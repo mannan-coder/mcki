@@ -14,6 +14,17 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
   };
 
   const fearGreedIndex = 72; // 0-100 scale
+  
+  const historicalData = {
+    current: 72,
+    yesterday: 67,
+    weekAgo: 84,
+    monthAgo: 58,
+    hourlyData: [68, 69, 67, 65, 67, 70, 72], // Last 7 hours
+    dailyData: [58, 62, 65, 70, 75, 80, 84, 78, 75, 72, 69, 67, 70, 72], // Last 14 days
+    weeklyTrend: '+5.0',
+    monthlyTrend: '+14.0'
+  };
 
   const getFearGreedColor = (value: number) => {
     if (value >= 75) return 'text-green-500';
@@ -81,7 +92,7 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
           </p>
         </div>
 
-        {/* Fear & Greed Index - Made smaller */}
+        {/* Fear & Greed Index - Enhanced with detailed history */}
         <div className={`p-6 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
             ? 'bg-gray-800/50 border-gray-700/50' 
@@ -92,32 +103,32 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
           </h3>
           
           <div className="flex items-center justify-center mb-4">
-            <div className="relative w-32 h-32">
-              <svg className="w-32 h-32 transform -rotate-90" viewBox="0 0 100 100">
+            <div className="relative w-24 h-24">
+              <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
                 {/* Background circle */}
                 <circle
                   cx="50"
                   cy="50"
-                  r="40"
+                  r="35"
                   stroke={isDarkMode ? '#374151' : '#e5e7eb'}
-                  strokeWidth="8"
+                  strokeWidth="6"
                   fill="none"
                 />
                 {/* Progress circle */}
                 <circle
                   cx="50"
                   cy="50"
-                  r="40"
+                  r="35"
                   stroke={fearGreedIndex >= 75 ? '#10b981' : fearGreedIndex >= 50 ? '#f59e0b' : fearGreedIndex >= 25 ? '#f97316' : '#ef4444'}
-                  strokeWidth="8"
+                  strokeWidth="6"
                   fill="none"
-                  strokeDasharray={`${fearGreedIndex * 2.51} 251`}
+                  strokeDasharray={`${fearGreedIndex * 2.2} 220`}
                   strokeLinecap="round"
                   className="transition-all duration-1000"
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className={`text-2xl font-bold ${getFearGreedColor(fearGreedIndex)}`}>
+                <div className={`text-xl font-bold ${getFearGreedColor(fearGreedIndex)}`}>
                   {fearGreedIndex}
                 </div>
                 <div className={`text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
@@ -127,14 +138,78 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
             </div>
           </div>
 
-          <div className="space-y-2">
+          {/* Historical Comparison */}
+          <div className="space-y-2 mb-4">
             <div className="flex items-center justify-between text-xs">
-              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>24h:</span>
-              <span className="text-green-500">+5</span>
+              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Now:</span>
+              <span className={`font-medium ${getFearGreedColor(historicalData.current)}`}>
+                {historicalData.current}
+              </span>
             </div>
             <div className="flex items-center justify-between text-xs">
-              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Week:</span>
-              <span className="text-red-500">-12</span>
+              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Yesterday:</span>
+              <span className={`font-medium ${getFearGreedColor(historicalData.yesterday)}`}>
+                {historicalData.yesterday} ({historicalData.current > historicalData.yesterday ? '+' : ''}{historicalData.current - historicalData.yesterday})
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Week ago:</span>
+              <span className={`font-medium ${getFearGreedColor(historicalData.weekAgo)}`}>
+                {historicalData.weekAgo} ({historicalData.current > historicalData.weekAgo ? '+' : ''}{historicalData.current - historicalData.weekAgo})
+              </span>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Month ago:</span>
+              <span className={`font-medium ${getFearGreedColor(historicalData.monthAgo)}`}>
+                {historicalData.monthAgo} ({historicalData.monthlyTrend})
+              </span>
+            </div>
+          </div>
+
+          {/* Mini Chart - 7 Day Trend */}
+          <div className="mb-3">
+            <div className={`text-xs font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              7-Day Trend
+            </div>
+            <div className="flex items-end justify-between h-8 space-x-1">
+              {historicalData.dailyData.slice(-7).map((value, index) => (
+                <div
+                  key={index}
+                  className={`w-2 rounded-t transition-all duration-300 ${
+                    value >= 75 ? 'bg-green-500' : 
+                    value >= 50 ? 'bg-yellow-500' : 
+                    value >= 25 ? 'bg-orange-500' : 'bg-red-500'
+                  }`}
+                  style={{ height: `${(value / 100) * 100}%` }}
+                  title={`Day ${index + 1}: ${value}`}
+                />
+              ))}
+            </div>
+            <div className="flex justify-between mt-1">
+              <span className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>7d ago</span>
+              <span className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Today</span>
+            </div>
+          </div>
+
+          {/* Key Metrics */}
+          <div className={`p-3 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="text-center">
+                <div className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  24h Change
+                </div>
+                <div className={`font-bold ${historicalData.current > historicalData.yesterday ? 'text-green-500' : 'text-red-500'}`}>
+                  {historicalData.current > historicalData.yesterday ? '+' : ''}{historicalData.current - historicalData.yesterday}
+                </div>
+              </div>
+              <div className="text-center">
+                <div className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Weekly
+                </div>
+                <div className={`font-bold ${historicalData.current > historicalData.weekAgo ? 'text-red-500' : 'text-green-500'}`}>
+                  {historicalData.current > historicalData.weekAgo ? '' : ''}{historicalData.current - historicalData.weekAgo}
+                </div>
+              </div>
             </div>
           </div>
         </div>
