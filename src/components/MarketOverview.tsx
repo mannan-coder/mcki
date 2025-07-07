@@ -53,7 +53,7 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
-        {/* Enhanced Market Cap with Details */}
+        {/* Enhanced Market Cap with Comprehensive Details */}
         <div className={`p-4 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
             ? 'bg-gray-800/50 border-gray-700/50' 
@@ -63,7 +63,7 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
             <h3 className={`text-base font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Total Market Cap
             </h3>
-            <div className="text-green-500 text-xs">+2.4%</div>
+            <div className="text-green-500 text-xs font-medium">+2.4%</div>
           </div>
           <div className="text-2xl font-bold text-blue-500 mb-3">
             {marketStats.totalMarketCap}
@@ -71,15 +71,27 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
           
           <div className="space-y-1.5 mb-3">
             <div className="flex items-center justify-between text-xs">
+              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>24h Change:</span>
+              <span className="text-green-500 font-semibold">+$58.2B</span>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>7d Change:</span>
+              <span className="text-green-500 font-semibold">+$127.8B</span>
+            </div>
+            <div className="flex items-center justify-between text-xs">
               <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>BTC Dominance:</span>
               <span className="text-orange-500 font-semibold">{marketStats.btcDominance}</span>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>ETH Dominance:</span>
+              <span className="text-blue-500 font-semibold">{marketStats.ethDominance}</span>
             </div>
             <div className="flex items-center justify-between text-xs">
               <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Open Interest:</span>
               <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$34.2B</span>
             </div>
             <div className="flex items-center justify-between text-xs">
-              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>ETH Gas:</span>
+              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>ETH Gas Fee:</span>
               <span className="text-blue-500 font-semibold">12 gwei</span>
             </div>
             <div className="flex items-center justify-between text-xs">
@@ -90,12 +102,12 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
           
           <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
             <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              24h change: +$58.2B
+              Market Health: <span className="text-green-500 font-medium">Strong</span> • ATH: $3.02T
             </p>
           </div>
         </div>
 
-        {/* Enhanced Volume with Coin Details */}
+        {/* Enhanced Volume with Comprehensive Coin Details */}
         <div className={`p-4 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
             ? 'bg-gray-800/50 border-gray-700/50' 
@@ -103,9 +115,9 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
         }`}>
           <div className="flex items-center justify-between mb-3">
             <h3 className={`text-base font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              24h Volume
+              24h Trading Volume
             </h3>
-            <div className="text-red-500 text-xs">-1.2%</div>
+            <div className="text-red-500 text-xs font-medium">-1.2%</div>
           </div>
           <div className="text-2xl font-bold text-purple-500 mb-3">
             {marketStats.totalVolume}
@@ -115,36 +127,48 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center">
                 <div className="w-1.5 h-1.5 bg-orange-500 rounded-full mr-2"></div>
-                <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>BTC:</span>
+                <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>BTC Volume:</span>
               </div>
               <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$28.4B</span>
             </div>
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center">
                 <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></div>
-                <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>ETH:</span>
+                <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>ETH Volume:</span>
               </div>
               <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$16.8B</span>
             </div>
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center">
                 <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2"></div>
-                <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>SOL:</span>
+                <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>SOL Volume:</span>
               </div>
               <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$3.2B</span>
             </div>
             <div className="flex items-center justify-between text-xs">
               <div className="flex items-center">
                 <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></div>
-                <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Others:</span>
+                <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>USDT Volume:</span>
               </div>
-              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$40.8B</span>
+              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$24.1B</span>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>DEX Volume:</span>
+              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$8.4B</span>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Derivatives:</span>
+              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$28.5B</span>
+            </div>
+            <div className="flex items-center justify-between text-xs">
+              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Avg Daily (7d):</span>
+              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$91.7B</span>
             </div>
           </div>
           
           <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
             <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Spot: 68% • Derivatives: 32%
+              Spot: <span className="text-blue-500 font-medium">68%</span> • Futures: <span className="text-purple-500 font-medium">32%</span>
             </p>
           </div>
         </div>
