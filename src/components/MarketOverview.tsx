@@ -54,115 +54,114 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
         {/* Enhanced Market Cap with Details */}
-        <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
             ? 'bg-gray-800/50 border-gray-700/50' 
             : 'bg-white/70 border-gray-200/50'
         }`}>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className={`text-base font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Total Market Cap
             </h3>
-            <div className="text-green-500 text-sm">+2.4%</div>
+            <div className="text-green-500 text-xs">+2.4%</div>
           </div>
-          <div className="text-3xl font-bold text-blue-500 mb-3">
+          <div className="text-2xl font-bold text-blue-500 mb-3">
             {marketStats.totalMarketCap}
           </div>
           
-          <div className="space-y-2 mb-4">
-            <div className="flex items-center justify-between text-sm">
+          <div className="space-y-1.5 mb-3">
+            <div className="flex items-center justify-between text-xs">
               <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>BTC Dominance:</span>
               <span className="text-orange-500 font-semibold">{marketStats.btcDominance}</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between text-xs">
               <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Open Interest:</span>
               <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$34.2B</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between text-xs">
               <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>ETH Gas:</span>
               <span className="text-blue-500 font-semibold">12 gwei</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between text-xs">
               <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Altcoin Season:</span>
               <span className="text-green-500 font-semibold">78/100</span>
             </div>
           </div>
           
-          <div className={`p-3 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
+          <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
             <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              24h change: +$58.2B • Market health: Strong
+              24h change: +$58.2B
             </p>
           </div>
         </div>
 
         {/* Enhanced Volume with Coin Details */}
-        <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
             ? 'bg-gray-800/50 border-gray-700/50' 
             : 'bg-white/70 border-gray-200/50'
         }`}>
-          <div className="flex items-center justify-between mb-4">
-            <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className={`text-base font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               24h Volume
             </h3>
-            <div className="text-red-500 text-sm">-1.2%</div>
+            <div className="text-red-500 text-xs">-1.2%</div>
           </div>
-          <div className="text-3xl font-bold text-purple-500 mb-3">
+          <div className="text-2xl font-bold text-purple-500 mb-3">
             {marketStats.totalVolume}
           </div>
           
-          <div className="space-y-2 mb-4">
-            <div className="flex items-center justify-between text-sm">
+          <div className="space-y-1.5 mb-3">
+            <div className="flex items-center justify-between text-xs">
               <div className="flex items-center">
-                <div className="w-2 h-2 bg-orange-500 rounded-full mr-2"></div>
+                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full mr-2"></div>
                 <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>BTC:</span>
               </div>
               <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$28.4B</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between text-xs">
               <div className="flex items-center">
-                <div className="w-2 h-2 bg-blue-500 rounded-full mr-2"></div>
+                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></div>
                 <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>ETH:</span>
               </div>
               <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$16.8B</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between text-xs">
               <div className="flex items-center">
-                <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2"></div>
                 <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>SOL:</span>
               </div>
               <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$3.2B</span>
             </div>
-            <div className="flex items-center justify-between text-sm">
+            <div className="flex items-center justify-between text-xs">
               <div className="flex items-center">
-                <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+                <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></div>
                 <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Others:</span>
               </div>
               <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$40.8B</span>
             </div>
           </div>
           
-          <div className={`p-3 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
+          <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
             <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Spot: 68% • Derivatives: 32% • DEX: $8.4B
+              Spot: 68% • Derivatives: 32%
             </p>
           </div>
         </div>
 
-        {/* Fear & Greed Index - Enhanced with detailed history */}
-        <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+        {/* Fear & Greed Index - Compact */}
+        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
             ? 'bg-gray-800/50 border-gray-700/50' 
             : 'bg-white/70 border-gray-200/50'
         }`}>
-          <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Fear & Greed Index
           </h3>
           
-          <div className="flex items-center justify-center mb-4">
-            <div className="relative w-24 h-24">
-              <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
-                {/* Background circle */}
+          <div className="flex items-center justify-center mb-3">
+            <div className="relative w-16 h-16">
+              <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 100 100">
                 <circle
                   cx="50"
                   cy="50"
@@ -171,7 +170,6 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
                   strokeWidth="6"
                   fill="none"
                 />
-                {/* Progress circle */}
                 <circle
                   cx="50"
                   cy="50"
@@ -185,7 +183,7 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
                 />
               </svg>
               <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className={`text-xl font-bold ${getFearGreedColor(fearGreedIndex)}`}>
+                <div className={`text-lg font-bold ${getFearGreedColor(fearGreedIndex)}`}>
                   {fearGreedIndex}
                 </div>
                 <div className={`text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
@@ -195,14 +193,7 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
             </div>
           </div>
 
-          {/* Historical Comparison */}
-          <div className="space-y-2 mb-4">
-            <div className="flex items-center justify-between text-xs">
-              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Now:</span>
-              <span className={`font-medium ${getFearGreedColor(historicalData.current)}`}>
-                {historicalData.current}
-              </span>
-            </div>
+          <div className="space-y-1 mb-3">
             <div className="flex items-center justify-between text-xs">
               <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Yesterday:</span>
               <span className={`font-medium ${getFearGreedColor(historicalData.yesterday)}`}>
@@ -215,41 +206,9 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
                 {historicalData.weekAgo} ({historicalData.current > historicalData.weekAgo ? '+' : ''}{historicalData.current - historicalData.weekAgo})
               </span>
             </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Month ago:</span>
-              <span className={`font-medium ${getFearGreedColor(historicalData.monthAgo)}`}>
-                {historicalData.monthAgo} ({historicalData.monthlyTrend})
-              </span>
-            </div>
           </div>
 
-          {/* Mini Chart - 7 Day Trend */}
-          <div className="mb-3">
-            <div className={`text-xs font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              7-Day Trend
-            </div>
-            <div className="flex items-end justify-between h-8 space-x-1">
-              {historicalData.dailyData.slice(-7).map((value, index) => (
-                <div
-                  key={index}
-                  className={`w-2 rounded-t transition-all duration-300 ${
-                    value >= 75 ? 'bg-green-500' : 
-                    value >= 50 ? 'bg-yellow-500' : 
-                    value >= 25 ? 'bg-orange-500' : 'bg-red-500'
-                  }`}
-                  style={{ height: `${(value / 100) * 100}%` }}
-                  title={`Day ${index + 1}: ${value}`}
-                />
-              ))}
-            </div>
-            <div className="flex justify-between mt-1">
-              <span className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>7d ago</span>
-              <span className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>Today</span>
-            </div>
-          </div>
-
-          {/* Key Metrics */}
-          <div className={`p-3 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
+          <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <div className="text-center">
                 <div className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
@@ -271,86 +230,86 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
           </div>
         </div>
 
-        <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
             ? 'bg-gray-800/50 border-gray-700/50' 
             : 'bg-white/70 border-gray-200/50'
         }`}>
-          <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Market Dominance
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Bitcoin</span>
-              <span className="text-orange-500 font-semibold">{marketStats.btcDominance}</span>
+              <span className="text-orange-500 font-semibold text-sm">{marketStats.btcDominance}</span>
             </div>
-            <div className={`w-full bg-gray-200 rounded-full h-2 ${isDarkMode ? 'bg-gray-700' : ''}`}>
-              <div className="bg-orange-500 h-2 rounded-full" style={{ width: marketStats.btcDominance }}></div>
+            <div className={`w-full bg-gray-200 rounded-full h-1.5 ${isDarkMode ? 'bg-gray-700' : ''}`}>
+              <div className="bg-orange-500 h-1.5 rounded-full" style={{ width: marketStats.btcDominance }}></div>
             </div>
             <div className="flex items-center justify-between">
               <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Ethereum</span>
-              <span className="text-blue-500 font-semibold">{marketStats.ethDominance}</span>
+              <span className="text-blue-500 font-semibold text-sm">{marketStats.ethDominance}</span>
             </div>
-            <div className={`w-full bg-gray-200 rounded-full h-2 ${isDarkMode ? 'bg-gray-700' : ''}`}>
-              <div className="bg-blue-500 h-2 rounded-full" style={{ width: marketStats.ethDominance }}></div>
+            <div className={`w-full bg-gray-200 rounded-full h-1.5 ${isDarkMode ? 'bg-gray-700' : ''}`}>
+              <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: marketStats.ethDominance }}></div>
             </div>
           </div>
         </div>
 
-        <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
             ? 'bg-gray-800/50 border-gray-700/50' 
             : 'bg-white/70 border-gray-200/50'
         }`}>
-          <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Market Stats
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Active Coins</span>
-              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 {marketStats.activeCoins}
               </span>
             </div>
             <div className="flex items-center justify-between">
               <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Exchanges</span>
-              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 {marketStats.exchanges}
               </span>
             </div>
             <div className="flex items-center justify-between">
               <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>DeFi Volume</span>
-              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 $12.4B
               </span>
             </div>
           </div>
         </div>
 
-        <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
             ? 'bg-gray-800/50 border-gray-700/50' 
             : 'bg-white/70 border-gray-200/50'
         }`}>
-          <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Additional Stats
           </h3>
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Staking Volume</span>
-              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 $145.2B
               </span>
             </div>
             <div className="flex items-center justify-between">
               <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>NFT Volume</span>
-              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 $892.4M
               </span>
             </div>
             <div className="flex items-center justify-between">
               <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Market Cap Change</span>
-              <span className="text-green-500 font-semibold">
+              <span className="text-green-500 font-semibold text-sm">
                 +2.4%
               </span>
             </div>
