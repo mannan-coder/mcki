@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ChevronDown, Search, TrendingUp, TrendingDown, DollarSign, Activity, BarChart3, Users, Globe, Zap } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ChevronDown, Search, TrendingUp, TrendingDown, Users, Activity, BarChart3, Globe, Monitor, Smartphone, Eye, Clock, MousePointer } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Navbar from '@/components/Navbar';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { Line, LineChart, ResponsiveContainer, XAxis, YAxis } from 'recharts';
+import { Line, LineChart, ResponsiveContainer, XAxis, YAxis, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 
 interface AnalyticsProps {
   isDarkMode?: boolean;
@@ -15,178 +15,85 @@ interface AnalyticsProps {
 }
 
 const Analytics = ({ isDarkMode = false, setIsDarkMode = () => {} }: AnalyticsProps) => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('All Chains');
+  const [selectedTimeRange, setSelectedTimeRange] = useState('7d');
+  const [realTimeVisitors, setRealTimeVisitors] = useState(147);
 
-  const categories = ['All Chains', 'Layer 1', 'Layer 2', 'DeFi', 'Proof of Work (PoW)', 'Proof of Stake (PoS)'];
+  // Simulate real-time visitor updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRealTimeVisitors(prev => {
+        const change = Math.floor(Math.random() * 10) - 5;
+        return Math.max(50, Math.min(300, prev + change));
+      });
+    }, 3000);
 
-  const chainData = [
-    {
-      id: 1,
-      name: 'Ethereum',
-      symbol: 'ETH',
-      logo: '🟦',
-      change24h: 2.4,
-      change7d: 8.7,
-      change30d: 15.2,
-      volume24h: 1250000000,
-      tvl: 65000000000,
-      dominance: 57.3,
-      coins: 5012,
-      category: 'Layer 1',
-      sparklineData: [
-        { time: '1', value: 3200 },
-        { time: '2', value: 3250 },
-        { time: '3', value: 3180 },
-        { time: '4', value: 3300 },
-        { time: '5', value: 3400 },
-        { time: '6', value: 3350 },
-        { time: '7', value: 3420 }
-      ]
-    },
-    {
-      id: 2,
-      name: 'Solana',
-      symbol: 'SOL',
-      logo: '🟣',
-      change24h: 5.2,
-      change7d: 12.4,
-      change30d: 28.6,
-      volume24h: 980000000,
-      tvl: 8500000000,
-      dominance: 7.5,
-      coins: 4340,
-      category: 'Layer 1',
-      sparklineData: [
-        { time: '1', value: 180 },
-        { time: '2', value: 175 },
-        { time: '3', value: 190 },
-        { time: '4', value: 195 },
-        { time: '5', value: 200 },
-        { time: '6', value: 188 },
-        { time: '7', value: 205 }
-      ]
-    },
-    {
-      id: 3,
-      name: 'BNB Smart Chain',
-      symbol: 'BNB',
-      logo: '🟨',
-      change24h: -1.2,
-      change7d: 3.8,
-      change30d: 11.4,
-      volume24h: 850000000,
-      tvl: 6200000000,
-      dominance: 5.5,
-      coins: 2915,
-      category: 'Layer 1',
-      sparklineData: [
-        { time: '1', value: 310 },
-        { time: '2', value: 305 },
-        { time: '3', value: 298 },
-        { time: '4', value: 315 },
-        { time: '5', value: 320 },
-        { time: '6', value: 308 },
-        { time: '7', value: 312 }
-      ]
-    },
-    {
-      id: 4,
-      name: 'Polygon',
-      symbol: 'MATIC',
-      logo: '🟪',
-      change24h: 3.7,
-      change7d: 6.2,
-      change30d: 18.9,
-      volume24h: 420000000,
-      tvl: 2800000000,
-      dominance: 2.5,
-      coins: 1840,
-      category: 'Layer 2',
-      sparklineData: [
-        { time: '1', value: 0.85 },
-        { time: '2', value: 0.82 },
-        { time: '3', value: 0.88 },
-        { time: '4', value: 0.90 },
-        { time: '5', value: 0.92 },
-        { time: '6', value: 0.89 },
-        { time: '7', value: 0.94 }
-      ]
-    },
-    {
-      id: 5,
-      name: 'Arbitrum One',
-      symbol: 'ARB',
-      logo: '🔵',
-      change24h: 4.1,
-      change7d: 9.3,
-      change30d: 22.1,
-      volume24h: 380000000,
-      tvl: 2500000000,
-      dominance: 2.2,
-      coins: 818,
-      category: 'Layer 2',
-      sparklineData: [
-        { time: '1', value: 1.2 },
-        { time: '2', value: 1.15 },
-        { time: '3', value: 1.25 },
-        { time: '4', value: 1.3 },
-        { time: '5', value: 1.28 },
-        { time: '6', value: 1.32 },
-        { time: '7', value: 1.35 }
-      ]
-    },
-    {
-      id: 6,
-      name: 'Optimism',
-      symbol: 'OP',
-      logo: '🔴',
-      change24h: 2.8,
-      change7d: 7.5,
-      change30d: 19.6,
-      volume24h: 320000000,
-      tvl: 1900000000,
-      dominance: 1.7,
-      coins: 654,
-      category: 'Layer 2',
-      sparklineData: [
-        { time: '1', value: 2.1 },
-        { time: '2', value: 2.05 },
-        { time: '3', value: 2.15 },
-        { time: '4', value: 2.2 },
-        { time: '5', value: 2.18 },
-        { time: '6', value: 2.25 },
-        { time: '7', value: 2.28 }
-      ]
-    }
+    return () => clearInterval(interval);
+  }, []);
+
+  const timeRanges = [
+    { label: 'Last 7 days', value: '7d' },
+    { label: 'Last 30 days', value: '30d' },
+    { label: 'Last 90 days', value: '90d' },
+    { label: 'Last year', value: '1y' }
   ];
 
   const overviewStats = {
-    totalTVL: 113415546884,
-    totalVolume: 23161716447,
-    tvlChange: -0.2,
-    volumeChange: 7.8,
-    totalChains: 250,
-    activeChains: 180
+    totalVisitors: 45820,
+    pageViews: 128450,
+    bounceRate: 42.3,
+    avgSessionDuration: '2m 34s',
+    conversionRate: 3.2,
+    newUsers: 68.5
   };
+
+  const trafficData = [
+    { date: 'Mon', visitors: 2400, pageviews: 4200, sessions: 1800 },
+    { date: 'Tue', visitors: 1398, pageviews: 2800, sessions: 1200 },
+    { date: 'Wed', visitors: 9800, pageviews: 15600, sessions: 8200 },
+    { date: 'Thu', visitors: 3908, pageviews: 7200, sessions: 3100 },
+    { date: 'Fri', visitors: 4800, pageviews: 9600, sessions: 4200 },
+    { date: 'Sat', visitors: 3800, pageviews: 6800, sessions: 3200 },
+    { date: 'Sun', visitors: 4300, pageviews: 8100, sessions: 3700 }
+  ];
+
+  const topPages = [
+    { page: '/', views: 15420, percentage: 23.8, avgTime: '3m 12s' },
+    { page: '/market', views: 12350, percentage: 19.1, avgTime: '2m 45s' },
+    { page: '/arbitrage', views: 8920, percentage: 13.8, avgTime: '4m 18s' },
+    { page: '/news', views: 7650, percentage: 11.8, avgTime: '1m 52s' },
+    { page: '/analytics', views: 6280, percentage: 9.7, avgTime: '5m 23s' },
+    { page: '/about', views: 4180, percentage: 6.5, avgTime: '1m 38s' }
+  ];
+
+  const trafficSources = [
+    { source: 'Organic Search', visitors: 18200, percentage: 39.7, color: 'hsl(var(--primary))' },
+    { source: 'Direct', visitors: 12800, percentage: 27.9, color: 'hsl(var(--success))' },
+    { source: 'Social Media', visitors: 8900, percentage: 19.4, color: 'hsl(var(--accent))' },
+    { source: 'Referral', visitors: 4200, percentage: 9.2, color: 'hsl(var(--secondary))' },
+    { source: 'Email', visitors: 1720, percentage: 3.8, color: 'hsl(var(--muted))' }
+  ];
+
+  const deviceData = [
+    { device: 'Desktop', users: 24500, percentage: 53.4 },
+    { device: 'Mobile', users: 18200, percentage: 39.7 },
+    { device: 'Tablet', users: 3120, percentage: 6.9 }
+  ];
+
+  const geographicData = [
+    { country: 'United States', visitors: 12800, percentage: 27.9, flag: '🇺🇸' },
+    { country: 'United Kingdom', visitors: 8200, percentage: 17.9, flag: '🇬🇧' },
+    { country: 'Germany', visitors: 6400, percentage: 14.0, flag: '🇩🇪' },
+    { country: 'Japan', visitors: 4100, percentage: 8.9, flag: '🇯🇵' },
+    { country: 'Canada', visitors: 3800, percentage: 8.3, flag: '🇨🇦' },
+    { country: 'France', visitors: 3200, percentage: 7.0, flag: '🇫🇷' },
+    { country: 'Others', visitors: 7320, percentage: 16.0, flag: '🌍' }
+  ];
 
   const formatNumber = (num: number) => {
-    if (num >= 1e9) return `$${(num / 1e9).toFixed(1)}B`;
-    if (num >= 1e6) return `$${(num / 1e6).toFixed(1)}M`;
-    if (num >= 1e3) return `$${(num / 1e3).toFixed(1)}K`;
-    return `$${num.toFixed(2)}`;
+    if (num >= 1e6) return `${(num / 1e6).toFixed(1)}M`;
+    if (num >= 1e3) return `${(num / 1e3).toFixed(1)}K`;
+    return num.toLocaleString();
   };
-
-  const formatPercentage = (num: number) => {
-    return `${num >= 0 ? '+' : ''}${num.toFixed(1)}%`;
-  };
-
-  const filteredChains = chainData.filter(chain => {
-    const matchesSearch = chain.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         chain.symbol.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'All Chains' || chain.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -194,252 +101,291 @@ const Analytics = ({ isDarkMode = false, setIsDarkMode = () => {} }: AnalyticsPr
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Chain Analytics</h1>
-          <p className="text-lg text-muted-foreground">
-            Comprehensive blockchain analytics and Total Value Locked (TVL) tracking
-          </p>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+          <div>
+            <h1 className="text-4xl font-bold mb-2">Website Analytics</h1>
+            <p className="text-lg text-muted-foreground">
+              Track your website performance and user behavior
+            </p>
+          </div>
+          
+          <div className="flex items-center space-x-4 mt-4 md:mt-0">
+            <div className="flex items-center space-x-2 px-4 py-2 bg-card border border-border rounded-lg">
+              <div className="w-3 h-3 bg-success rounded-full animate-pulse"></div>
+              <span className="text-sm font-medium">{realTimeVisitors} users online</span>
+            </div>
+            
+            <Tabs value={selectedTimeRange} onValueChange={setSelectedTimeRange}>
+              <TabsList>
+                {timeRanges.map((range) => (
+                  <TabsTrigger key={range.value} value={range.value} className="text-xs">
+                    {range.label.split(' ')[1]}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+          </div>
         </div>
 
         {/* Overview Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-8">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Value Locked</CardTitle>
-              <DollarSign className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Total Visitors</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatNumber(overviewStats.totalTVL)}</div>
-              <p className={`text-xs ${overviewStats.tvlChange >= 0 ? 'text-success' : 'text-destructive'}`}>
-                {formatPercentage(overviewStats.tvlChange)} from yesterday
-              </p>
+              <div className="text-2xl font-bold">{formatNumber(overviewStats.totalVisitors)}</div>
+              <p className="text-xs text-success">+12.5% from last period</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">24h Trading Volume</CardTitle>
-              <BarChart3 className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Page Views</CardTitle>
+              <Eye className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{formatNumber(overviewStats.totalVolume)}</div>
-              <p className={`text-xs ${overviewStats.volumeChange >= 0 ? 'text-success' : 'text-destructive'}`}>
-                {formatPercentage(overviewStats.volumeChange)} from yesterday
-              </p>
+              <div className="text-2xl font-bold">{formatNumber(overviewStats.pageViews)}</div>
+              <p className="text-xs text-success">+8.2% from last period</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Active Chains</CardTitle>
-              <Activity className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Bounce Rate</CardTitle>
+              <TrendingDown className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{overviewStats.activeChains}</div>
-              <p className="text-xs text-muted-foreground">
-                of {overviewStats.totalChains} total chains
-              </p>
+              <div className="text-2xl font-bold">{overviewStats.bounceRate}%</div>
+              <p className="text-xs text-success">-2.1% from last period</p>
             </CardContent>
           </Card>
 
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Market Cap</CardTitle>
-              <Globe className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">Avg. Session</CardTitle>
+              <Clock className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">$2.4T</div>
-              <p className="text-xs text-success">+2.1% from yesterday</p>
+              <div className="text-2xl font-bold">{overviewStats.avgSessionDuration}</div>
+              <p className="text-xs text-success">+15.3% from last period</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">Conversion</CardTitle>
+              <MousePointer className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{overviewStats.conversionRate}%</div>
+              <p className="text-xs text-success">+0.8% from last period</p>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium">New Users</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{overviewStats.newUsers}%</div>
+              <p className="text-xs text-muted-foreground">of total visitors</p>
             </CardContent>
           </Card>
         </div>
 
-        {/* Filters and Search */}
-        <div className="flex flex-col md:flex-row gap-4 mb-6">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              placeholder="Search chains..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-          
-          <Tabs value={selectedCategory} onValueChange={setSelectedCategory} className="w-full md:w-auto">
-            <TabsList className="grid w-full grid-cols-3 md:grid-cols-6">
-              {categories.map((category) => (
-                <TabsTrigger key={category} value={category} className="text-xs">
-                  {category.replace(' (PoW)', '').replace(' (PoS)', '')}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          </Tabs>
-        </div>
-
-        {/* Chains Table */}
-        <Card>
+        {/* Traffic Chart */}
+        <Card className="mb-8">
           <CardHeader>
-            <CardTitle>Top Blockchains by Total Value Locked (TVL)</CardTitle>
+            <CardTitle>Website Traffic Overview</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="text-left py-3 px-2">#</th>
-                    <th className="text-left py-3 px-2">Chain</th>
-                    <th className="text-left py-3 px-2">24h</th>
-                    <th className="text-left py-3 px-2">7d</th>
-                    <th className="text-left py-3 px-2">30d</th>
-                    <th className="text-right py-3 px-2">24h Volume</th>
-                    <th className="text-right py-3 px-2">TVL</th>
-                    <th className="text-right py-3 px-2">Dominance</th>
-                    <th className="text-right py-3 px-2"># of Coins</th>
-                    <th className="text-right py-3 px-2">Last 7 Days</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredChains.map((chain, index) => (
-                    <tr key={chain.id} className="border-b border-border hover:bg-muted/50 transition-colors">
-                      <td className="py-4 px-2 text-sm">{index + 1}</td>
-                      <td className="py-4 px-2">
-                        <div className="flex items-center space-x-3">
-                          <span className="text-2xl">{chain.logo}</span>
-                          <div>
-                            <div className="font-medium">{chain.name}</div>
-                            <div className="text-sm text-muted-foreground">{chain.symbol}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-4 px-2">
-                        <div className={`flex items-center space-x-1 ${
-                          chain.change24h >= 0 ? 'text-success' : 'text-destructive'
-                        }`}>
-                          {chain.change24h >= 0 ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
-                          <span className="text-sm">{formatPercentage(chain.change24h)}</span>
-                        </div>
-                      </td>
-                      <td className="py-4 px-2">
-                        <span className={`text-sm ${
-                          chain.change7d >= 0 ? 'text-success' : 'text-destructive'
-                        }`}>
-                          {formatPercentage(chain.change7d)}
-                        </span>
-                      </td>
-                      <td className="py-4 px-2">
-                        <span className={`text-sm ${
-                          chain.change30d >= 0 ? 'text-success' : 'text-destructive'
-                        }`}>
-                          {formatPercentage(chain.change30d)}
-                        </span>
-                      </td>
-                      <td className="py-4 px-2 text-right text-sm">{formatNumber(chain.volume24h)}</td>
-                      <td className="py-4 px-2 text-right text-sm font-medium">{formatNumber(chain.tvl)}</td>
-                      <td className="py-4 px-2 text-right text-sm">{chain.dominance}%</td>
-                      <td className="py-4 px-2 text-right text-sm">{chain.coins.toLocaleString()}</td>
-                      <td className="py-4 px-2 text-right">
-                        <div className="w-20 h-10">
-                          <ChartContainer
-                            config={{
-                              value: {
-                                label: "Price",
-                                color: chain.change7d >= 0 ? "hsl(var(--success))" : "hsl(var(--destructive))",
-                              },
-                            }}
-                            className="h-full w-full"
-                          >
-                            <ResponsiveContainer width="100%" height="100%">
-                              <LineChart data={chain.sparklineData}>
-                                <Line
-                                  type="monotone"
-                                  dataKey="value"
-                                  stroke={chain.change7d >= 0 ? "hsl(var(--success))" : "hsl(var(--destructive))"}
-                                  strokeWidth={2}
-                                  dot={false}
-                                />
-                              </LineChart>
-                            </ResponsiveContainer>
-                          </ChartContainer>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <ChartContainer
+              config={{
+                visitors: {
+                  label: "Visitors",
+                  color: "hsl(var(--primary))",
+                },
+                pageviews: {
+                  label: "Page Views", 
+                  color: "hsl(var(--success))",
+                },
+                sessions: {
+                  label: "Sessions",
+                  color: "hsl(var(--accent))",
+                },
+              }}
+              className="h-80"
+            >
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={trafficData}>
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Area 
+                    type="monotone" 
+                    dataKey="visitors" 
+                    stackId="1"
+                    stroke="hsl(var(--primary))" 
+                    fill="hsl(var(--primary))"
+                    fillOpacity={0.6}
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="pageviews" 
+                    stackId="2"
+                    stroke="hsl(var(--success))" 
+                    fill="hsl(var(--success))"
+                    fillOpacity={0.6}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </ChartContainer>
           </CardContent>
         </Card>
 
-        {/* Additional Analytics Section */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-8">
+        {/* Two column layout for detailed analytics */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Top Pages */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Zap className="h-5 w-5" />
-                <span>Chain Performance Metrics</span>
-              </CardTitle>
+              <CardTitle>Top Pages</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Average Block Time</span>
-                  <Badge variant="secondary">12.5s</Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Network Fees (24h avg)</span>
-                  <Badge variant="secondary">$2.45</Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Active Validators</span>
-                  <Badge variant="secondary">42,851</Badge>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Cross-chain Bridges</span>
-                  <Badge variant="secondary">156</Badge>
-                </div>
+                {topPages.map((page, index) => (
+                  <div key={index} className="flex items-center justify-between p-3 rounded-lg border border-border hover:bg-muted/50 transition-colors">
+                    <div className="flex-1">
+                      <div className="font-medium text-sm">{page.page}</div>
+                      <div className="text-xs text-muted-foreground">Avg. time: {page.avgTime}</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-medium text-sm">{formatNumber(page.views)}</div>
+                      <div className="text-xs text-muted-foreground">{page.percentage}%</div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
 
+          {/* Traffic Sources */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Traffic Sources</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {trafficSources.map((source, index) => (
+                  <div key={index} className="flex items-center space-x-4">
+                    <div className="w-4 h-4 rounded-full" style={{ backgroundColor: source.color }}></div>
+                    <div className="flex-1">
+                      <div className="flex justify-between">
+                        <span className="font-medium text-sm">{source.source}</span>
+                        <span className="text-sm">{formatNumber(source.visitors)}</span>
+                      </div>
+                      <div className="w-full bg-muted rounded-full h-2 mt-1">
+                        <div 
+                          className="h-2 rounded-full" 
+                          style={{ 
+                            width: `${source.percentage}%`,
+                            backgroundColor: source.color 
+                          }}
+                        ></div>
+                      </div>
+                    </div>
+                    <span className="text-xs text-muted-foreground">{source.percentage}%</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Device Breakdown */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
-                <Users className="h-5 w-5" />
-                <span>Ecosystem Growth</span>
+                <Monitor className="h-5 w-5" />
+                <span>Device Breakdown</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">New Wallets (24h)</span>
-                  <div className="flex items-center space-x-2">
-                    <TrendingUp className="h-4 w-4 text-success" />
-                    <span className="text-success">+12,485</span>
+                {deviceData.map((device, index) => (
+                  <div key={index} className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      {device.device === 'Desktop' && <Monitor className="h-4 w-4 text-muted-foreground" />}
+                      {device.device === 'Mobile' && <Smartphone className="h-4 w-4 text-muted-foreground" />}
+                      {device.device === 'Tablet' && <Monitor className="h-4 w-4 text-muted-foreground" />}
+                      <span className="font-medium text-sm">{device.device}</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-medium text-sm">{formatNumber(device.users)}</div>
+                      <div className="text-xs text-muted-foreground">{device.percentage}%</div>
+                    </div>
                   </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Active DApps</span>
-                  <div className="flex items-center space-x-2">
-                    <TrendingUp className="h-4 w-4 text-success" />
-                    <span className="text-success">3,247</span>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Geographic Data */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center space-x-2">
+                <Globe className="h-5 w-5" />
+                <span>Geographic Distribution</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {geographicData.map((country, index) => (
+                  <div key={index} className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <span className="text-lg">{country.flag}</span>
+                      <span className="font-medium text-sm">{country.country}</span>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-medium text-sm">{formatNumber(country.visitors)}</div>
+                      <div className="text-xs text-muted-foreground">{country.percentage}%</div>
+                    </div>
                   </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Total Transactions (24h)</span>
-                  <div className="flex items-center space-x-2">
-                    <TrendingUp className="h-4 w-4 text-success" />
-                    <span className="text-success">2.8M</span>
-                  </div>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm">Developer Activity</span>
-                  <Badge variant="outline" className="text-success border-success">High</Badge>
-                </div>
+                ))}
               </div>
             </CardContent>
           </Card>
         </div>
+
+        {/* Performance Insights */}
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <BarChart3 className="h-5 w-5" />
+              <span>Performance Insights</span>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center p-4 border border-border rounded-lg">
+                <div className="text-2xl font-bold text-success">94</div>
+                <div className="text-sm text-muted-foreground">Page Speed Score</div>
+                <Badge variant="secondary" className="mt-2">Excellent</Badge>
+              </div>
+              <div className="text-center p-4 border border-border rounded-lg">
+                <div className="text-2xl font-bold text-primary">1.2s</div>
+                <div className="text-sm text-muted-foreground">Avg. Load Time</div>
+                <Badge variant="secondary" className="mt-2">Good</Badge>
+              </div>
+              <div className="text-center p-4 border border-border rounded-lg">
+                <div className="text-2xl font-bold text-success">99.9%</div>
+                <div className="text-sm text-muted-foreground">Uptime</div>
+                <Badge variant="secondary" className="mt-2">Excellent</Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
