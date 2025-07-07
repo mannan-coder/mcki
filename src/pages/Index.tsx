@@ -5,6 +5,7 @@ import TopMetrics from '@/components/TopMetrics';
 import ArbitrageDashboard from '@/components/ArbitrageDashboard';
 import MarketOverview from '@/components/MarketOverview';
 import OnChainAnalysis from '@/components/OnChainAnalysis';
+import NewsAlert from '@/components/NewsAlert';
 import InsightsAlerts from '@/components/InsightsAlerts';
 import CalculatorsSection from '@/components/CalculatorsSection';
 import Footer from '@/components/Footer';
@@ -25,6 +26,7 @@ const Index = () => {
           <ArbitrageDashboard isDarkMode={isDarkMode} />
           <MarketOverview isDarkMode={isDarkMode} />
           <OnChainAnalysis isDarkMode={isDarkMode} />
+          <NewsAlert isDarkMode={isDarkMode} />
           <InsightsAlerts isDarkMode={isDarkMode} />
           <CalculatorsSection isDarkMode={isDarkMode} />
         </main>
