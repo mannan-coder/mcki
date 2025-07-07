@@ -9,6 +9,7 @@ import Market from "./pages/Market";
 import News from "./pages/News";
 import NewsDetail from "./pages/NewsDetail";
 import Analytics from "./pages/Analytics";
+import ChainAnalytics from "./pages/ChainAnalytics";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -26,6 +27,7 @@ const App = () => (
           <Route path="/news" element={<News />} />
           <Route path="/news/:id" element={<NewsDetail />} />
           <Route path="/analytics" element={<Analytics />} />
+          <Route path="/chain-analytics" element={<ChainAnalytics />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

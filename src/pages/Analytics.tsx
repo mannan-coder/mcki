@@ -103,9 +103,9 @@ const Analytics = ({ isDarkMode = false, setIsDarkMode = () => {} }: AnalyticsPr
         {/* Header */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div>
-            <h1 className="text-4xl font-bold mb-2">Website Analytics</h1>
+            <h1 className="text-4xl font-bold mb-2">Analytics Dashboard</h1>
             <p className="text-lg text-muted-foreground">
-              Track your website performance and user behavior
+              Comprehensive analytics for website and blockchain data
             </p>
           </div>
           
@@ -125,6 +125,18 @@ const Analytics = ({ isDarkMode = false, setIsDarkMode = () => {} }: AnalyticsPr
               </TabsList>
             </Tabs>
           </div>
+        </div>
+
+        {/* Analytics Menu */}
+        <div className="mb-8">
+          <Tabs defaultValue="website" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="website">Website Analytics</TabsTrigger>
+              <TabsTrigger value="chains" onClick={() => window.location.href = '/chain-analytics'}>
+                Chain Analytics
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
         </div>
 
         {/* Overview Stats */}
