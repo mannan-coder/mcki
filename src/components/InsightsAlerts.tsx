@@ -1,5 +1,7 @@
 
-import { Calendar, AlertTriangle, TrendingUp, Eye, Target } from 'lucide-react';
+import { Calendar, AlertTriangle, TrendingUp, Eye, Target, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 
 interface InsightsAlertsProps {
   isDarkMode: boolean;
@@ -13,54 +15,85 @@ const InsightsAlerts = ({ isDarkMode }: InsightsAlertsProps) => {
     { time: '20:00 UTC', event: 'Coinbase Earnings Call', impact: 'medium' },
   ];
 
-  const alerts = [
-    {
-      type: 'liquidation',
-      icon: AlertTriangle,
-      title: 'Large Liquidation Alert',
-      description: '$45M in long positions liquidated on Binance',
-      time: '5 min ago',
-      severity: 'high'
-    },
-    {
-      type: 'pump',
-      icon: TrendingUp,
-      title: 'Pump Alert: MATIC',
-      description: '+18% price increase in 15 minutes',
-      time: '12 min ago',
-      severity: 'medium'
-    },
-    {
-      type: 'whale',
-      icon: Eye,
-      title: 'Whale Movement',
-      description: '2,500 BTC moved to unknown wallet',
-      time: '25 min ago',
-      severity: 'medium'
-    },
-    {
-      type: 'sniper',
-      icon: Target,
-      title: 'New Token Listed',
-      description: 'NEWCOIN listed on KuCoin with 500% gain',
-      time: '1h ago',
-      severity: 'high'
-    }
+  // Liquidation Alerts Data
+  const liquidationData = [
+    { time: '00:00', amount: 12.5, coin: 'BTC', exchange: 'Binance' },
+    { time: '04:00', amount: 8.3, coin: 'ETH', exchange: 'OKX' },
+    { time: '08:00', amount: 45.2, coin: 'BTC', exchange: 'Bybit' },
+    { time: '12:00', amount: 23.7, coin: 'SOL', exchange: 'Binance' },
+    { time: '16:00', amount: 67.8, coin: 'BTC', exchange: 'Kraken' },
+    { time: '20:00', amount: 34.5, coin: 'ETH', exchange: 'Coinbase' },
   ];
+
+  const liquidationAlerts = [
+    { coin: 'BTC', exchange: 'Binance', amount: '$67.8M', type: 'Long', change: '-12.5%', time: '2 min ago' },
+    { coin: 'ETH', exchange: 'OKX', amount: '$34.5M', type: 'Short', change: '+8.3%', time: '5 min ago' },
+    { coin: 'SOL', exchange: 'Bybit', amount: '$23.7M', type: 'Long', change: '-15.2%', time: '8 min ago' },
+    { coin: 'MATIC', exchange: 'Kraken', amount: '$12.3M', type: 'Long', change: '-9.8%', time: '12 min ago' },
+  ];
+
+  // Pump & Dump Data
+  const pumpDumpData = [
+    { time: '00:00', price: 100, volume: 1000 },
+    { time: '00:15', price: 105, volume: 1500 },
+    { time: '00:30', price: 118, volume: 8500 },
+    { time: '00:45', price: 142, volume: 12000 },
+    { time: '01:00', price: 95, volume: 15000 },
+    { time: '01:15', price: 87, volume: 8000 },
+  ];
+
+  const pumpDumpAlerts = [
+    { coin: 'PEPE', exchange: 'Binance', change: '+247%', volume: '$12.5M', time: '3 min ago', type: 'pump' },
+    { coin: 'SHIB', exchange: 'KuCoin', change: '+89%', volume: '$8.7M', time: '7 min ago', type: 'pump' },
+    { coin: 'DOGE', exchange: 'Coinbase', change: '-45%', volume: '$15.2M', time: '15 min ago', type: 'dump' },
+    { coin: 'FLOKI', exchange: 'OKX', change: '+156%', volume: '$6.3M', time: '22 min ago', type: 'pump' },
+  ];
+
+  // Whale Hunter Data
+  const whaleMovements = [
+    { exchange: 'Binance', amount: 2500, coin: 'BTC', direction: 'in', time: '5 min ago' },
+    { exchange: 'Coinbase', amount: 15000, coin: 'ETH', direction: 'out', time: '12 min ago' },
+    { exchange: 'Kraken', amount: 500000, coin: 'SOL', direction: 'in', time: '18 min ago' },
+    { exchange: 'OKX', amount: 1200, coin: 'BTC', direction: 'out', time: '25 min ago' },
+  ];
+
+  const whaleDistribution = [
+    { name: 'BTC', value: 45, color: '#f59e0b' },
+    { name: 'ETH', value: 30, color: '#3b82f6' },
+    { name: 'SOL', value: 15, color: '#8b5cf6' },
+    { name: 'Others', value: 10, color: '#10b981' },
+  ];
+
+  // Sniper Tools Data
+  const sniperData = [
+    { time: '00:00', listings: 2, gains: 150 },
+    { time: '04:00', listings: 1, gains: 89 },
+    { time: '08:00', listings: 4, gains: 340 },
+    { time: '12:00', listings: 3, gains: 267 },
+    { time: '16:00', listings: 1, gains: 45 },
+    { time: '20:00', listings: 2, gains: 178 },
+  ];
+
+  const sniperAlerts = [
+    { coin: 'NEWCOIN', exchange: 'KuCoin', gain: '+487%', volume: '$2.1M', time: '1 min ago', marketCap: '$45M' },
+    { coin: 'LAUNCH', exchange: 'Binance', gain: '+234%', volume: '$5.8M', time: '8 min ago', marketCap: '$78M' },
+    { coin: 'ROCKET', exchange: 'OKX', gain: '+156%', volume: '$1.2M', time: '15 min ago', marketCap: '$23M' },
+    { coin: 'MOON', exchange: 'Bybit', gain: '+89%', volume: '$3.4M', time: '22 min ago', marketCap: '$56M' },
+  ];
+
+  const chartConfig = {
+    amount: { label: "Amount ($M)", color: "#ef4444" },
+    price: { label: "Price", color: "#3b82f6" },
+    volume: { label: "Volume", color: "#8b5cf6" },
+    listings: { label: "New Listings", color: "#10b981" },
+    gains: { label: "Average Gain %", color: "#f59e0b" },
+  };
 
   const getImpactColor = (impact: string) => {
     switch (impact) {
       case 'high': return 'text-red-500';
       case 'medium': return 'text-yellow-500';
       default: return 'text-green-500';
-    }
-  };
-
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case 'high': return 'border-red-500/50 bg-red-500/10';
-      case 'medium': return 'border-yellow-500/50 bg-yellow-500/10';
-      default: return 'border-green-500/50 bg-green-500/10';
     }
   };
 
@@ -75,7 +108,7 @@ const InsightsAlerts = ({ isDarkMode }: InsightsAlertsProps) => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         {/* Tomorrow's Events */}
         <div className={`p-6 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
@@ -114,7 +147,7 @@ const InsightsAlerts = ({ isDarkMode }: InsightsAlertsProps) => {
           </div>
         </div>
 
-        {/* Live Alerts */}
+        {/* Live Status */}
         <div className={`p-6 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
             ? 'bg-gray-800/50 border-gray-700/50' 
@@ -122,7 +155,7 @@ const InsightsAlerts = ({ isDarkMode }: InsightsAlertsProps) => {
         }`}>
           <div className="flex items-center justify-between mb-6">
             <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              🚨 Live Alerts
+              🚨 Live Status
             </h3>
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
@@ -130,103 +163,316 @@ const InsightsAlerts = ({ isDarkMode }: InsightsAlertsProps) => {
             </div>
           </div>
 
-          <div className="space-y-4">
-            {alerts.map((alert, index) => (
-              <div key={index} className={`p-4 rounded-lg border ${getSeverityColor(alert.severity)} ${
-                isDarkMode ? 'border-opacity-30' : 'border-opacity-50'
-              }`}>
-                <div className="flex items-start space-x-3">
-                  <div className={`p-2 rounded-lg ${
-                    alert.severity === 'high' 
-                      ? 'bg-red-500/20 text-red-500' 
-                      : alert.severity === 'medium'
-                      ? 'bg-yellow-500/20 text-yellow-500'
-                      : 'bg-green-500/20 text-green-500'
-                  }`}>
-                    <alert.icon size={16} />
-                  </div>
-                  <div className="flex-1">
-                    <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      {alert.title}
-                    </div>
-                    <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      {alert.description}
-                    </div>
-                    <div className={`text-xs mt-1 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                      {alert.time}
-                    </div>
-                  </div>
-                </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
+              <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                847
               </div>
-            ))}
+              <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Active Alerts
+              </div>
+            </div>
+            <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
+              <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                15
+              </div>
+              <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Exchanges Tracked
+              </div>
+            </div>
+            <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
+              <div className={`text-2xl font-bold text-red-500`}>
+                $234M
+              </div>
+              <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Liquidations (24h)
+              </div>
+            </div>
+            <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
+              <div className={`text-2xl font-bold text-green-500`}>
+                23
+              </div>
+              <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                New Listings
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Alert Categories */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mt-8">
-        <div className={`p-6 rounded-xl border backdrop-blur-sm text-center ${
-          isDarkMode 
-            ? 'bg-gray-800/50 border-gray-700/50' 
-            : 'bg-white/70 border-gray-200/50'
-        }`}>
-          <div className="p-3 bg-gradient-to-r from-red-500 to-rose-600 rounded-lg inline-block mb-4">
+      {/* Liquidation Alerts */}
+      <div className={`p-6 rounded-xl border backdrop-blur-sm mb-8 ${
+        isDarkMode 
+          ? 'bg-gray-800/50 border-gray-700/50' 
+          : 'bg-white/70 border-gray-200/50'
+      }`}>
+        <div className="flex items-center space-x-3 mb-6">
+          <div className="p-3 bg-gradient-to-r from-red-500 to-rose-600 rounded-lg">
             <AlertTriangle className="text-white" size={24} />
           </div>
-          <h4 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Liquidation Alerts
-          </h4>
-          <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            Track large-scale liquidations across exchanges
-          </p>
+          <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            🚨 Liquidation Alerts
+          </h3>
         </div>
 
-        <div className={`p-6 rounded-xl border backdrop-blur-sm text-center ${
-          isDarkMode 
-            ? 'bg-gray-800/50 border-gray-700/50' 
-            : 'bg-white/70 border-gray-200/50'
-        }`}>
-          <div className="p-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg inline-block mb-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div>
+            <h4 className={`text-lg font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              24h Liquidation Volume
+            </h4>
+            <ChartContainer config={chartConfig} className="h-64">
+              <LineChart data={liquidationData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="time" />
+                <YAxis />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Line type="monotone" dataKey="amount" stroke="#ef4444" strokeWidth={2} />
+              </LineChart>
+            </ChartContainer>
+          </div>
+
+          <div>
+            <h4 className={`text-lg font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              Recent Liquidations
+            </h4>
+            <div className="space-y-3">
+              {liquidationAlerts.map((alert, index) => (
+                <div key={index} className={`flex items-center justify-between p-3 rounded-lg border ${
+                  isDarkMode ? 'bg-gray-700/30 border-gray-600/30' : 'bg-gray-50 border-gray-200'
+                }`}>
+                  <div className="flex items-center space-x-3">
+                    <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {alert.coin}
+                    </div>
+                    <div className={`text-sm px-2 py-1 rounded ${
+                      alert.type === 'Long' ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'
+                    }`}>
+                      {alert.type}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {alert.amount}
+                    </div>
+                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      {alert.exchange} • {alert.time}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Pump & Dump Alerts */}
+      <div className={`p-6 rounded-xl border backdrop-blur-sm mb-8 ${
+        isDarkMode 
+          ? 'bg-gray-800/50 border-gray-700/50' 
+          : 'bg-white/70 border-gray-200/50'
+      }`}>
+        <div className="flex items-center space-x-3 mb-6">
+          <div className="p-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg">
             <TrendingUp className="text-white" size={24} />
           </div>
-          <h4 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Pump & Dump
-          </h4>
-          <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            Detect sudden price movements and anomalies
-          </p>
+          <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            📈 Pump & Dump Detection
+          </h3>
         </div>
 
-        <div className={`p-6 rounded-xl border backdrop-blur-sm text-center ${
-          isDarkMode 
-            ? 'bg-gray-800/50 border-gray-700/50' 
-            : 'bg-white/70 border-gray-200/50'
-        }`}>
-          <div className="p-3 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-lg inline-block mb-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div>
+            <h4 className={`text-lg font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              Price & Volume Pattern
+            </h4>
+            <ChartContainer config={chartConfig} className="h-64">
+              <LineChart data={pumpDumpData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="time" />
+                <YAxis yAxisId="left" />
+                <YAxis yAxisId="right" orientation="right" />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Line yAxisId="left" type="monotone" dataKey="price" stroke="#3b82f6" strokeWidth={2} />
+                <Line yAxisId="right" type="monotone" dataKey="volume" stroke="#8b5cf6" strokeWidth={2} />
+              </LineChart>
+            </ChartContainer>
+          </div>
+
+          <div>
+            <h4 className={`text-lg font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              Active Pump & Dump Alerts
+            </h4>
+            <div className="space-y-3">
+              {pumpDumpAlerts.map((alert, index) => (
+                <div key={index} className={`flex items-center justify-between p-3 rounded-lg border ${
+                  isDarkMode ? 'bg-gray-700/30 border-gray-600/30' : 'bg-gray-50 border-gray-200'
+                }`}>
+                  <div className="flex items-center space-x-3">
+                    <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {alert.coin}
+                    </div>
+                    <div className={`flex items-center text-sm ${
+                      alert.type === 'pump' ? 'text-green-500' : 'text-red-500'
+                    }`}>
+                      {alert.type === 'pump' ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
+                      {alert.change}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {alert.volume}
+                    </div>
+                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      {alert.exchange} • {alert.time}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Whale Hunter */}
+      <div className={`p-6 rounded-xl border backdrop-blur-sm mb-8 ${
+        isDarkMode 
+          ? 'bg-gray-800/50 border-gray-700/50' 
+          : 'bg-white/70 border-gray-200/50'
+      }`}>
+        <div className="flex items-center space-x-3 mb-6">
+          <div className="p-3 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-lg">
             <Eye className="text-white" size={24} />
           </div>
-          <h4 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Whale Hunter
-          </h4>
-          <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            Monitor large wallet movements and transactions
-          </p>
+          <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            🐋 Whale Hunter
+          </h3>
         </div>
 
-        <div className={`p-6 rounded-xl border backdrop-blur-sm text-center ${
-          isDarkMode 
-            ? 'bg-gray-800/50 border-gray-700/50' 
-            : 'bg-white/70 border-gray-200/50'
-        }`}>
-          <div className="p-3 bg-gradient-to-r from-purple-500 to-violet-600 rounded-lg inline-block mb-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div>
+            <h4 className={`text-lg font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              Whale Activity Distribution
+            </h4>
+            <ChartContainer config={chartConfig} className="h-64">
+              <PieChart>
+                <Pie
+                  data={whaleDistribution}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={80}
+                  paddingAngle={5}
+                  dataKey="value"
+                >
+                  {whaleDistribution.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.color} />
+                  ))}
+                </Pie>
+                <ChartTooltip content={<ChartTooltipContent />} />
+              </PieChart>
+            </ChartContainer>
+          </div>
+
+          <div>
+            <h4 className={`text-lg font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              Recent Whale Movements
+            </h4>
+            <div className="space-y-3">
+              {whaleMovements.map((movement, index) => (
+                <div key={index} className={`flex items-center justify-between p-3 rounded-lg border ${
+                  isDarkMode ? 'bg-gray-700/30 border-gray-600/30' : 'bg-gray-50 border-gray-200'
+                }`}>
+                  <div className="flex items-center space-x-3">
+                    <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {movement.amount.toLocaleString()} {movement.coin}
+                    </div>
+                    <div className={`flex items-center text-sm px-2 py-1 rounded ${
+                      movement.direction === 'in' 
+                        ? 'bg-green-500/20 text-green-500' 
+                        : 'bg-red-500/20 text-red-500'
+                    }`}>
+                      {movement.direction === 'in' ? <ArrowDownRight size={14} /> : <ArrowUpRight size={14} />}
+                      {movement.direction === 'in' ? 'Inflow' : 'Outflow'}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {movement.exchange}
+                    </div>
+                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      {movement.time}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Sniper Tools */}
+      <div className={`p-6 rounded-xl border backdrop-blur-sm mb-8 ${
+        isDarkMode 
+          ? 'bg-gray-800/50 border-gray-700/50' 
+          : 'bg-white/70 border-gray-200/50'
+      }`}>
+        <div className="flex items-center space-x-3 mb-6">
+          <div className="p-3 bg-gradient-to-r from-purple-500 to-violet-600 rounded-lg">
             <Target className="text-white" size={24} />
           </div>
-          <h4 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Sniper Tools
-          </h4>
-          <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            Early alerts for new listings and trending tokens
-          </p>
+          <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            🎯 Sniper Tools
+          </h3>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div>
+            <h4 className={`text-lg font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              New Listings Performance
+            </h4>
+            <ChartContainer config={chartConfig} className="h-64">
+              <BarChart data={sniperData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="time" />
+                <YAxis yAxisId="left" />
+                <YAxis yAxisId="right" orientation="right" />
+                <ChartTooltip content={<ChartTooltipContent />} />
+                <Bar yAxisId="left" dataKey="listings" fill="#10b981" />
+                <Bar yAxisId="right" dataKey="gains" fill="#f59e0b" />
+              </BarChart>
+            </ChartContainer>
+          </div>
+
+          <div>
+            <h4 className={`text-lg font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              Hot New Listings
+            </h4>
+            <div className="space-y-3">
+              {sniperAlerts.map((alert, index) => (
+                <div key={index} className={`flex items-center justify-between p-3 rounded-lg border ${
+                  isDarkMode ? 'bg-gray-700/30 border-gray-600/30' : 'bg-gray-50 border-gray-200'
+                }`}>
+                  <div className="flex items-center space-x-3">
+                    <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {alert.coin}
+                    </div>
+                    <div className="flex items-center text-sm text-green-500">
+                      <ArrowUpRight size={16} />
+                      {alert.gain}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {alert.marketCap}
+                    </div>
+                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      {alert.exchange} • {alert.time}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
