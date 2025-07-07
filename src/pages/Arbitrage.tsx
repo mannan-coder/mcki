@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
-import { TrendingUp, RefreshCw, ExternalLink, BarChart3, Clock, DollarSign, Target, Zap, Bell, Download, TrendingDown } from 'lucide-react';
+import { TrendingUp, RefreshCw, ExternalLink, BarChart3, Clock, DollarSign, Target, Zap } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { useToast } from '@/hooks/use-toast';
 
 interface ArbitrageOpportunity {
   id: number;
@@ -40,12 +39,6 @@ const ArbitragePage = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedCoin, setSelectedCoin] = useState('BTC');
   const [sortBy, setSortBy] = useState('spread');
-  const [showPriceAlertModal, setShowPriceAlertModal] = useState(false);
-  const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
-  const [webhookUrl, setWebhookUrl] = useState('');
-  const [alertThreshold, setAlertThreshold] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
 
   const arbitrageData: ArbitrageOpportunity[] = [
     {
@@ -247,6 +240,106 @@ const ArbitragePage = () => {
       liquidityDepth: '$143K',
       lastUpdated: '9s ago',
       priceHistory: [9.82, 9.84, 9.86, 9.87]
+    },
+    {
+      id: 11,
+      symbol: 'XRP',
+      name: 'Ripple',
+      buyExchange: 'Huobi',
+      sellExchange: 'Binance',
+      buyPrice: 0.52,
+      sellPrice: 0.534,
+      spread: 2.69,
+      profit: '$0.014',
+      netProfit: '$0.012',
+      volume: '7.3M',
+      confidence: 94,
+      timeToExecute: '3-6 min',
+      risk: 'Low',
+      fees: '$0.002',
+      liquidityDepth: '$298K',
+      lastUpdated: '5s ago',
+      priceHistory: [0.518, 0.519, 0.520, 0.52]
+    },
+    {
+      id: 12,
+      symbol: 'LTC',
+      name: 'Litecoin',
+      buyExchange: 'Bitfinex',
+      sellExchange: 'Kraken',
+      buyPrice: 98.45,
+      sellPrice: 101.2,
+      spread: 2.79,
+      profit: '$2.75',
+      netProfit: '$2.58',
+      volume: '2.1M',
+      confidence: 88,
+      timeToExecute: '4-8 min',
+      risk: 'Medium',
+      fees: '$0.17',
+      liquidityDepth: '$156K',
+      lastUpdated: '7s ago',
+      priceHistory: [98.2, 98.3, 98.4, 98.45]
+    },
+    {
+      id: 13,
+      symbol: 'ICP',
+      name: 'Internet Computer',
+      buyExchange: 'Gate.io',
+      sellExchange: 'OKX',
+      buyPrice: 12.84,
+      sellPrice: 13.45,
+      spread: 4.75,
+      profit: '$0.61',
+      netProfit: '$0.56',
+      volume: '1.2M',
+      confidence: 82,
+      timeToExecute: '6-10 min',
+      risk: 'High',
+      fees: '$0.05',
+      liquidityDepth: '$87K',
+      lastUpdated: '11s ago',
+      priceHistory: [12.75, 12.78, 12.81, 12.84]
+    },
+    {
+      id: 14,
+      symbol: 'APT',
+      name: 'Aptos',
+      buyExchange: 'MEXC',
+      sellExchange: 'Coinbase',
+      buyPrice: 14.67,
+      sellPrice: 15.28,
+      spread: 4.16,
+      profit: '$0.61',
+      netProfit: '$0.56',
+      volume: '3.8M',
+      confidence: 85,
+      timeToExecute: '5-9 min',
+      risk: 'Medium',
+      fees: '$0.05',
+      liquidityDepth: '$194K',
+      lastUpdated: '4s ago',
+      priceHistory: [14.60, 14.63, 14.65, 14.67]
+    },
+    {
+      id: 15,
+      symbol: 'NEAR',
+      name: 'NEAR Protocol',
+      buyExchange: 'Bybit',
+      sellExchange: 'Binance',
+      buyPrice: 5.82,
+      sellPrice: 6.12,
+      spread: 5.15,
+      profit: '$0.30',
+      netProfit: '$0.27',
+      volume: '2.4M',
+      confidence: 79,
+      timeToExecute: '7-12 min',
+      risk: 'High',
+      fees: '$0.03',
+      liquidityDepth: '$102K',
+      lastUpdated: '8s ago',
+      priceHistory: [5.78, 5.79, 5.81, 5.82]
     }
   ];
 
@@ -256,135 +349,28 @@ const ArbitragePage = () => {
       { exchange: 'Coinbase', price: 67825, volume24h: '$32.1B', change24h: 2.2, lastUpdate: '3s ago', spread: 0.08, orderBookDepth: '$2.1M' },
       { exchange: 'KuCoin', price: 67150, volume24h: '$28.7B', change24h: 1.8, lastUpdate: '2s ago', spread: 0.12, orderBookDepth: '$1.9M' },
       { exchange: 'OKX', price: 67945, volume24h: '$41.3B', change24h: 2.6, lastUpdate: '4s ago', spread: 0.06, orderBookDepth: '$2.5M' },
-      { exchange: 'Kraken', price: 67780, volume24h: '$19.8B', change24h: 2.1, lastUpdate: '5s ago', spread: 0.09, orderBookDepth: '$1.4M' }
+      { exchange: 'Kraken', price: 67780, volume24h: '$19.8B', change24h: 2.1, lastUpdate: '5s ago', spread: 0.09, orderBookDepth: '$1.4M' },
+      { exchange: 'Huobi', price: 67675, volume24h: '$15.2B', change24h: 1.9, lastUpdate: '6s ago', spread: 0.11, orderBookDepth: '$1.1M' },
+      { exchange: 'Bitfinex', price: 67920, volume24h: '$12.8B', change24h: 2.3, lastUpdate: '4s ago', spread: 0.07, orderBookDepth: '$980K' }
     ],
     ETH: [
       { exchange: 'Binance', price: 3845, volume24h: '$28.4B', change24h: 1.8, lastUpdate: '3s ago', spread: 0.04, orderBookDepth: '$1.8M' },
       { exchange: 'Coinbase', price: 3820, volume24h: '$24.1B', change24h: 1.6, lastUpdate: '2s ago', spread: 0.07, orderBookDepth: '$1.5M' },
       { exchange: 'KuCoin', price: 3856, volume24h: '$16.2B', change24h: 1.9, lastUpdate: '4s ago', spread: 0.09, orderBookDepth: '$1.2M' },
       { exchange: 'OKX', price: 3865, volume24h: '$22.7B', change24h: 2.0, lastUpdate: '3s ago', spread: 0.05, orderBookDepth: '$1.6M' },
-      { exchange: 'Kraken', price: 3838, volume24h: '$12.9B', change24h: 1.7, lastUpdate: '6s ago', spread: 0.08, orderBookDepth: '$1.1M' }
+      { exchange: 'Kraken', price: 3838, volume24h: '$12.9B', change24h: 1.7, lastUpdate: '6s ago', spread: 0.08, orderBookDepth: '$1.1M' },
+      { exchange: 'Huobi', price: 3842, volume24h: '$9.4B', change24h: 1.8, lastUpdate: '5s ago', spread: 0.06, orderBookDepth: '$890K' },
+      { exchange: 'Bitfinex', price: 3851, volume24h: '$7.2B', change24h: 1.9, lastUpdate: '7s ago', spread: 0.08, orderBookDepth: '$720K' }
     ],
     SOL: [
       { exchange: 'Binance', price: 178.9, volume24h: '$8.2B', change24h: -0.7, lastUpdate: '4s ago', spread: 0.06, orderBookDepth: '$680K' },
       { exchange: 'Coinbase', price: 179.2, volume24h: '$6.1B', change24h: -0.5, lastUpdate: '5s ago', spread: 0.09, orderBookDepth: '$520K' },
       { exchange: 'KuCoin', price: 177.8, volume24h: '$4.8B', change24h: -0.9, lastUpdate: '7s ago', spread: 0.11, orderBookDepth: '$410K' },
       { exchange: 'OKX', price: 178.4, volume24h: '$5.9B', change24h: -0.6, lastUpdate: '6s ago', spread: 0.08, orderBookDepth: '$580K' },
-      { exchange: 'Kraken', price: 176.2, volume24h: '$3.2B', change24h: -1.2, lastUpdate: '8s ago', spread: 0.12, orderBookDepth: '$340K' }
-    ],
-    AVAX: [
-      { exchange: 'Binance', price: 43.12, volume24h: '$3.8B', change24h: 1.2, lastUpdate: '3s ago', spread: 0.07, orderBookDepth: '$420K' },
-      { exchange: 'Coinbase', price: 43.35, volume24h: '$2.9B', change24h: 1.5, lastUpdate: '4s ago', spread: 0.09, orderBookDepth: '$380K' },
-      { exchange: 'KuCoin', price: 42.98, volume24h: '$2.1B', change24h: 0.9, lastUpdate: '6s ago', spread: 0.11, orderBookDepth: '$290K' },
-      { exchange: 'OKX', price: 43.28, volume24h: '$3.2B', change24h: 1.4, lastUpdate: '4s ago', spread: 0.08, orderBookDepth: '$350K' },
-      { exchange: 'Kraken', price: 42.15, volume24h: '$1.7B', change24h: 0.6, lastUpdate: '5s ago', spread: 0.13, orderBookDepth: '$240K' }
-    ],
-    DOT: [
-      { exchange: 'Binance', price: 8.42, volume24h: '$1.9B', change24h: 0.8, lastUpdate: '5s ago', spread: 0.06, orderBookDepth: '$180K' },
-      { exchange: 'Coinbase', price: 8.58, volume24h: '$1.4B', change24h: 1.1, lastUpdate: '3s ago', spread: 0.08, orderBookDepth: '$150K' },
-      { exchange: 'KuCoin', price: 8.51, volume24h: '$0.9B', change24h: 0.9, lastUpdate: '7s ago', spread: 0.10, orderBookDepth: '$120K' },
-      { exchange: 'OKX', price: 8.49, volume24h: '$1.2B', change24h: 1.0, lastUpdate: '6s ago', spread: 0.07, orderBookDepth: '$140K' },
-      { exchange: 'Kraken', price: 8.46, volume24h: '$0.7B', change24h: 0.7, lastUpdate: '8s ago', spread: 0.09, orderBookDepth: '$110K' }
-    ],
-    LINK: [
-      { exchange: 'Binance', price: 14.52, volume24h: '$2.8B', change24h: -0.3, lastUpdate: '4s ago', spread: 0.05, orderBookDepth: '$320K' },
-      { exchange: 'Coinbase', price: 14.48, volume24h: '$2.1B', change24h: -0.5, lastUpdate: '5s ago', spread: 0.07, orderBookDepth: '$280K' },
-      { exchange: 'KuCoin', price: 14.65, volume24h: '$1.6B', change24h: -0.1, lastUpdate: '3s ago', spread: 0.09, orderBookDepth: '$220K' },
-      { exchange: 'OKX', price: 14.28, volume24h: '$2.3B', change24h: -0.7, lastUpdate: '6s ago', spread: 0.06, orderBookDepth: '$260K' },
-      { exchange: 'Kraken', price: 14.41, volume24h: '$1.2B', change24h: -0.4, lastUpdate: '7s ago', spread: 0.08, orderBookDepth: '$190K' }
+      { exchange: 'Kraken', price: 176.2, volume24h: '$3.2B', change24h: -1.2, lastUpdate: '8s ago', spread: 0.12, orderBookDepth: '$340K' },
+      { exchange: 'Huobi', price: 177.5, volume24h: '$2.8B', change24h: -0.8, lastUpdate: '9s ago', spread: 0.10, orderBookDepth: '$290K' },
+      { exchange: 'Bybit', price: 176.8, volume24h: '$3.5B', change24h: -1.0, lastUpdate: '7s ago', spread: 0.11, orderBookDepth: '$310K' }
     ]
-  };
-
-  const handlePriceAlert = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!webhookUrl || !alertThreshold) {
-      toast({
-        title: "Error",
-        description: "Please enter both webhook URL and threshold",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const response = await fetch(webhookUrl, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        mode: "no-cors",
-        body: JSON.stringify({
-          action: "setup_price_alert",
-          coin: selectedCoin,
-          threshold: alertThreshold,
-          timestamp: new Date().toISOString(),
-          triggered_from: window.location.origin,
-        }),
-      });
-
-      toast({
-        title: "Alert Setup Sent",
-        description: `Price alert for ${selectedCoin} at ${alertThreshold}% spread sent to Zapier. Check your Zap history to confirm.`,
-      });
-      
-      setShowPriceAlertModal(false);
-      setWebhookUrl('');
-      setAlertThreshold('');
-    } catch (error) {
-      console.error("Error setting up alert:", error);
-      toast({
-        title: "Error",
-        description: "Failed to setup price alert. Please check the webhook URL and try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleExportData = () => {
-    const exportData = {
-      arbitrage_opportunities: arbitrageData,
-      exchange_rates: exchangeRates,
-      market_stats: {
-        total_opportunities: arbitrageData.length,
-        average_spread: (arbitrageData.reduce((sum, op) => sum + op.spread, 0) / arbitrageData.length).toFixed(2),
-        total_volume: '21.0M',
-        average_execution_time: '4.2 min'
-      },
-      export_timestamp: new Date().toISOString()
-    };
-    
-    const dataStr = JSON.stringify(exportData, null, 2);
-    const dataBlob = new Blob([dataStr], {type: 'application/json'});
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `arbitrage_data_${new Date().toISOString().split('T')[0]}.json`;
-    link.click();
-    
-    toast({
-      title: "Data Exported",
-      description: "Arbitrage data has been downloaded successfully.",
-    });
-  };
-
-  const calculatePortfolioStats = () => {
-    const totalOpportunities = arbitrageData.length;
-    const highConfidenceOps = arbitrageData.filter(op => op.confidence >= 90).length;
-    const lowRiskOps = arbitrageData.filter(op => op.risk === 'Low').length;
-    const avgProfit = arbitrageData.reduce((sum, op) => sum + parseFloat(op.netProfit.replace('$', '')), 0) / totalOpportunities;
-    
-    return {
-      totalOpportunities,
-      highConfidenceOps,
-      lowRiskOps,
-      avgProfit: avgProfit.toFixed(2),
-      successRate: ((highConfidenceOps / totalOpportunities) * 100).toFixed(1)
-    };
   };
 
   const handleRefresh = async () => {
@@ -663,7 +649,7 @@ const ArbitragePage = () => {
                 📊 Exchange Rates
               </h2>
               <div className="flex flex-wrap gap-2">
-                {['BTC', 'ETH', 'SOL', 'AVAX', 'DOT', 'LINK'].map((coin) => (
+                {['BTC', 'ETH', 'SOL', 'AVAX', 'DOT', 'LINK', 'XRP', 'LTC', 'ICP', 'APT', 'NEAR'].map((coin) => (
                   <button
                     key={coin}
                     onClick={() => setSelectedCoin(coin)}
@@ -747,38 +733,33 @@ const ArbitragePage = () => {
                 : 'bg-white/90 border-gray-200/60'
             }`}>
               <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                Quick Actions
+                Market Overview
               </h3>
               <div className="space-y-2">
-                <button 
-                  onClick={() => setShowPriceAlertModal(true)}
-                  className={`w-full px-4 py-2 rounded-lg border transition-colors flex items-center justify-center space-x-2 ${
-                    isDarkMode 
-                      ? 'border-gray-600 hover:bg-gray-700/50 text-gray-300' 
-                      : 'border-gray-300 hover:bg-gray-50 text-gray-700'
-                  }`}
-                >
-                  <Bell size={16} />
-                  <span>Set Price Alerts</span>
-                </button>
-                <button 
-                  onClick={handleExportData}
-                  className={`w-full px-4 py-2 rounded-lg border transition-colors flex items-center justify-center space-x-2 ${
-                    isDarkMode 
-                      ? 'border-gray-600 hover:bg-gray-700/50 text-gray-300' 
-                      : 'border-gray-300 hover:bg-gray-50 text-gray-700'
-                  }`}
-                >
-                  <Download size={16} />
-                  <span>Export Data</span>
-                </button>
-                <button 
-                  onClick={() => setShowAnalyticsModal(true)}
-                  className={`w-full px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white transition-colors flex items-center justify-center space-x-2`}
-                >
-                  <BarChart3 size={16} />
-                  <span>View Analytics</span>
-                </button>
+                <div className="flex justify-between items-center">
+                  <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Active Pairs
+                  </span>
+                  <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    {arbitrageData.length}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Exchanges
+                  </span>
+                  <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    12
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                    Best Spread
+                  </span>
+                  <span className="font-medium text-green-500">
+                    {Math.max(...arbitrageData.map(op => op.spread)).toFixed(2)}%
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -871,7 +852,7 @@ const ArbitragePage = () => {
                       <div className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                         Exchange Comparison
                       </div>
-                      {rates.slice(0, 3).map((rate, index) => (
+                      {rates.slice(0, 4).map((rate, index) => (
                         <div key={index} className="flex items-center justify-between">
                           <div className="flex items-center space-x-2">
                             <div className={`w-2 h-2 rounded-full ${
@@ -913,188 +894,6 @@ const ArbitragePage = () => {
           </div>
         </div>
       </main>
-
-      {/* Price Alert Modal */}
-      {showPriceAlertModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className={`rounded-xl border backdrop-blur-sm p-6 w-full max-w-md ${
-            isDarkMode 
-              ? 'bg-gray-800/90 border-gray-700/60' 
-              : 'bg-white/90 border-gray-200/60'
-          }`}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                Setup Price Alert
-              </h3>
-              <button 
-                onClick={() => setShowPriceAlertModal(false)}
-                className={`p-2 rounded-lg ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
-              >
-                ✕
-              </button>
-            </div>
-            
-            <form onSubmit={handlePriceAlert} className="space-y-4">
-              <div>
-                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Selected Coin: {selectedCoin}
-                </label>
-              </div>
-              
-              <div>
-                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Alert Threshold (% spread)
-                </label>
-                <input
-                  type="number"
-                  step="0.1"
-                  value={alertThreshold}
-                  onChange={(e) => setAlertThreshold(e.target.value)}
-                  placeholder="e.g. 2.5"
-                  className={`w-full px-3 py-2 rounded-lg border transition-colors ${
-                    isDarkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                  }`}
-                />
-              </div>
-              
-              <div>
-                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Zapier Webhook URL
-                </label>
-                <input
-                  type="url"
-                  value={webhookUrl}
-                  onChange={(e) => setWebhookUrl(e.target.value)}
-                  placeholder="https://hooks.zapier.com/hooks/catch/..."
-                  className={`w-full px-3 py-2 rounded-lg border transition-colors ${
-                    isDarkMode 
-                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
-                  }`}
-                />
-                <p className={`text-xs mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Create a Zap with webhook trigger to receive alerts
-                </p>
-              </div>
-              
-              <div className="flex space-x-3">
-                <button
-                  type="button"
-                  onClick={() => setShowPriceAlertModal(false)}
-                  className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
-                    isDarkMode 
-                      ? 'border-gray-600 hover:bg-gray-700 text-gray-300' 
-                      : 'border-gray-300 hover:bg-gray-50 text-gray-700'
-                  }`}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={isLoading}
-                  className="flex-1 px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white transition-colors disabled:opacity-50"
-                >
-                  {isLoading ? 'Setting up...' : 'Setup Alert'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Analytics Modal */}
-      {showAnalyticsModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className={`rounded-xl border backdrop-blur-sm p-6 w-full max-w-2xl ${
-            isDarkMode 
-              ? 'bg-gray-800/90 border-gray-700/60' 
-              : 'bg-white/90 border-gray-200/60'
-          }`}>
-            <div className="flex items-center justify-between mb-6">
-              <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                📊 Advanced Analytics
-              </h3>
-              <button 
-                onClick={() => setShowAnalyticsModal(false)}
-                className={`p-2 rounded-lg ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
-              >
-                ✕
-              </button>
-            </div>
-            
-            {(() => {
-              const stats = calculatePortfolioStats();
-              return (
-                <div className="space-y-6">
-                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    <div className={`p-4 rounded-lg border ${isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
-                      <div className="text-2xl font-bold text-green-500">{stats.totalOpportunities}</div>
-                      <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Total Opportunities</div>
-                    </div>
-                    <div className={`p-4 rounded-lg border ${isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
-                      <div className="text-2xl font-bold text-blue-500">{stats.successRate}%</div>
-                      <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Success Rate</div>
-                    </div>
-                    <div className={`p-4 rounded-lg border ${isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
-                      <div className="text-2xl font-bold text-purple-500">${stats.avgProfit}</div>
-                      <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Avg Profit</div>
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <h4 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        Risk Distribution
-                      </h4>
-                      <div className="space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Low Risk</span>
-                          <span className="text-green-500 font-medium">{stats.lowRiskOps} ops</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Medium Risk</span>
-                          <span className="text-yellow-500 font-medium">{arbitrageData.filter(op => op.risk === 'Medium').length} ops</span>
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>High Risk</span>
-                          <span className="text-red-500 font-medium">{arbitrageData.filter(op => op.risk === 'High').length} ops</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <h4 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        Top Performers
-                      </h4>
-                      <div className="space-y-2">
-                        {arbitrageData.slice(0, 3).map((op, index) => (
-                          <div key={index} className="flex items-center justify-between">
-                            <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                              {op.symbol}
-                            </span>
-                            <span className="text-green-500 font-medium">{op.spread}%</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="pt-4 border-t border-gray-600">
-                    <button
-                      onClick={() => setShowAnalyticsModal(false)}
-                      className="w-full px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white transition-colors"
-                    >
-                      Close Analytics
-                    </button>
-                  </div>
-                </div>
-              );
-            })()}
-          </div>
-        </div>
-      )}
 
       <Footer isDarkMode={isDarkMode} />
     </div>
