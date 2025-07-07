@@ -1,7 +1,6 @@
 
-import { TrendingUp, ExternalLink, RefreshCw } from 'lucide-react';
+import { TrendingUp, RefreshCw } from 'lucide-react';
 import { useState } from 'react';
-import { useToast } from "@/hooks/use-toast";
 
 interface ArbitrageDashboardProps {
   isDarkMode: boolean;
@@ -9,8 +8,6 @@ interface ArbitrageDashboardProps {
 
 const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [executingTrades, setExecutingTrades] = useState<Set<number>>(new Set());
-  const { toast } = useToast();
 
   const arbitrageOpportunities = [
     {
@@ -157,51 +154,6 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
     setIsRefreshing(false);
   };
 
-  const handleExecuteTrade = async (index: number, opportunity: any) => {
-    if (executingTrades.has(index)) return;
-
-    const newExecutingTrades = new Set(executingTrades);
-    newExecutingTrades.add(index);
-    setExecutingTrades(newExecutingTrades);
-
-    toast({
-      title: "Executing Trade",
-      description: `Initiating ${opportunity.symbol} arbitrage between ${opportunity.buyExchange} and ${opportunity.sellExchange}...`,
-    });
-
-    try {
-      // Simulate trade execution time
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      
-      // Simulate success/failure based on confidence and risk
-      const successRate = opportunity.confidence * (opportunity.risk === 'Low' ? 1.1 : opportunity.risk === 'Medium' ? 0.9 : 0.7);
-      const isSuccess = Math.random() * 100 < successRate;
-
-      if (isSuccess) {
-        toast({
-          title: "Trade Executed Successfully! 🎉",
-          description: `${opportunity.symbol} arbitrage completed. Estimated profit: ${opportunity.netProfit}`,
-        });
-      } else {
-        toast({
-          title: "Trade Execution Failed",
-          description: `${opportunity.symbol} arbitrage failed due to market conditions. No funds lost.`,
-          variant: "destructive",
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "Execution Error",
-        description: "Failed to execute trade. Please try again.",
-        variant: "destructive",
-      });
-    } finally {
-      const updatedExecutingTrades = new Set(executingTrades);
-      updatedExecutingTrades.delete(index);
-      setExecutingTrades(updatedExecutingTrades);
-    }
-  };
-
   return (
     <section id="arbitrage" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="flex items-center justify-between mb-8">
@@ -338,23 +290,9 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                     <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>
                       Net: <span className="font-medium">{opportunity.netProfit}</span>
                     </div>
-                    <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'} mb-2`}>
+                    <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
                       Fees: {opportunity.fees}
                     </div>
-                    <button 
-                      onClick={() => handleExecuteTrade(index, opportunity)}
-                      disabled={executingTrades.has(index)}
-                      className={`inline-flex items-center space-x-1 text-xs px-3 py-1.5 rounded transition-all duration-200 ${
-                        executingTrades.has(index)
-                          ? 'bg-gray-200 text-gray-500 cursor-not-allowed'
-                          : isDarkMode
-                            ? 'text-blue-400 hover:text-blue-300 bg-blue-900/30 hover:bg-blue-900/50 border border-blue-700/50'
-                            : 'text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200'
-                      }`}
-                    >
-                      <span>{executingTrades.has(index) ? 'Executing...' : 'Execute'}</span>
-                      <ExternalLink size={10} />
-                    </button>
                   </div>
                 </div>
               </div>
