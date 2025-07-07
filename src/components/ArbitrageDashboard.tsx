@@ -18,7 +18,14 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
       sellPrice: 67890,
       spread: 1.1,
       profit: '$740',
-      volume: '2.5M'
+      volume: '2.5M',
+      confidence: 95,
+      timeToExecute: '3-5 min',
+      risk: 'Low',
+      fees: '$12.50',
+      netProfit: '$727.50',
+      liquidityDepth: '$847K',
+      lastUpdated: '2s ago'
     },
     {
       symbol: 'ETH',
@@ -28,7 +35,14 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
       sellPrice: 3865,
       spread: 1.18,
       profit: '$45',
-      volume: '8.2M'
+      volume: '8.2M',
+      confidence: 92,
+      timeToExecute: '2-4 min',
+      risk: 'Low',
+      fees: '$3.80',
+      netProfit: '$41.20',
+      liquidityDepth: '$1.2M',
+      lastUpdated: '5s ago'
     },
     {
       symbol: 'SOL',
@@ -38,7 +52,14 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
       sellPrice: 178.9,
       spread: 1.53,
       profit: '$2.70',
-      volume: '1.8M'
+      volume: '1.8M',
+      confidence: 88,
+      timeToExecute: '4-6 min',
+      risk: 'Medium',
+      fees: '$0.45',
+      netProfit: '$2.25',
+      liquidityDepth: '$234K',
+      lastUpdated: '8s ago'
     },
     {
       symbol: 'ADA',
@@ -48,7 +69,14 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
       sellPrice: 0.657,
       spread: 1.39,
       profit: '$0.009',
-      volume: '5.1M'
+      volume: '5.1M',
+      confidence: 85,
+      timeToExecute: '5-8 min',
+      risk: 'Medium',
+      fees: '$0.002',
+      netProfit: '$0.007',
+      liquidityDepth: '$89K',
+      lastUpdated: '12s ago'
     },
     {
       symbol: 'MATIC',
@@ -58,8 +86,66 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
       sellPrice: 0.882,
       spread: 1.96,
       profit: '$0.017',
-      volume: '3.4M'
+      volume: '3.4M',
+      confidence: 90,
+      timeToExecute: '3-7 min',
+      risk: 'Low',
+      fees: '$0.003',
+      netProfit: '$0.014',
+      liquidityDepth: '$156K',
+      lastUpdated: '6s ago'
     },
+    {
+      symbol: 'DOT',
+      buyExchange: 'Bitget',
+      sellExchange: 'Kraken',
+      buyPrice: 8.42,
+      sellPrice: 8.58,
+      spread: 1.90,
+      profit: '$0.16',
+      volume: '1.2M',
+      confidence: 87,
+      timeToExecute: '4-6 min',
+      risk: 'Medium',
+      fees: '$0.025',
+      netProfit: '$0.135',
+      liquidityDepth: '$78K',
+      lastUpdated: '15s ago'
+    },
+    {
+      symbol: 'AVAX',
+      buyExchange: 'Gate.io',
+      sellExchange: 'Binance',
+      buyPrice: 45.67,
+      sellPrice: 46.42,
+      spread: 1.64,
+      profit: '$0.75',
+      volume: '892K',
+      confidence: 83,
+      timeToExecute: '6-9 min',
+      risk: 'High',
+      fees: '$0.18',
+      netProfit: '$0.57',
+      liquidityDepth: '$45K',
+      lastUpdated: '23s ago'
+    },
+    {
+      symbol: 'LINK',
+      buyExchange: 'Huobi',
+      sellExchange: 'OKX',
+      buyPrice: 18.34,
+      sellPrice: 18.65,
+      spread: 1.69,
+      profit: '$0.31',
+      volume: '2.1M',
+      confidence: 91,
+      timeToExecute: '2-5 min',
+      risk: 'Low',
+      fees: '$0.065',
+      netProfit: '$0.245',
+      liquidityDepth: '$167K',
+      lastUpdated: '4s ago'
+    }
   ];
 
   const handleRefresh = async () => {
@@ -112,7 +198,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
           {arbitrageOpportunities.map((opportunity, index) => (
             <div key={index} className={`px-6 py-4 hover:bg-gray-500/10 transition-colors cursor-pointer`}>
               <div className="grid grid-cols-2 md:grid-cols-7 gap-4 items-center">
-                {/* Coin */}
+                 {/* Coin */}
                 <div className="flex items-center space-x-3">
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
                     isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
@@ -124,7 +210,19 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                       {opportunity.symbol}
                     </div>
                     <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      Vol: {opportunity.volume}
+                      Vol: {opportunity.volume} • {opportunity.lastUpdated}
+                    </div>
+                    <div className={`text-xs flex items-center space-x-2 mt-1`}>
+                      <span className={`px-1.5 py-0.5 rounded text-xs font-medium ${
+                        opportunity.risk === 'Low' ? 'bg-green-100 text-green-700' :
+                        opportunity.risk === 'Medium' ? 'bg-yellow-100 text-yellow-700' :
+                        'bg-red-100 text-red-700'
+                      }`}>
+                        {opportunity.risk}
+                      </span>
+                      <span className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
+                        {opportunity.confidence}% confidence
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -172,10 +270,16 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
 
                 {/* Profit */}
                 <div className="text-right">
-                  <div className={`font-bold text-green-500`}>
+                  <div className={`font-bold text-green-500 mb-1`}>
                     {opportunity.profit}
                   </div>
-                  <button className="text-xs text-blue-500 hover:text-blue-400 flex items-center space-x-1 mt-1">
+                  <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>
+                    Net: {opportunity.netProfit}
+                  </div>
+                  <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'} mb-2`}>
+                    Fees: {opportunity.fees} • {opportunity.timeToExecute}
+                  </div>
+                  <button className="text-xs text-blue-500 hover:text-blue-400 flex items-center space-x-1 justify-end">
                     <span>Execute</span>
                     <ExternalLink size={10} />
                   </button>
