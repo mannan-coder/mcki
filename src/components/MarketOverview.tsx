@@ -339,7 +339,7 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
             : 'bg-white/70 border-gray-200/50'
         }`}>
           <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Additional Stats
+            Advanced Market Metrics
           </h3>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
@@ -349,9 +349,45 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>NFT Volume</span>
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Derivatives Volume</span>
+              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                $89.7B
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Futures Open Interest</span>
+              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                $34.2B
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>NFT Volume (24h)</span>
               <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 $892.4M
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Cross-chain Volume</span>
+              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                $4.8B
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Institutional Holdings</span>
+              <span className="text-blue-500 font-semibold text-sm">
+                68.4%
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Liquidations (24h)</span>
+              <span className="text-red-500 font-semibold text-sm">
+                $142.7M
+              </span>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Long/Short Ratio</span>
+              <span className="text-green-500 font-semibold text-sm">
+                2.1:1
               </span>
             </div>
             <div className="flex items-center justify-between">
