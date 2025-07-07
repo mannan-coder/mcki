@@ -387,6 +387,229 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
           </div>
         </div>
       </div>
+
+      {/* Coin Prices Across Exchanges */}
+      <section className="mt-12">
+        <div className="mb-8">
+          <h2 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            Live Exchange Prices
+          </h2>
+          <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            Real-time cryptocurrency prices across major exchanges
+          </p>
+        </div>
+
+        <div className={`rounded-xl border backdrop-blur-sm overflow-hidden ${
+          isDarkMode 
+            ? 'bg-gray-800/80 border-gray-700/60' 
+            : 'bg-white/90 border-gray-200/60'
+        }`}>
+          {/* Header */}
+          <div className={`px-6 py-4 border-b ${isDarkMode ? 'border-gray-700/60 bg-gray-800/90' : 'border-gray-200/60 bg-gray-50/80'}`}>
+            <div className="grid grid-cols-7 gap-4 text-sm font-semibold items-center">
+              <div className={`col-span-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Cryptocurrency</div>
+              <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Binance</div>
+              <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Coinbase</div>
+              <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>KuCoin</div>
+              <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>OKX</div>
+              <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Kraken</div>
+            </div>
+          </div>
+
+          {/* Price Data */}
+          <div className={`divide-y ${isDarkMode ? 'divide-gray-700/40' : 'divide-gray-200/40'}`}>
+            {[
+              {
+                symbol: 'BTC',
+                name: 'Bitcoin',
+                prices: {
+                  binance: 67890,
+                  coinbase: 67825,
+                  kucoin: 67150,
+                  okx: 67945,
+                  kraken: 67780
+                },
+                change24h: 2.4
+              },
+              {
+                symbol: 'ETH',
+                name: 'Ethereum',
+                prices: {
+                  binance: 3845,
+                  coinbase: 3820,
+                  kucoin: 3856,
+                  okx: 3865,
+                  kraken: 3838
+                },
+                change24h: 1.8
+              },
+              {
+                symbol: 'SOL',
+                name: 'Solana',
+                prices: {
+                  binance: 178.9,
+                  coinbase: 179.2,
+                  kucoin: 177.8,
+                  okx: 178.4,
+                  kraken: 176.2
+                },
+                change24h: -0.7
+              },
+              {
+                symbol: 'ADA',
+                name: 'Cardano',
+                prices: {
+                  binance: 0.648,
+                  coinbase: 0.652,
+                  kucoin: 0.657,
+                  okx: 0.649,
+                  kraken: 0.645
+                },
+                change24h: 3.2
+              },
+              {
+                symbol: 'MATIC',
+                name: 'Polygon',
+                prices: {
+                  binance: 0.878,
+                  coinbase: 0.882,
+                  kucoin: 0.875,
+                  okx: 0.865,
+                  kraken: 0.881
+                },
+                change24h: 5.1
+              },
+              {
+                symbol: 'DOT',
+                name: 'Polkadot',
+                prices: {
+                  binance: 8.52,
+                  coinbase: 8.48,
+                  kucoin: 8.55,
+                  okx: 8.51,
+                  kraken: 8.58
+                },
+                change24h: -1.2
+              }
+            ].map((coin, index) => {
+              const allPrices = Object.values(coin.prices);
+              const minPrice = Math.min(...allPrices);
+              const maxPrice = Math.max(...allPrices);
+              
+              return (
+                <div key={index} className={`px-6 py-5 hover:bg-gray-500/5 transition-colors`}>
+                  <div className="grid grid-cols-7 gap-4 items-center">
+                    {/* Cryptocurrency */}
+                    <div className="col-span-2 flex items-center space-x-3">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${
+                        isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
+                      }`}>
+                        {coin.symbol.charAt(0)}
+                      </div>
+                      <div>
+                        <div className={`font-semibold text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {coin.symbol}
+                        </div>
+                        <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          {coin.name}
+                        </div>
+                        <div className={`text-xs ${coin.change24h >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                          {coin.change24h >= 0 ? '+' : ''}{coin.change24h}% 24h
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Binance */}
+                    <div className="text-center">
+                      <div className={`text-sm font-medium ${
+                        coin.prices.binance === minPrice ? 'text-green-500' : 
+                        coin.prices.binance === maxPrice ? 'text-red-500' : 
+                        isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                      }`}>
+                        ${coin.prices.binance.toLocaleString()}
+                      </div>
+                      {coin.prices.binance === minPrice && (
+                        <div className="text-xs text-green-500 font-medium">Lowest</div>
+                      )}
+                      {coin.prices.binance === maxPrice && (
+                        <div className="text-xs text-red-500 font-medium">Highest</div>
+                      )}
+                    </div>
+
+                    {/* Coinbase */}
+                    <div className="text-center">
+                      <div className={`text-sm font-medium ${
+                        coin.prices.coinbase === minPrice ? 'text-green-500' : 
+                        coin.prices.coinbase === maxPrice ? 'text-red-500' : 
+                        isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                      }`}>
+                        ${coin.prices.coinbase.toLocaleString()}
+                      </div>
+                      {coin.prices.coinbase === minPrice && (
+                        <div className="text-xs text-green-500 font-medium">Lowest</div>
+                      )}
+                      {coin.prices.coinbase === maxPrice && (
+                        <div className="text-xs text-red-500 font-medium">Highest</div>
+                      )}
+                    </div>
+
+                    {/* KuCoin */}
+                    <div className="text-center">
+                      <div className={`text-sm font-medium ${
+                        coin.prices.kucoin === minPrice ? 'text-green-500' : 
+                        coin.prices.kucoin === maxPrice ? 'text-red-500' : 
+                        isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                      }`}>
+                        ${coin.prices.kucoin.toLocaleString()}
+                      </div>
+                      {coin.prices.kucoin === minPrice && (
+                        <div className="text-xs text-green-500 font-medium">Lowest</div>
+                      )}
+                      {coin.prices.kucoin === maxPrice && (
+                        <div className="text-xs text-red-500 font-medium">Highest</div>
+                      )}
+                    </div>
+
+                    {/* OKX */}
+                    <div className="text-center">
+                      <div className={`text-sm font-medium ${
+                        coin.prices.okx === minPrice ? 'text-green-500' : 
+                        coin.prices.okx === maxPrice ? 'text-red-500' : 
+                        isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                      }`}>
+                        ${coin.prices.okx.toLocaleString()}
+                      </div>
+                      {coin.prices.okx === minPrice && (
+                        <div className="text-xs text-green-500 font-medium">Lowest</div>
+                      )}
+                      {coin.prices.okx === maxPrice && (
+                        <div className="text-xs text-red-500 font-medium">Highest</div>
+                      )}
+                    </div>
+
+                    {/* Kraken */}
+                    <div className="text-center">
+                      <div className={`text-sm font-medium ${
+                        coin.prices.kraken === minPrice ? 'text-green-500' : 
+                        coin.prices.kraken === maxPrice ? 'text-red-500' : 
+                        isDarkMode ? 'text-gray-300' : 'text-gray-700'
+                      }`}>
+                        ${coin.prices.kraken.toLocaleString()}
+                      </div>
+                      {coin.prices.kraken === minPrice && (
+                        <div className="text-xs text-green-500 font-medium">Lowest</div>
+                      )}
+                      {coin.prices.kraken === maxPrice && (
+                        <div className="text-xs text-red-500 font-medium">Highest</div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
     </section>
   );
 };
