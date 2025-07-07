@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { TrendingUp, RefreshCw, ExternalLink, BarChart3, Clock, DollarSign, Target, Zap } from 'lucide-react';
+import { TrendingUp, RefreshCw, ExternalLink, BarChart3, Clock, DollarSign, Target, Zap, Bell, Download, TrendingDown } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { useToast } from '@/hooks/use-toast';
 
 interface ArbitrageOpportunity {
   id: number;
@@ -39,6 +40,12 @@ const ArbitragePage = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedCoin, setSelectedCoin] = useState('BTC');
   const [sortBy, setSortBy] = useState('spread');
+  const [showPriceAlertModal, setShowPriceAlertModal] = useState(false);
+  const [showAnalyticsModal, setShowAnalyticsModal] = useState(false);
+  const [webhookUrl, setWebhookUrl] = useState('');
+  const [alertThreshold, setAlertThreshold] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
 
   const arbitrageData: ArbitrageOpportunity[] = [
     {
@@ -286,6 +293,98 @@ const ArbitragePage = () => {
       { exchange: 'OKX', price: 14.28, volume24h: '$2.3B', change24h: -0.7, lastUpdate: '6s ago', spread: 0.06, orderBookDepth: '$260K' },
       { exchange: 'Kraken', price: 14.41, volume24h: '$1.2B', change24h: -0.4, lastUpdate: '7s ago', spread: 0.08, orderBookDepth: '$190K' }
     ]
+  };
+
+  const handlePriceAlert = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!webhookUrl || !alertThreshold) {
+      toast({
+        title: "Error",
+        description: "Please enter both webhook URL and threshold",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const response = await fetch(webhookUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        mode: "no-cors",
+        body: JSON.stringify({
+          action: "setup_price_alert",
+          coin: selectedCoin,
+          threshold: alertThreshold,
+          timestamp: new Date().toISOString(),
+          triggered_from: window.location.origin,
+        }),
+      });
+
+      toast({
+        title: "Alert Setup Sent",
+        description: `Price alert for ${selectedCoin} at ${alertThreshold}% spread sent to Zapier. Check your Zap history to confirm.`,
+      });
+      
+      setShowPriceAlertModal(false);
+      setWebhookUrl('');
+      setAlertThreshold('');
+    } catch (error) {
+      console.error("Error setting up alert:", error);
+      toast({
+        title: "Error",
+        description: "Failed to setup price alert. Please check the webhook URL and try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleExportData = () => {
+    const exportData = {
+      arbitrage_opportunities: arbitrageData,
+      exchange_rates: exchangeRates,
+      market_stats: {
+        total_opportunities: arbitrageData.length,
+        average_spread: (arbitrageData.reduce((sum, op) => sum + op.spread, 0) / arbitrageData.length).toFixed(2),
+        total_volume: '21.0M',
+        average_execution_time: '4.2 min'
+      },
+      export_timestamp: new Date().toISOString()
+    };
+    
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+    const url = URL.createObjectURL(dataBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `arbitrage_data_${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    
+    toast({
+      title: "Data Exported",
+      description: "Arbitrage data has been downloaded successfully.",
+    });
+  };
+
+  const calculatePortfolioStats = () => {
+    const totalOpportunities = arbitrageData.length;
+    const highConfidenceOps = arbitrageData.filter(op => op.confidence >= 90).length;
+    const lowRiskOps = arbitrageData.filter(op => op.risk === 'Low').length;
+    const avgProfit = arbitrageData.reduce((sum, op) => sum + parseFloat(op.netProfit.replace('$', '')), 0) / totalOpportunities;
+    
+    return {
+      totalOpportunities,
+      highConfidenceOps,
+      lowRiskOps,
+      avgProfit: avgProfit.toFixed(2),
+      successRate: ((highConfidenceOps / totalOpportunities) * 100).toFixed(1)
+    };
   };
 
   const handleRefresh = async () => {
@@ -652,38 +751,33 @@ const ArbitragePage = () => {
               </h3>
               <div className="space-y-2">
                 <button 
-                  onClick={() => alert('Price alerts feature coming soon!')}
-                  className={`w-full px-4 py-2 rounded-lg border transition-colors ${
+                  onClick={() => setShowPriceAlertModal(true)}
+                  className={`w-full px-4 py-2 rounded-lg border transition-colors flex items-center justify-center space-x-2 ${
                     isDarkMode 
                       ? 'border-gray-600 hover:bg-gray-700/50 text-gray-300' 
                       : 'border-gray-300 hover:bg-gray-50 text-gray-700'
                   }`}
                 >
-                  Set Price Alerts
+                  <Bell size={16} />
+                  <span>Set Price Alerts</span>
                 </button>
                 <button 
-                  onClick={() => {
-                    const dataStr = JSON.stringify(arbitrageData, null, 2);
-                    const dataBlob = new Blob([dataStr], {type: 'application/json'});
-                    const url = URL.createObjectURL(dataBlob);
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.download = 'arbitrage_data.json';
-                    link.click();
-                  }}
-                  className={`w-full px-4 py-2 rounded-lg border transition-colors ${
+                  onClick={handleExportData}
+                  className={`w-full px-4 py-2 rounded-lg border transition-colors flex items-center justify-center space-x-2 ${
                     isDarkMode 
                       ? 'border-gray-600 hover:bg-gray-700/50 text-gray-300' 
                       : 'border-gray-300 hover:bg-gray-50 text-gray-700'
                   }`}
                 >
-                  Export Data
+                  <Download size={16} />
+                  <span>Export Data</span>
                 </button>
                 <button 
-                  onClick={() => alert('Advanced analytics dashboard coming soon!')}
-                  className={`w-full px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white transition-colors`}
+                  onClick={() => setShowAnalyticsModal(true)}
+                  className={`w-full px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white transition-colors flex items-center justify-center space-x-2`}
                 >
-                  View Analytics
+                  <BarChart3 size={16} />
+                  <span>View Analytics</span>
                 </button>
               </div>
             </div>
@@ -819,6 +913,188 @@ const ArbitragePage = () => {
           </div>
         </div>
       </main>
+
+      {/* Price Alert Modal */}
+      {showPriceAlertModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className={`rounded-xl border backdrop-blur-sm p-6 w-full max-w-md ${
+            isDarkMode 
+              ? 'bg-gray-800/90 border-gray-700/60' 
+              : 'bg-white/90 border-gray-200/60'
+          }`}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                Setup Price Alert
+              </h3>
+              <button 
+                onClick={() => setShowPriceAlertModal(false)}
+                className={`p-2 rounded-lg ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
+              >
+                ✕
+              </button>
+            </div>
+            
+            <form onSubmit={handlePriceAlert} className="space-y-4">
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Selected Coin: {selectedCoin}
+                </label>
+              </div>
+              
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Alert Threshold (% spread)
+                </label>
+                <input
+                  type="number"
+                  step="0.1"
+                  value={alertThreshold}
+                  onChange={(e) => setAlertThreshold(e.target.value)}
+                  placeholder="e.g. 2.5"
+                  className={`w-full px-3 py-2 rounded-lg border transition-colors ${
+                    isDarkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                  }`}
+                />
+              </div>
+              
+              <div>
+                <label className={`block text-sm font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Zapier Webhook URL
+                </label>
+                <input
+                  type="url"
+                  value={webhookUrl}
+                  onChange={(e) => setWebhookUrl(e.target.value)}
+                  placeholder="https://hooks.zapier.com/hooks/catch/..."
+                  className={`w-full px-3 py-2 rounded-lg border transition-colors ${
+                    isDarkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
+                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500'
+                  }`}
+                />
+                <p className={`text-xs mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Create a Zap with webhook trigger to receive alerts
+                </p>
+              </div>
+              
+              <div className="flex space-x-3">
+                <button
+                  type="button"
+                  onClick={() => setShowPriceAlertModal(false)}
+                  className={`flex-1 px-4 py-2 rounded-lg border transition-colors ${
+                    isDarkMode 
+                      ? 'border-gray-600 hover:bg-gray-700 text-gray-300' 
+                      : 'border-gray-300 hover:bg-gray-50 text-gray-700'
+                  }`}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isLoading}
+                  className="flex-1 px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white transition-colors disabled:opacity-50"
+                >
+                  {isLoading ? 'Setting up...' : 'Setup Alert'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Analytics Modal */}
+      {showAnalyticsModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className={`rounded-xl border backdrop-blur-sm p-6 w-full max-w-2xl ${
+            isDarkMode 
+              ? 'bg-gray-800/90 border-gray-700/60' 
+              : 'bg-white/90 border-gray-200/60'
+          }`}>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                📊 Advanced Analytics
+              </h3>
+              <button 
+                onClick={() => setShowAnalyticsModal(false)}
+                className={`p-2 rounded-lg ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
+              >
+                ✕
+              </button>
+            </div>
+            
+            {(() => {
+              const stats = calculatePortfolioStats();
+              return (
+                <div className="space-y-6">
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                    <div className={`p-4 rounded-lg border ${isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
+                      <div className="text-2xl font-bold text-green-500">{stats.totalOpportunities}</div>
+                      <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Total Opportunities</div>
+                    </div>
+                    <div className={`p-4 rounded-lg border ${isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
+                      <div className="text-2xl font-bold text-blue-500">{stats.successRate}%</div>
+                      <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Success Rate</div>
+                    </div>
+                    <div className={`p-4 rounded-lg border ${isDarkMode ? 'bg-gray-700/50 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
+                      <div className="text-2xl font-bold text-purple-500">${stats.avgProfit}</div>
+                      <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Avg Profit</div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <h4 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        Risk Distribution
+                      </h4>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Low Risk</span>
+                          <span className="text-green-500 font-medium">{stats.lowRiskOps} ops</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Medium Risk</span>
+                          <span className="text-yellow-500 font-medium">{arbitrageData.filter(op => op.risk === 'Medium').length} ops</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>High Risk</span>
+                          <span className="text-red-500 font-medium">{arbitrageData.filter(op => op.risk === 'High').length} ops</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <h4 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        Top Performers
+                      </h4>
+                      <div className="space-y-2">
+                        {arbitrageData.slice(0, 3).map((op, index) => (
+                          <div key={index} className="flex items-center justify-between">
+                            <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                              {op.symbol}
+                            </span>
+                            <span className="text-green-500 font-medium">{op.spread}%</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-gray-600">
+                    <button
+                      onClick={() => setShowAnalyticsModal(false)}
+                      className="w-full px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white transition-colors"
+                    >
+                      Close Analytics
+                    </button>
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+      )}
 
       <Footer isDarkMode={isDarkMode} />
     </div>
