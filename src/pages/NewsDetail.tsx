@@ -48,46 +48,46 @@ const NewsDetail = () => {
             />
             
             <div className="prose prose-lg max-w-none">
-              <p className="text-lg leading-relaxed">
+              <p className={`text-lg leading-relaxed ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                 The cryptocurrency market experienced a significant surge today following the approval of multiple Bitcoin Exchange-Traded Funds (ETFs) by the Securities and Exchange Commission. This landmark decision has opened the floodgates for institutional investment, with major financial institutions rushing to capitalize on the new opportunity.
               </p>
 
-              <h2 className="text-2xl font-bold mt-8 mb-4">Market Impact</h2>
-              <p>
+              <h2 className={`text-2xl font-bold mt-8 mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Market Impact</h2>
+              <p className={`${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                 The approval has had an immediate and profound impact on Bitcoin's price, which surged over 12% in the hours following the announcement. Trading volumes have increased by 340% compared to the previous day, indicating massive institutional interest.
               </p>
 
               <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg my-6">
-                <h3 className="text-lg font-semibold mb-4">Key Statistics:</h3>
+                <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Key Statistics:</h3>
                 <ul className="space-y-2">
-                  <li><strong>Bitcoin price increase:</strong> <span className="text-green-500">+12.4%</span> in 24 hours</li>
-                  <li><strong>Trading volume surge:</strong> <span className="text-blue-500">+340%</span></li>
-                  <li><strong>Total ETF inflows:</strong> <span className="text-purple-500">$2.8 billion</span> in first day</li>
-                  <li><strong>Institutional participants:</strong> <span className="text-orange-500">47 major firms</span></li>
+                  <li className={isDarkMode ? 'text-gray-200' : 'text-gray-700'}><strong>Bitcoin price increase:</strong> <span className="text-green-500">+12.4%</span> in 24 hours</li>
+                  <li className={isDarkMode ? 'text-gray-200' : 'text-gray-700'}><strong>Trading volume surge:</strong> <span className="text-blue-500">+340%</span></li>
+                  <li className={isDarkMode ? 'text-gray-200' : 'text-gray-700'}><strong>Total ETF inflows:</strong> <span className="text-purple-500">$2.8 billion</span> in first day</li>
+                  <li className={isDarkMode ? 'text-gray-200' : 'text-gray-700'}><strong>Institutional participants:</strong> <span className="text-orange-500">47 major firms</span></li>
                 </ul>
               </div>
 
-              <h2 className="text-2xl font-bold mt-8 mb-4">Institutional Response</h2>
+              <h2 className={`text-2xl font-bold mt-8 mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Institutional Response</h2>
               <img 
                 src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&h=300&fit=crop" 
                 alt="Financial Trading Dashboard" 
                 className="w-full h-48 object-cover rounded-lg mb-4"
               />
-              <p>
+              <p className={`${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                 Major investment firms including BlackRock, Fidelity, and VanEck have reported substantial inflows into their newly approved Bitcoin ETF products. The enthusiasm from traditional finance has been overwhelming, with some funds reaching capacity limits within hours of launch.
               </p>
 
               <blockquote className="border-l-4 border-blue-500 pl-6 py-4 my-6 bg-blue-50 dark:bg-blue-900/20 rounded-r-lg">
-                <p className="italic text-lg">
+                <p className={`italic text-lg ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                   "This represents a paradigm shift in how institutional investors view Bitcoin. We're seeing pension funds, endowments, and family offices all expressing serious interest."
                 </p>
-                <footer className="mt-2 text-sm font-medium">
+                <footer className={`mt-2 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                   — Michael Novogratz, Galaxy Digital CEO
                 </footer>
               </blockquote>
 
-              <h2 className="text-2xl font-bold mt-8 mb-4">Technical Analysis</h2>
-              <p>
+              <h2 className={`text-2xl font-bold mt-8 mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Technical Analysis</h2>
+              <p className={`${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                 From a technical perspective, Bitcoin has broken through several key resistance levels, establishing new support at $68,000. The RSI indicates continued bullish momentum, though some analysts warn of potential short-term profit-taking.
               </p>
 
@@ -106,17 +106,17 @@ const NewsDetail = () => {
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold mt-8 mb-4">Market Outlook</h2>
+              <h2 className={`text-2xl font-bold mt-8 mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Market Outlook</h2>
               <img 
                 src="https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=600&h=300&fit=crop" 
                 alt="Market Analysis" 
                 className="w-full h-48 object-cover rounded-lg mb-4"
               />
-              <p>
+              <p className={`${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                 With institutional adoption accelerating and regulatory clarity improving, many analysts are revising their Bitcoin price targets upward. The combination of limited supply and increasing demand from ETFs could create a sustained bull market.
               </p>
               
-              <p>
+              <p className={`${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                 The crypto community is celebrating this milestone as validation of Bitcoin's maturity as an asset class. However, investors are advised to remain cautious of potential volatility as the market adjusts to this new dynamic.
               </p>
             </div>
@@ -152,49 +152,49 @@ const NewsDetail = () => {
             />
             
             <div className="prose prose-lg max-w-none">
-              <h1 className="text-3xl font-bold mb-6">Ethereum Shanghai Upgrade: A Technical Triumph</h1>
+              <h1 className={`text-3xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Ethereum Shanghai Upgrade: A Technical Triumph</h1>
               
-              <p className="text-lg leading-relaxed">
+              <p className={`text-lg leading-relaxed ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                 The Ethereum network has successfully completed its highly anticipated Shanghai upgrade, marking another milestone in the blockchain's evolution toward greater efficiency and user accessibility.
               </p>
 
-              <h2 className="text-2xl font-bold mt-8 mb-4">Upgrade Highlights</h2>
-              <p>
+              <h2 className={`text-2xl font-bold mt-8 mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Upgrade Highlights</h2>
+              <p className={`${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                 The Shanghai upgrade introduces several critical improvements to the Ethereum network, with staking withdrawals being the most significant feature for users and validators.
               </p>
 
               <div className="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg my-6">
-                <h3 className="text-lg font-semibold mb-4">Key Features:</h3>
+                <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Key Features:</h3>
                 <ul className="space-y-2">
-                  <li><strong>Staking Withdrawals:</strong> <span className="text-green-500">Validators can now withdraw staked ETH</span></li>
-                  <li><strong>Gas Optimizations:</strong> <span className="text-blue-500">Reduced transaction costs for smart contracts</span></li>
-                  <li><strong>Validator Improvements:</strong> <span className="text-purple-500">Enhanced validator experience and rewards</span></li>
-                  <li><strong>Network Stability:</strong> <span className="text-orange-500">Improved overall network performance</span></li>
+                  <li className={isDarkMode ? 'text-gray-200' : 'text-gray-700'}><strong>Staking Withdrawals:</strong> <span className="text-green-500">Validators can now withdraw staked ETH</span></li>
+                  <li className={isDarkMode ? 'text-gray-200' : 'text-gray-700'}><strong>Gas Optimizations:</strong> <span className="text-blue-500">Reduced transaction costs for smart contracts</span></li>
+                  <li className={isDarkMode ? 'text-gray-200' : 'text-gray-700'}><strong>Validator Improvements:</strong> <span className="text-purple-500">Enhanced validator experience and rewards</span></li>
+                  <li className={isDarkMode ? 'text-gray-200' : 'text-gray-700'}><strong>Network Stability:</strong> <span className="text-orange-500">Improved overall network performance</span></li>
                 </ul>
               </div>
 
-              <h2 className="text-2xl font-bold mt-8 mb-4">Impact on Staking</h2>
+              <h2 className={`text-2xl font-bold mt-8 mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Impact on Staking</h2>
               <img 
                 src="https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=600&h=300&fit=crop" 
                 alt="Staking Interface" 
                 className="w-full h-48 object-cover rounded-lg mb-4"
               />
-              <p>
+              <p className={`${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                 The ability to withdraw staked ETH has been the most requested feature since the launch of Ethereum 2.0. This upgrade removes the final barrier for many institutional investors who were hesitant to lock up their ETH indefinitely.
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
                 <div className="bg-green-50 dark:bg-green-900/20 p-6 rounded-lg">
-                  <h4 className="text-lg font-semibold text-green-600 mb-2">Staking Benefits</h4>
-                  <ul className="text-sm space-y-1">
+                  <h4 className={`text-lg font-semibold text-green-600 mb-2`}>Staking Benefits</h4>
+                  <ul className={`text-sm space-y-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     <li>• Flexible withdrawals</li>
                     <li>• Improved liquidity</li>
                     <li>• Enhanced validator rewards</li>
                   </ul>
                 </div>
                 <div className="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-lg">
-                  <h4 className="text-lg font-semibold text-blue-600 mb-2">Network Improvements</h4>
-                  <ul className="text-sm space-y-1">
+                  <h4 className={`text-lg font-semibold text-blue-600 mb-2`}>Network Improvements</h4>
+                  <ul className={`text-sm space-y-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     <li>• Lower gas fees</li>
                     <li>• Better scalability</li>
                     <li>• Enhanced security</li>
@@ -202,16 +202,16 @@ const NewsDetail = () => {
                 </div>
               </div>
 
-              <h2 className="text-2xl font-bold mt-8 mb-4">Technical Implementation</h2>
-              <p>
+              <h2 className={`text-2xl font-bold mt-8 mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>Technical Implementation</h2>
+              <p className={`${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                 The upgrade was executed flawlessly across all network participants, demonstrating the maturity of Ethereum's governance and development processes. The seamless transition showcases the robust testing and coordination that went into this critical update.
               </p>
 
               <blockquote className="border-l-4 border-blue-500 pl-6 py-4 my-6 bg-blue-50 dark:bg-blue-900/20 rounded-r-lg">
-                <p className="italic text-lg">
+                <p className={`italic text-lg ${isDarkMode ? 'text-gray-200' : 'text-gray-700'}`}>
                   "The Shanghai upgrade represents a significant milestone in Ethereum's journey towards becoming a more accessible and user-friendly platform for decentralized applications."
                 </p>
-                <footer className="mt-2 text-sm font-medium">
+                <footer className={`mt-2 text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
                   — Ethereum Foundation Development Team
                 </footer>
               </blockquote>
