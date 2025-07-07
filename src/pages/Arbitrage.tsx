@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { TrendingUp, RefreshCw, ExternalLink, BarChart3, Clock, DollarSign, Target, Zap } from 'lucide-react';
+import { TrendingUp, RefreshCw, ExternalLink, BarChart3, Clock, DollarSign, Target, Zap, Activity, Users, Layers, AlertTriangle } from 'lucide-react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, AreaChart, Area } from 'recharts';
 
 interface ArbitrageOpportunity {
   id: number;
@@ -39,6 +40,8 @@ const ArbitragePage = () => {
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [selectedCoin, setSelectedCoin] = useState('BTC');
   const [sortBy, setSortBy] = useState('spread');
+  const [showChartModal, setShowChartModal] = useState(false);
+  const [selectedCoinForChart, setSelectedCoinForChart] = useState<string | null>(null);
 
   const arbitrageData: ArbitrageOpportunity[] = [
     {
@@ -371,6 +374,48 @@ const ArbitragePage = () => {
       { exchange: 'Huobi', price: 177.5, volume24h: '$2.8B', change24h: -0.8, lastUpdate: '9s ago', spread: 0.10, orderBookDepth: '$290K' },
       { exchange: 'Bybit', price: 176.8, volume24h: '$3.5B', change24h: -1.0, lastUpdate: '7s ago', spread: 0.11, orderBookDepth: '$310K' }
     ]
+  };
+
+  const generateChartData = (coin: string) => {
+    const basePrice = exchangeRates[coin]?.[0]?.price || 100;
+    return Array.from({ length: 24 }, (_, i) => ({
+      time: `${i}:00`,
+      price: basePrice + (Math.random() - 0.5) * basePrice * 0.05,
+      volume: Math.random() * 1000000,
+      spread: Math.random() * 3
+    }));
+  };
+
+  const getMarketStats = () => {
+    const totalOpportunities = arbitrageData.length;
+    const avgSpread = (arbitrageData.reduce((sum, op) => sum + op.spread, 0) / totalOpportunities).toFixed(2);
+    const lowRiskCount = arbitrageData.filter(op => op.risk === 'Low').length;
+    const mediumRiskCount = arbitrageData.filter(op => op.risk === 'Medium').length;
+    const highRiskCount = arbitrageData.filter(op => op.risk === 'High').length;
+    const avgConfidence = (arbitrageData.reduce((sum, op) => sum + op.confidence, 0) / totalOpportunities).toFixed(1);
+    const totalVolume = arbitrageData.reduce((sum, op) => parseFloat(op.volume.replace('M', '')), 0).toFixed(1);
+    const bestSpread = Math.max(...arbitrageData.map(op => op.spread)).toFixed(2);
+    const bestProfit = arbitrageData.reduce((max, op) => {
+      const profit = parseFloat(op.netProfit.replace('$', ''));
+      return profit > max ? profit : max;
+    }, 0).toFixed(2);
+
+    return {
+      totalOpportunities,
+      avgSpread,
+      lowRiskCount,
+      mediumRiskCount,
+      highRiskCount,
+      avgConfidence,
+      totalVolume,
+      bestSpread,
+      bestProfit
+    };
+  };
+
+  const handleViewDetails = (coin: string) => {
+    setSelectedCoinForChart(coin);
+    setShowChartModal(true);
   };
 
   const handleRefresh = async () => {
@@ -726,41 +771,130 @@ const ArbitragePage = () => {
               </div>
             </div>
 
-            {/* Quick Actions */}
+            {/* Market Overview */}
             <div className={`mt-6 rounded-xl border backdrop-blur-sm p-4 ${
               isDarkMode 
                 ? 'bg-gray-800/80 border-gray-700/60' 
                 : 'bg-white/90 border-gray-200/60'
             }`}>
-              <h3 className={`font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                Market Overview
+              <h3 className={`font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                📊 Market Overview
               </h3>
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Active Pairs
-                  </span>
-                  <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    {arbitrageData.length}
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Exchanges
-                  </span>
-                  <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    12
-                  </span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    Best Spread
-                  </span>
-                  <span className="font-medium text-green-500">
-                    {Math.max(...arbitrageData.map(op => op.spread)).toFixed(2)}%
-                  </span>
-                </div>
-              </div>
+              {(() => {
+                const stats = getMarketStats();
+                return (
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div className={`p-3 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-50'}`}>
+                        <div className="flex items-center space-x-2 mb-1">
+                          <Target size={16} className="text-green-500" />
+                          <span className={`text-xs ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                            Active Pairs
+                          </span>
+                        </div>
+                        <div className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {stats.totalOpportunities}
+                        </div>
+                      </div>
+                      <div className={`p-3 rounded-lg ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-50'}`}>
+                        <div className="flex items-center space-x-2 mb-1">
+                          <Layers size={16} className="text-blue-500" />
+                          <span className={`text-xs ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                            Exchanges
+                          </span>
+                        </div>
+                        <div className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          12
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center">
+                        <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          Avg Spread
+                        </span>
+                        <span className="font-medium text-blue-500">
+                          {stats.avgSpread}%
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          Best Spread
+                        </span>
+                        <span className="font-medium text-green-500">
+                          {stats.bestSpread}%
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          Best Profit
+                        </span>
+                        <span className="font-medium text-purple-500">
+                          ${stats.bestProfit}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          Total Volume
+                        </span>
+                        <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {stats.totalVolume}M
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                          Avg Confidence
+                        </span>
+                        <span className="font-medium text-yellow-500">
+                          {stats.avgConfidence}%
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className={`pt-3 border-t ${isDarkMode ? 'border-gray-600' : 'border-gray-200'}`}>
+                      <div className={`text-xs font-medium mb-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Risk Distribution
+                      </div>
+                      <div className="space-y-2">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                            <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                              Low Risk
+                            </span>
+                          </div>
+                          <span className="text-xs font-medium text-green-500">
+                            {stats.lowRiskCount} ops
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-2 h-2 rounded-full bg-yellow-500"></div>
+                            <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                              Medium Risk
+                            </span>
+                          </div>
+                          <span className="text-xs font-medium text-yellow-500">
+                            {stats.mediumRiskCount} ops
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-2 h-2 rounded-full bg-red-500"></div>
+                            <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                              High Risk
+                            </span>
+                          </div>
+                          <span className="text-xs font-medium text-red-500">
+                            {stats.highRiskCount} ops
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           </div>
         </div>
@@ -876,8 +1010,8 @@ const ArbitragePage = () => {
                     </div>
 
                     <button 
-                      onClick={() => setSelectedCoin(coin)}
-                      className={`w-full mt-4 px-4 py-2 rounded-lg transition-colors ${
+                      onClick={() => handleViewDetails(coin)}
+                      className={`w-full mt-4 px-4 py-2 rounded-lg transition-colors flex items-center justify-center space-x-2 ${
                         selectedCoin === coin
                           ? 'bg-blue-500 text-white'
                           : isDarkMode
@@ -885,7 +1019,8 @@ const ArbitragePage = () => {
                             : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
                       }`}
                     >
-                      {selectedCoin === coin ? 'Currently Selected' : 'View Details'}
+                      <BarChart3 size={16} />
+                      <span>{selectedCoin === coin ? 'View Chart' : 'View Details'}</span>
                     </button>
                   </div>
                 </div>
@@ -894,6 +1029,193 @@ const ArbitragePage = () => {
           </div>
         </div>
       </main>
+
+      {/* Chart Modal */}
+      {showChartModal && selectedCoinForChart && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className={`rounded-xl border backdrop-blur-sm p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto ${
+            isDarkMode 
+              ? 'bg-gray-800/90 border-gray-700/60' 
+              : 'bg-white/90 border-gray-200/60'
+          }`}>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                📈 {selectedCoinForChart} Market Analysis
+              </h3>
+              <button 
+                onClick={() => setShowChartModal(false)}
+                className={`p-2 rounded-lg ${isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
+              >
+                ✕
+              </button>
+            </div>
+
+            {(() => {
+              const chartData = generateChartData(selectedCoinForChart);
+              const coinRates = exchangeRates[selectedCoinForChart] || [];
+              const currentPrice = coinRates[0]?.price || 0;
+              const maxPrice = Math.max(...coinRates.map(r => r.price));
+              const minPrice = Math.min(...coinRates.map(r => r.price));
+              
+              return (
+                <div className="space-y-6">
+                  {/* Price Chart */}
+                  <div>
+                    <h4 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      24H Price Movement
+                    </h4>
+                    <div className="h-64">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <AreaChart data={chartData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke={isDarkMode ? '#374151' : '#e5e7eb'} />
+                          <XAxis 
+                            dataKey="time" 
+                            stroke={isDarkMode ? '#9ca3af' : '#6b7280'}
+                            fontSize={12}
+                          />
+                          <YAxis 
+                            stroke={isDarkMode ? '#9ca3af' : '#6b7280'}
+                            fontSize={12}
+                          />
+                          <Tooltip 
+                            contentStyle={{
+                              backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
+                              border: isDarkMode ? '1px solid #374151' : '1px solid #e5e7eb',
+                              borderRadius: '8px',
+                              color: isDarkMode ? '#ffffff' : '#000000'
+                            }}
+                          />
+                          <Area 
+                            type="monotone" 
+                            dataKey="price" 
+                            stroke="#3b82f6" 
+                            fill="url(#colorPrice)" 
+                            strokeWidth={2}
+                          />
+                          <defs>
+                            <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                              <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                            </linearGradient>
+                          </defs>
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* Spread Chart */}
+                  <div>
+                    <h4 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      Arbitrage Spread Analysis
+                    </h4>
+                    <div className="h-64">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart data={chartData}>
+                          <CartesianGrid strokeDasharray="3 3" stroke={isDarkMode ? '#374151' : '#e5e7eb'} />
+                          <XAxis 
+                            dataKey="time" 
+                            stroke={isDarkMode ? '#9ca3af' : '#6b7280'}
+                            fontSize={12}
+                          />
+                          <YAxis 
+                            stroke={isDarkMode ? '#9ca3af' : '#6b7280'}
+                            fontSize={12}
+                          />
+                          <Tooltip 
+                            contentStyle={{
+                              backgroundColor: isDarkMode ? '#1f2937' : '#ffffff',
+                              border: isDarkMode ? '1px solid #374151' : '1px solid #e5e7eb',
+                              borderRadius: '8px',
+                              color: isDarkMode ? '#ffffff' : '#000000'
+                            }}
+                          />
+                          <Line 
+                            type="monotone" 
+                            dataKey="spread" 
+                            stroke="#10b981" 
+                            strokeWidth={2}
+                            dot={{ fill: '#10b981', strokeWidth: 2, r: 4 }}
+                          />
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  </div>
+
+                  {/* Exchange Comparison Table */}
+                  <div>
+                    <h4 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      Exchange Comparison
+                    </h4>
+                    <div className={`rounded-lg border overflow-hidden ${isDarkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+                      <div className={`px-4 py-3 border-b ${isDarkMode ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-gray-50'}`}>
+                        <div className="grid grid-cols-5 gap-4 text-sm font-semibold">
+                          <div className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Exchange</div>
+                          <div className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Price</div>
+                          <div className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>24h Change</div>
+                          <div className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Volume</div>
+                          <div className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Spread</div>
+                        </div>
+                      </div>
+                      <div className={`divide-y ${isDarkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
+                        {coinRates.map((rate, index) => (
+                          <div key={index} className="px-4 py-3">
+                            <div className="grid grid-cols-5 gap-4 items-center text-sm">
+                              <div className="flex items-center space-x-2">
+                                <div className={`w-2 h-2 rounded-full ${
+                                  rate.price === maxPrice ? 'bg-red-500' : 
+                                  rate.price === minPrice ? 'bg-green-500' : 'bg-gray-400'
+                                }`}></div>
+                                <span className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                                  {rate.exchange}
+                                </span>
+                              </div>
+                              <div className={`font-medium ${
+                                rate.price === maxPrice ? 'text-red-500' : 
+                                rate.price === minPrice ? 'text-green-500' : 
+                                isDarkMode ? 'text-white' : 'text-gray-900'
+                              }`}>
+                                ${rate.price.toLocaleString()}
+                              </div>
+                              <div className={`${rate.change24h >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                                {rate.change24h >= 0 ? '+' : ''}{rate.change24h}%
+                              </div>
+                              <div className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                                {rate.volume24h}
+                              </div>
+                              <div className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>
+                                {rate.spread}%
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-end space-x-3">
+                    <button
+                      onClick={() => setSelectedCoin(selectedCoinForChart)}
+                      className="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white transition-colors"
+                    >
+                      Select for Trading
+                    </button>
+                    <button
+                      onClick={() => setShowChartModal(false)}
+                      className={`px-4 py-2 rounded-lg border transition-colors ${
+                        isDarkMode 
+                          ? 'border-gray-600 hover:bg-gray-700 text-gray-300' 
+                          : 'border-gray-300 hover:bg-gray-50 text-gray-700'
+                      }`}
+                    >
+                      Close
+                    </button>
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+      )}
 
       <Footer isDarkMode={isDarkMode} />
     </div>
