@@ -182,13 +182,13 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
       }`}>
         {/* Header */}
         <div className={`px-6 py-4 border-b ${isDarkMode ? 'border-gray-700/60 bg-gray-800/90' : 'border-gray-200/60 bg-gray-50/80'}`}>
-          <div className="grid grid-cols-12 gap-4 text-sm font-semibold">
-            <div className={`col-span-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Asset</div>
-            <div className={`col-span-2 hidden md:block ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Buy From</div>
-            <div className={`col-span-2 hidden md:block ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Sell To</div>
-            <div className={`col-span-2 hidden lg:block ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Prices</div>
-            <div className={`col-span-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Spread</div>
-            <div className={`col-span-2 text-right ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Profit</div>
+          <div className="grid grid-cols-12 gap-4 text-sm font-semibold items-center">
+            <div className={`col-span-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Asset Info</div>
+            <div className={`col-span-2 hidden md:block ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Buy Exchange</div>
+            <div className={`col-span-2 hidden md:block ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Sell Exchange</div>
+            <div className={`col-span-2 hidden lg:block text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Price Range</div>
+            <div className={`col-span-1 text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Spread</div>
+            <div className={`col-span-2 text-right ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Profit & Action</div>
           </div>
         </div>
 
@@ -248,18 +248,18 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
 
                 {/* Prices - col-span-2 */}
                 <div className="col-span-2 hidden lg:block">
-                  <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs">Buy:</span>
-                      <span className={`font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-                        ${opportunity.buyPrice.toLocaleString()}
-                      </span>
+                  <div className="text-center space-y-1">
+                    <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+                      Buy Price
                     </div>
-                    <div className="flex items-center justify-between mt-1">
-                      <span className="text-xs">Sell:</span>
-                      <span className={`font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-                        ${opportunity.sellPrice.toLocaleString()}
-                      </span>
+                    <div className={`font-semibold text-sm ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                      ${opportunity.buyPrice.toLocaleString()}
+                    </div>
+                    <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'} mt-2`}>
+                      Sell Price
+                    </div>
+                    <div className={`font-semibold text-sm ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+                      ${opportunity.sellPrice.toLocaleString()}
                     </div>
                   </div>
                 </div>
