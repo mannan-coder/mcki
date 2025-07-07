@@ -210,7 +210,7 @@ const Analytics = ({ isDarkMode = false, setIsDarkMode = () => {} }: AnalyticsPr
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{formatNumber(overviewStats.totalTVL)}</div>
-              <p className={`text-xs ${overviewStats.tvlChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+              <p className={`text-xs ${overviewStats.tvlChange >= 0 ? 'text-success' : 'text-destructive'}`}>
                 {formatPercentage(overviewStats.tvlChange)} from yesterday
               </p>
             </CardContent>
@@ -223,7 +223,7 @@ const Analytics = ({ isDarkMode = false, setIsDarkMode = () => {} }: AnalyticsPr
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{formatNumber(overviewStats.totalVolume)}</div>
-              <p className={`text-xs ${overviewStats.volumeChange >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+              <p className={`text-xs ${overviewStats.volumeChange >= 0 ? 'text-success' : 'text-destructive'}`}>
                 {formatPercentage(overviewStats.volumeChange)} from yesterday
               </p>
             </CardContent>
@@ -249,7 +249,7 @@ const Analytics = ({ isDarkMode = false, setIsDarkMode = () => {} }: AnalyticsPr
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">$2.4T</div>
-              <p className="text-xs text-green-500">+2.1% from yesterday</p>
+              <p className="text-xs text-success">+2.1% from yesterday</p>
             </CardContent>
           </Card>
         </div>
@@ -314,7 +314,7 @@ const Analytics = ({ isDarkMode = false, setIsDarkMode = () => {} }: AnalyticsPr
                       </td>
                       <td className="py-4 px-2">
                         <div className={`flex items-center space-x-1 ${
-                          chain.change24h >= 0 ? 'text-green-500' : 'text-red-500'
+                          chain.change24h >= 0 ? 'text-success' : 'text-destructive'
                         }`}>
                           {chain.change24h >= 0 ? <TrendingUp size={16} /> : <TrendingDown size={16} />}
                           <span className="text-sm">{formatPercentage(chain.change24h)}</span>
@@ -322,14 +322,14 @@ const Analytics = ({ isDarkMode = false, setIsDarkMode = () => {} }: AnalyticsPr
                       </td>
                       <td className="py-4 px-2">
                         <span className={`text-sm ${
-                          chain.change7d >= 0 ? 'text-green-500' : 'text-red-500'
+                          chain.change7d >= 0 ? 'text-success' : 'text-destructive'
                         }`}>
                           {formatPercentage(chain.change7d)}
                         </span>
                       </td>
                       <td className="py-4 px-2">
                         <span className={`text-sm ${
-                          chain.change30d >= 0 ? 'text-green-500' : 'text-red-500'
+                          chain.change30d >= 0 ? 'text-success' : 'text-destructive'
                         }`}>
                           {formatPercentage(chain.change30d)}
                         </span>
@@ -414,27 +414,27 @@ const Analytics = ({ isDarkMode = false, setIsDarkMode = () => {} }: AnalyticsPr
                 <div className="flex justify-between items-center">
                   <span className="text-sm">New Wallets (24h)</span>
                   <div className="flex items-center space-x-2">
-                    <TrendingUp className="h-4 w-4 text-green-500" />
-                    <span className="text-green-500">+12,485</span>
+                    <TrendingUp className="h-4 w-4 text-success" />
+                    <span className="text-success">+12,485</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Active DApps</span>
                   <div className="flex items-center space-x-2">
-                    <TrendingUp className="h-4 w-4 text-green-500" />
-                    <span className="text-green-500">3,247</span>
+                    <TrendingUp className="h-4 w-4 text-success" />
+                    <span className="text-success">3,247</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Total Transactions (24h)</span>
                   <div className="flex items-center space-x-2">
-                    <TrendingUp className="h-4 w-4 text-green-500" />
-                    <span className="text-green-500">2.8M</span>
+                    <TrendingUp className="h-4 w-4 text-success" />
+                    <span className="text-success">2.8M</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm">Developer Activity</span>
-                  <Badge variant="outline" className="text-green-500 border-green-500">High</Badge>
+                  <Badge variant="outline" className="text-success border-success">High</Badge>
                 </div>
               </div>
             </CardContent>
