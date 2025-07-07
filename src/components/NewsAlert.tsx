@@ -1,5 +1,6 @@
 
 import { Newspaper, TrendingUp, AlertCircle, Clock, ExternalLink, BarChart3, Users, Zap } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 interface NewsAlertProps {
   isDarkMode: boolean;
@@ -148,9 +149,12 @@ const NewsAlert = ({ isDarkMode }: NewsAlertProps) => {
                   <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     Source: {news.source}
                   </span>
-                  <button className={`flex items-center text-xs hover:underline ${isDarkMode ? 'text-cyan-400' : 'text-blue-600'}`}>
+                  <Link 
+                    to={`/news/${news.id}`}
+                    className={`flex items-center text-xs hover:underline transition-colors ${isDarkMode ? 'text-cyan-400 hover:text-cyan-300' : 'text-blue-600 hover:text-blue-800'}`}
+                  >
                     Read More <ExternalLink size={12} className="ml-1" />
-                  </button>
+                  </Link>
                 </div>
               </div>
             ))}
