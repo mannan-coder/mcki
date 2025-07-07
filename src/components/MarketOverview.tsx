@@ -220,10 +220,10 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
               </div>
               <div className="text-center">
                 <div className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Weekly
+                  7d Change
                 </div>
-                <div className={`font-bold ${historicalData.current > historicalData.weekAgo ? 'text-red-500' : 'text-green-500'}`}>
-                  {historicalData.current > historicalData.weekAgo ? '' : ''}{historicalData.current - historicalData.weekAgo}
+                <div className={`font-bold ${historicalData.current > historicalData.weekAgo ? 'text-green-500' : 'text-red-500'}`}>
+                  {historicalData.current > historicalData.weekAgo ? '+' : ''}{historicalData.current - historicalData.weekAgo}
                 </div>
               </div>
             </div>
