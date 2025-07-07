@@ -159,37 +159,35 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
             Fear & Greed Index
           </h3>
           
-          <div className="flex items-center justify-center mb-3">
-            <div className="relative w-16 h-16">
-              <svg className="w-16 h-16 transform -rotate-90" viewBox="0 0 100 100">
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="35"
-                  stroke={isDarkMode ? '#374151' : '#e5e7eb'}
-                  strokeWidth="6"
-                  fill="none"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="35"
-                  stroke={fearGreedIndex >= 75 ? '#10b981' : fearGreedIndex >= 50 ? '#f59e0b' : fearGreedIndex >= 25 ? '#f97316' : '#ef4444'}
-                  strokeWidth="6"
-                  fill="none"
-                  strokeDasharray={`${fearGreedIndex * 2.2} 220`}
-                  strokeLinecap="round"
-                  className="transition-all duration-1000"
-                />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <div className={`text-lg font-bold ${getFearGreedColor(fearGreedIndex)}`}>
-                  {fearGreedIndex}
-                </div>
-                <div className={`text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  {getFearGreedLabel(fearGreedIndex)}
-                </div>
+          <div className="mb-3">
+            <div className="flex items-center justify-between mb-2">
+              <div className={`text-2xl font-bold ${getFearGreedColor(fearGreedIndex)}`}>
+                {fearGreedIndex}
               </div>
+              <div className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                {getFearGreedLabel(fearGreedIndex)}
+              </div>
+            </div>
+            
+            {/* Fear & Greed Bar */}
+            <div className={`w-full bg-gray-200 rounded-full h-3 ${isDarkMode ? 'bg-gray-700' : ''} mb-1`}>
+              <div 
+                className={`h-3 rounded-full transition-all duration-1000 ${
+                  fearGreedIndex >= 75 ? 'bg-green-500' : 
+                  fearGreedIndex >= 50 ? 'bg-yellow-500' : 
+                  fearGreedIndex >= 25 ? 'bg-orange-500' : 'bg-red-500'
+                }`}
+                style={{ width: `${fearGreedIndex}%` }}
+              ></div>
+            </div>
+            
+            {/* Scale indicators */}
+            <div className="flex justify-between text-xs mt-1">
+              <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>0</span>
+              <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>25</span>
+              <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>50</span>
+              <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>75</span>
+              <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>100</span>
             </div>
           </div>
 
