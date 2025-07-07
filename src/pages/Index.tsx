@@ -22,9 +22,9 @@ const Index = () => {
         <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
         
         <main className="relative z-10">
+          <MarketOverview isDarkMode={isDarkMode} />
           <TopMetrics isDarkMode={isDarkMode} />
           <ArbitrageDashboard isDarkMode={isDarkMode} />
-          <MarketOverview isDarkMode={isDarkMode} />
           <OnChainAnalysis isDarkMode={isDarkMode} />
           <NewsAlert isDarkMode={isDarkMode} />
           <InsightsAlerts isDarkMode={isDarkMode} />
