@@ -14,10 +14,10 @@ const Index = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'bg-gray-900' : 'bg-gray-50'}`}>
+    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'dark' : ''}`} style={{backgroundColor: isDarkMode ? '#121212' : '#f8f9fa'}}>
       <div className="relative">
-        {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-900/20 via-purple-900/20 to-indigo-900/20 pointer-events-none" />
+        {/* Binance-style background */}
+        <div className="absolute inset-0 bg-background" />
         
         <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
         

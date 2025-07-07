@@ -21,23 +21,19 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
   ];
 
   return (
-    <nav className={`sticky top-0 z-50 backdrop-blur-lg border-b transition-all duration-300 ${
-      isDarkMode 
-        ? 'bg-gray-900/80 border-gray-700/50' 
-        : 'bg-white/80 border-gray-200/50'
-    }`}>
+    <nav className="sticky top-0 z-50 backdrop-blur-lg border-b transition-all duration-300 bg-background/95 border-border">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-lg">M</span>
+            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+              <span className="text-primary-foreground font-bold text-lg">M</span>
             </div>
             <div>
-              <h1 className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <h1 className="text-xl font-bold text-foreground">
                 MCKI
               </h1>
-              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <p className="text-xs text-muted-foreground">
                 Arbitrage Intelligence
               </p>
             </div>
@@ -49,9 +45,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
               <a
                 key={item.name}
                 href={item.href}
-                className={`text-sm font-medium transition-colors hover:text-blue-500 ${
-                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                }`}
+                className="text-sm font-medium transition-colors hover:text-primary text-foreground"
               >
                 {item.name}
               </a>
@@ -62,11 +56,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
           <div className="flex items-center space-x-4">
             <button
               onClick={() => setIsDarkMode(!isDarkMode)}
-              className={`p-2 rounded-lg transition-colors ${
-                isDarkMode 
-                  ? 'bg-gray-800 text-yellow-400 hover:bg-gray-700' 
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
+              className="p-2 rounded-lg transition-colors bg-secondary hover:bg-muted text-foreground"
             >
               {isDarkMode ? <Sun size={20} /> : <MoonIcon size={20} />}
             </button>
@@ -74,11 +64,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
             {/* Mobile menu button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className={`md:hidden p-2 rounded-lg transition-colors ${
-                isDarkMode 
-                  ? 'bg-gray-800 text-white hover:bg-gray-700' 
-                  : 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-              }`}
+              className="md:hidden p-2 rounded-lg transition-colors bg-secondary hover:bg-muted text-foreground"
             >
               {isMenuOpen ? <X size={20} /> : <Menu size={20} />}
             </button>
@@ -87,16 +73,12 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className={`md:hidden py-4 border-t ${
-            isDarkMode ? 'border-gray-700' : 'border-gray-200'
-          }`}>
+          <div className="md:hidden py-4 border-t border-border">
             {navItems.map((item) => (
               <a
                 key={item.name}
                 href={item.href}
-                className={`block py-2 text-sm font-medium transition-colors hover:text-blue-500 ${
-                  isDarkMode ? 'text-gray-300' : 'text-gray-700'
-                }`}
+                className="block py-2 text-sm font-medium transition-colors hover:text-primary text-foreground"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {item.name}
