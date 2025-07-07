@@ -13,6 +13,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
 
   const navItems = [
     { name: 'Dashboard', href: '/' },
+    { name: 'News', href: '/news' },
     { name: 'Arbitrage', href: '#arbitrage' },
     { name: 'Market', href: '#market' },
     { name: 'Analytics', href: '#analytics' },
@@ -42,13 +43,23 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="text-sm font-medium transition-colors hover:text-primary text-foreground"
-              >
-                {item.name}
-              </a>
+              item.href.startsWith('/') ? (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="text-sm font-medium transition-colors hover:text-primary text-foreground"
+                >
+                  {item.name}
+                </Link>
+              ) : (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="text-sm font-medium transition-colors hover:text-primary text-foreground"
+                >
+                  {item.name}
+                </a>
+              )
             ))}
           </div>
 
@@ -75,14 +86,25 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-border">
             {navItems.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                className="block py-2 text-sm font-medium transition-colors hover:text-primary text-foreground"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                {item.name}
-              </a>
+              item.href.startsWith('/') ? (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className="block py-2 text-sm font-medium transition-colors hover:text-primary text-foreground"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ) : (
+                <a
+                  key={item.name}
+                  href={item.href}
+                  className="block py-2 text-sm font-medium transition-colors hover:text-primary text-foreground"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  {item.name}
+                </a>
+              )
             ))}
           </div>
         )}
