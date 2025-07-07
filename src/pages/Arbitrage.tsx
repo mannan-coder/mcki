@@ -140,6 +140,106 @@ const ArbitragePage = () => {
       liquidityDepth: '$156K',
       lastUpdated: '6s ago',
       priceHistory: [0.863, 0.864, 0.864, 0.865]
+    },
+    {
+      id: 6,
+      symbol: 'AVAX',
+      name: 'Avalanche',
+      buyExchange: 'Kraken',
+      sellExchange: 'OKX',
+      buyPrice: 42.15,
+      sellPrice: 43.28,
+      spread: 2.68,
+      profit: '$1.13',
+      netProfit: '$1.05',
+      volume: '4.2M',
+      confidence: 87,
+      timeToExecute: '4-7 min',
+      risk: 'Medium',
+      fees: '$0.08',
+      liquidityDepth: '$312K',
+      lastUpdated: '4s ago',
+      priceHistory: [42.05, 42.10, 42.12, 42.15]
+    },
+    {
+      id: 7,
+      symbol: 'DOT',
+      name: 'Polkadot',
+      buyExchange: 'Binance',
+      sellExchange: 'Coinbase',
+      buyPrice: 8.42,
+      sellPrice: 8.58,
+      spread: 1.90,
+      profit: '$0.16',
+      netProfit: '$0.14',
+      volume: '2.8M',
+      confidence: 91,
+      timeToExecute: '3-6 min',
+      risk: 'Low',
+      fees: '$0.02',
+      liquidityDepth: '$185K',
+      lastUpdated: '7s ago',
+      priceHistory: [8.38, 8.40, 8.41, 8.42]
+    },
+    {
+      id: 8,
+      symbol: 'LINK',
+      name: 'Chainlink',
+      buyExchange: 'OKX',
+      sellExchange: 'KuCoin',
+      buyPrice: 14.28,
+      sellPrice: 14.65,
+      spread: 2.59,
+      profit: '$0.37',
+      netProfit: '$0.33',
+      volume: '6.1M',
+      confidence: 89,
+      timeToExecute: '5-8 min',
+      risk: 'Medium',
+      fees: '$0.04',
+      liquidityDepth: '$428K',
+      lastUpdated: '3s ago',
+      priceHistory: [14.20, 14.24, 14.26, 14.28]
+    },
+    {
+      id: 9,
+      symbol: 'UNI',
+      name: 'Uniswap',
+      buyExchange: 'Coinbase',
+      sellExchange: 'Binance',
+      buyPrice: 12.84,
+      sellPrice: 13.12,
+      spread: 2.18,
+      profit: '$0.28',
+      netProfit: '$0.25',
+      volume: '3.7M',
+      confidence: 93,
+      timeToExecute: '2-5 min',
+      risk: 'Low',
+      fees: '$0.03',
+      liquidityDepth: '$267K',
+      lastUpdated: '6s ago',
+      priceHistory: [12.80, 12.82, 12.83, 12.84]
+    },
+    {
+      id: 10,
+      symbol: 'ATOM',
+      name: 'Cosmos',
+      buyExchange: 'KuCoin',
+      sellExchange: 'OKX',
+      buyPrice: 9.87,
+      sellPrice: 10.15,
+      spread: 2.84,
+      profit: '$0.28',
+      netProfit: '$0.24',
+      volume: '1.9M',
+      confidence: 86,
+      timeToExecute: '6-9 min',
+      risk: 'High',
+      fees: '$0.04',
+      liquidityDepth: '$143K',
+      lastUpdated: '9s ago',
+      priceHistory: [9.82, 9.84, 9.86, 9.87]
     }
   ];
 
@@ -164,6 +264,27 @@ const ArbitragePage = () => {
       { exchange: 'KuCoin', price: 177.8, volume24h: '$4.8B', change24h: -0.9, lastUpdate: '7s ago', spread: 0.11, orderBookDepth: '$410K' },
       { exchange: 'OKX', price: 178.4, volume24h: '$5.9B', change24h: -0.6, lastUpdate: '6s ago', spread: 0.08, orderBookDepth: '$580K' },
       { exchange: 'Kraken', price: 176.2, volume24h: '$3.2B', change24h: -1.2, lastUpdate: '8s ago', spread: 0.12, orderBookDepth: '$340K' }
+    ],
+    AVAX: [
+      { exchange: 'Binance', price: 43.12, volume24h: '$3.8B', change24h: 1.2, lastUpdate: '3s ago', spread: 0.07, orderBookDepth: '$420K' },
+      { exchange: 'Coinbase', price: 43.35, volume24h: '$2.9B', change24h: 1.5, lastUpdate: '4s ago', spread: 0.09, orderBookDepth: '$380K' },
+      { exchange: 'KuCoin', price: 42.98, volume24h: '$2.1B', change24h: 0.9, lastUpdate: '6s ago', spread: 0.11, orderBookDepth: '$290K' },
+      { exchange: 'OKX', price: 43.28, volume24h: '$3.2B', change24h: 1.4, lastUpdate: '4s ago', spread: 0.08, orderBookDepth: '$350K' },
+      { exchange: 'Kraken', price: 42.15, volume24h: '$1.7B', change24h: 0.6, lastUpdate: '5s ago', spread: 0.13, orderBookDepth: '$240K' }
+    ],
+    DOT: [
+      { exchange: 'Binance', price: 8.42, volume24h: '$1.9B', change24h: 0.8, lastUpdate: '5s ago', spread: 0.06, orderBookDepth: '$180K' },
+      { exchange: 'Coinbase', price: 8.58, volume24h: '$1.4B', change24h: 1.1, lastUpdate: '3s ago', spread: 0.08, orderBookDepth: '$150K' },
+      { exchange: 'KuCoin', price: 8.51, volume24h: '$0.9B', change24h: 0.9, lastUpdate: '7s ago', spread: 0.10, orderBookDepth: '$120K' },
+      { exchange: 'OKX', price: 8.49, volume24h: '$1.2B', change24h: 1.0, lastUpdate: '6s ago', spread: 0.07, orderBookDepth: '$140K' },
+      { exchange: 'Kraken', price: 8.46, volume24h: '$0.7B', change24h: 0.7, lastUpdate: '8s ago', spread: 0.09, orderBookDepth: '$110K' }
+    ],
+    LINK: [
+      { exchange: 'Binance', price: 14.52, volume24h: '$2.8B', change24h: -0.3, lastUpdate: '4s ago', spread: 0.05, orderBookDepth: '$320K' },
+      { exchange: 'Coinbase', price: 14.48, volume24h: '$2.1B', change24h: -0.5, lastUpdate: '5s ago', spread: 0.07, orderBookDepth: '$280K' },
+      { exchange: 'KuCoin', price: 14.65, volume24h: '$1.6B', change24h: -0.1, lastUpdate: '3s ago', spread: 0.09, orderBookDepth: '$220K' },
+      { exchange: 'OKX', price: 14.28, volume24h: '$2.3B', change24h: -0.7, lastUpdate: '6s ago', spread: 0.06, orderBookDepth: '$260K' },
+      { exchange: 'Kraken', price: 14.41, volume24h: '$1.2B', change24h: -0.4, lastUpdate: '7s ago', spread: 0.08, orderBookDepth: '$190K' }
     ]
   };
 
@@ -442,12 +563,12 @@ const ArbitragePage = () => {
               <h2 className={`text-2xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 📊 Exchange Rates
               </h2>
-              <div className="flex space-x-2">
-                {['BTC', 'ETH', 'SOL'].map((coin) => (
+              <div className="flex flex-wrap gap-2">
+                {['BTC', 'ETH', 'SOL', 'AVAX', 'DOT', 'LINK'].map((coin) => (
                   <button
                     key={coin}
                     onClick={() => setSelectedCoin(coin)}
-                    className={`px-4 py-2 rounded-lg font-medium transition-colors ${
+                    className={`px-3 py-2 rounded-lg font-medium transition-colors text-sm ${
                       selectedCoin === coin
                         ? 'bg-blue-500 text-white'
                         : isDarkMode
@@ -530,25 +651,171 @@ const ArbitragePage = () => {
                 Quick Actions
               </h3>
               <div className="space-y-2">
-                <button className={`w-full px-4 py-2 rounded-lg border transition-colors ${
-                  isDarkMode 
-                    ? 'border-gray-600 hover:bg-gray-700/50 text-gray-300' 
-                    : 'border-gray-300 hover:bg-gray-50 text-gray-700'
-                }`}>
+                <button 
+                  onClick={() => alert('Price alerts feature coming soon!')}
+                  className={`w-full px-4 py-2 rounded-lg border transition-colors ${
+                    isDarkMode 
+                      ? 'border-gray-600 hover:bg-gray-700/50 text-gray-300' 
+                      : 'border-gray-300 hover:bg-gray-50 text-gray-700'
+                  }`}
+                >
                   Set Price Alerts
                 </button>
-                <button className={`w-full px-4 py-2 rounded-lg border transition-colors ${
-                  isDarkMode 
-                    ? 'border-gray-600 hover:bg-gray-700/50 text-gray-300' 
-                    : 'border-gray-300 hover:bg-gray-50 text-gray-700'
-                }`}>
+                <button 
+                  onClick={() => {
+                    const dataStr = JSON.stringify(arbitrageData, null, 2);
+                    const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                    const url = URL.createObjectURL(dataBlob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = 'arbitrage_data.json';
+                    link.click();
+                  }}
+                  className={`w-full px-4 py-2 rounded-lg border transition-colors ${
+                    isDarkMode 
+                      ? 'border-gray-600 hover:bg-gray-700/50 text-gray-300' 
+                      : 'border-gray-300 hover:bg-gray-50 text-gray-700'
+                  }`}
+                >
                   Export Data
                 </button>
-                <button className={`w-full px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white transition-colors`}>
+                <button 
+                  onClick={() => alert('Advanced analytics dashboard coming soon!')}
+                  className={`w-full px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 text-white transition-colors`}
+                >
                   View Analytics
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Detailed Coin Information */}
+        <div className="mt-8">
+          <h2 className={`text-2xl font-bold mb-6 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            💎 Detailed Market Analysis
+          </h2>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            {Object.entries(exchangeRates).map(([coin, rates]) => {
+              const coinMaxPrice = Math.max(...rates.map(r => r.price));
+              const coinMinPrice = Math.min(...rates.map(r => r.price));
+              const avgPrice = rates.reduce((sum, r) => sum + r.price, 0) / rates.length;
+              const totalVolume = rates.reduce((sum, r) => parseFloat(r.volume24h.replace(/[B$]/g, '')), 0);
+              
+              return (
+                <div key={coin} className={`rounded-xl border backdrop-blur-sm overflow-hidden ${
+                  isDarkMode 
+                    ? 'bg-gray-800/80 border-gray-700/60' 
+                    : 'bg-white/90 border-gray-200/60'
+                }`}>
+                  <div className={`px-6 py-4 border-b ${isDarkMode ? 'border-gray-700/60 bg-gray-800/90' : 'border-gray-200/60 bg-gray-50/80'}`}>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold ${
+                          isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
+                        }`}>
+                          {coin.charAt(0)}
+                        </div>
+                        <div>
+                          <h3 className={`font-bold text-lg ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                            {coin}
+                          </h3>
+                          <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            Avg: ${avgPrice.toLocaleString()}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-green-500 font-semibold">
+                          {((coinMaxPrice - coinMinPrice) / coinMinPrice * 100).toFixed(2)}%
+                        </div>
+                        <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          Max Spread
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-6">
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div>
+                        <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>
+                          Highest Price
+                        </div>
+                        <div className="text-red-500 font-semibold">
+                          ${coinMaxPrice.toLocaleString()}
+                        </div>
+                      </div>
+                      <div>
+                        <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>
+                          Lowest Price
+                        </div>
+                        <div className="text-green-500 font-semibold">
+                          ${coinMinPrice.toLocaleString()}
+                        </div>
+                      </div>
+                      <div>
+                        <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>
+                          Total Volume
+                        </div>
+                        <div className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          ${totalVolume.toFixed(1)}B
+                        </div>
+                      </div>
+                      <div>
+                        <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>
+                          Exchanges
+                        </div>
+                        <div className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {rates.length}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Exchange Comparison
+                      </div>
+                      {rates.slice(0, 3).map((rate, index) => (
+                        <div key={index} className="flex items-center justify-between">
+                          <div className="flex items-center space-x-2">
+                            <div className={`w-2 h-2 rounded-full ${
+                              rate.price === coinMaxPrice ? 'bg-red-500' : 
+                              rate.price === coinMinPrice ? 'bg-green-500' : 'bg-gray-400'
+                            }`}></div>
+                            <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                              {rate.exchange}
+                            </span>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <span className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                              ${rate.price.toLocaleString()}
+                            </span>
+                            <span className={`text-xs ${rate.change24h >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                              {rate.change24h >= 0 ? '+' : ''}{rate.change24h}%
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <button 
+                      onClick={() => setSelectedCoin(coin)}
+                      className={`w-full mt-4 px-4 py-2 rounded-lg transition-colors ${
+                        selectedCoin === coin
+                          ? 'bg-blue-500 text-white'
+                          : isDarkMode
+                            ? 'bg-gray-700 hover:bg-gray-600 text-gray-300'
+                            : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                      }`}
+                    >
+                      {selectedCoin === coin ? 'Currently Selected' : 'View Details'}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </main>
