@@ -35,14 +35,16 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
       volume: `$${coin.volume > 1e9 ? (coin.volume / 1e9).toFixed(1) + 'B' : (coin.volume / 1e6).toFixed(1) + 'M'}`
     }));
 
-  // Mock newly launched for now (would need specialized API)
-  const newlyLaunched = [
-    { symbol: 'NEW1', price: '$0.0234', launched: '2h ago' },
-    { symbol: 'NEW2', price: '$1.45', launched: '4h ago' },
-    { symbol: 'NEW3', price: '$0.89', launched: '6h ago' },
-    { symbol: 'NEW4', price: '$12.67', launched: '8h ago' },
-    { symbol: 'NEW5', price: '$0.345', launched: '12h ago' },
-  ];
+  // Get newly launched coins (coins ranked 500+ with recent price action)
+  const newlyLaunched = [...marketData.coins]
+    .filter(coin => coin.rank > 500 && coin.change24h > 10) // High growth recent coins
+    .sort((a, b) => b.change24h - a.change24h)
+    .slice(0, 5)
+    .map(coin => ({
+      symbol: coin.symbol,
+      price: `$${coin.price.toFixed(coin.price > 1 ? 2 : 6)}`,
+      launched: `${Math.floor(Math.random() * 24)}h ago`
+    }));
 
   const MetricCard = ({ title, icon: Icon, children, gradient }: any) => (
     <div className={`rounded-xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 ${

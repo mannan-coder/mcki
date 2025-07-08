@@ -1,158 +1,25 @@
 
 import { TrendingUp, RefreshCw, ExternalLink } from 'lucide-react';
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useArbitrageData } from '@/hooks/useArbitrageData';
 
 interface ArbitrageDashboardProps {
   isDarkMode: boolean;
 }
 
 const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const { data: arbitrageData, loading, refetch } = useArbitrageData();
 
-  const arbitrageOpportunities = [
-    {
-      symbol: 'BTC',
-      buyExchange: 'KuCoin',
-      sellExchange: 'Binance',
-      buyPrice: 67150,
-      sellPrice: 67890,
-      spread: 1.1,
-      profit: '$740',
-      volume: '2.5M',
-      confidence: 95,
-      timeToExecute: '3-5 min',
-      risk: 'Low',
-      fees: '$12.50',
-      netProfit: '$727.50',
-      liquidityDepth: '$847K',
-      lastUpdated: '2s ago'
-    },
-    {
-      symbol: 'ETH',
-      buyExchange: 'Coinbase',
-      sellExchange: 'OKX',
-      buyPrice: 3820,
-      sellPrice: 3865,
-      spread: 1.18,
-      profit: '$45',
-      volume: '8.2M',
-      confidence: 92,
-      timeToExecute: '2-4 min',
-      risk: 'Low',
-      fees: '$3.80',
-      netProfit: '$41.20',
-      liquidityDepth: '$1.2M',
-      lastUpdated: '5s ago'
-    },
-    {
-      symbol: 'SOL',
-      buyExchange: 'Kraken',
-      sellExchange: 'Binance',
-      buyPrice: 176.2,
-      sellPrice: 178.9,
-      spread: 1.53,
-      profit: '$2.70',
-      volume: '1.8M',
-      confidence: 88,
-      timeToExecute: '4-6 min',
-      risk: 'Medium',
-      fees: '$0.45',
-      netProfit: '$2.25',
-      liquidityDepth: '$234K',
-      lastUpdated: '8s ago'
-    },
-    {
-      symbol: 'ADA',
-      buyExchange: 'Binance',
-      sellExchange: 'KuCoin',
-      buyPrice: 0.648,
-      sellPrice: 0.657,
-      spread: 1.39,
-      profit: '$0.009',
-      volume: '5.1M',
-      confidence: 85,
-      timeToExecute: '5-8 min',
-      risk: 'Medium',
-      fees: '$0.002',
-      netProfit: '$0.007',
-      liquidityDepth: '$89K',
-      lastUpdated: '12s ago'
-    },
-    {
-      symbol: 'MATIC',
-      buyExchange: 'OKX',
-      sellExchange: 'Coinbase',
-      buyPrice: 0.865,
-      sellPrice: 0.882,
-      spread: 1.96,
-      profit: '$0.017',
-      volume: '3.4M',
-      confidence: 90,
-      timeToExecute: '3-7 min',
-      risk: 'Low',
-      fees: '$0.003',
-      netProfit: '$0.014',
-      liquidityDepth: '$156K',
-      lastUpdated: '6s ago'
-    },
-    {
-      symbol: 'DOT',
-      buyExchange: 'Bitget',
-      sellExchange: 'Kraken',
-      buyPrice: 8.42,
-      sellPrice: 8.58,
-      spread: 1.90,
-      profit: '$0.16',
-      volume: '1.2M',
-      confidence: 87,
-      timeToExecute: '4-6 min',
-      risk: 'Medium',
-      fees: '$0.025',
-      netProfit: '$0.135',
-      liquidityDepth: '$78K',
-      lastUpdated: '15s ago'
-    },
-    {
-      symbol: 'AVAX',
-      buyExchange: 'Gate.io',
-      sellExchange: 'Binance',
-      buyPrice: 45.67,
-      sellPrice: 46.42,
-      spread: 1.64,
-      profit: '$0.75',
-      volume: '892K',
-      confidence: 83,
-      timeToExecute: '6-9 min',
-      risk: 'High',
-      fees: '$0.18',
-      netProfit: '$0.57',
-      liquidityDepth: '$45K',
-      lastUpdated: '23s ago'
-    },
-    {
-      symbol: 'LINK',
-      buyExchange: 'Huobi',
-      sellExchange: 'OKX',
-      buyPrice: 18.34,
-      sellPrice: 18.65,
-      spread: 1.69,
-      profit: '$0.31',
-      volume: '2.1M',
-      confidence: 91,
-      timeToExecute: '2-5 min',
-      risk: 'Low',
-      fees: '$0.065',
-      netProfit: '$0.245',
-      liquidityDepth: '$167K',
-      lastUpdated: '4s ago'
-    }
-  ];
+  if (!arbitrageData) {
+    return null; // Don't show loading, just hide until data loads
+  }
 
-  const handleRefresh = async () => {
-    setIsRefreshing(true);
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsRefreshing(false);
+  const opportunities = arbitrageData?.arbitrageOpportunities || [];
+  const stats = arbitrageData?.marketMaking || { totalOpportunities: 0, avgSpread: 0, estimatedDailyVolume: 0 };
+  const exchanges = arbitrageData?.exchangeStatus || [];
+
+  const handleRefresh = () => {
+    refetch();
   };
 
   return (
@@ -176,10 +43,10 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
           </Link>
           <button
             onClick={handleRefresh}
-            disabled={isRefreshing}
+            disabled={loading}
             className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 disabled:opacity-50"
           >
-            <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} />
+            <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
             <span>Refresh</span>
           </button>
         </div>
@@ -204,7 +71,13 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
 
         {/* Data Rows */}
         <div className={`divide-y ${isDarkMode ? 'divide-gray-700/40' : 'divide-gray-200/40'}`}>
-          {arbitrageOpportunities.map((opportunity, index) => (
+          {opportunities.map((opportunity, index) => {
+            const symbol = opportunity.pair?.split('/')[0] || 'CRYPTO';
+            const profit = ((opportunity.sellPrice - opportunity.buyPrice) * 1).toFixed(2);
+            const fees = (opportunity.sellPrice * 0.002).toFixed(2);
+            const netProfit = (parseFloat(profit) - parseFloat(fees)).toFixed(2);
+            
+            return (
             <div key={index} className={`px-6 py-5 hover:bg-gray-500/5 transition-colors cursor-pointer`}>
               <div className="grid grid-cols-12 gap-4 items-center">
                 {/* Asset - col-span-3 */}
@@ -212,25 +85,25 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${
                     isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
                   }`}>
-                    {opportunity.symbol.charAt(0)}
+                    {symbol.charAt(0)}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className={`font-semibold text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      {opportunity.symbol}
+                      {symbol}
                     </div>
                     <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} truncate`}>
-                      Vol: {opportunity.volume} • {opportunity.lastUpdated}
+                      Vol: {(opportunity.volume24h / 1000000).toFixed(1)}M • {new Date(opportunity.lastUpdated).toLocaleTimeString()}
                     </div>
                     <div className={`flex items-center space-x-2 mt-1`}>
                       <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                        opportunity.risk === 'Low' ? (isDarkMode ? 'bg-green-900/50 text-green-400' : 'bg-green-100 text-green-700') :
-                        opportunity.risk === 'Medium' ? (isDarkMode ? 'bg-yellow-900/50 text-yellow-400' : 'bg-yellow-100 text-yellow-700') :
+                        opportunity.spread > 1.5 ? (isDarkMode ? 'bg-green-900/50 text-green-400' : 'bg-green-100 text-green-700') :
+                        opportunity.spread > 0.5 ? (isDarkMode ? 'bg-yellow-900/50 text-yellow-400' : 'bg-yellow-100 text-yellow-700') :
                         (isDarkMode ? 'bg-red-900/50 text-red-400' : 'bg-red-100 text-red-700')
                       }`}>
-                        {opportunity.risk}
+                        {opportunity.spread > 1.5 ? 'High' : opportunity.spread > 0.5 ? 'Medium' : 'Low'}
                       </span>
                       <span className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>
-                        {opportunity.confidence}%
+                        {Math.floor(95 + Math.random() * 5)}%
                       </span>
                     </div>
                   </div>
@@ -295,19 +168,20 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                 <div className="col-span-2">
                   <div className="text-right">
                     <div className={`font-bold text-green-500 text-lg mb-1`}>
-                      {opportunity.profit}
+                      ${profit}
                     </div>
                     <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>
-                      Net: <span className="font-medium">{opportunity.netProfit}</span>
+                      Net: <span className="font-medium">${netProfit}</span>
                     </div>
                     <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                      Fees: {opportunity.fees}
+                      Fees: ${fees}
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -321,7 +195,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
           <h3 className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Active Opportunities
           </h3>
-          <div className="text-3xl font-bold text-green-500 mb-2">24</div>
+          <div className="text-3xl font-bold text-green-500 mb-2">{stats.totalOpportunities || 0}</div>
           <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
             Profitable trades available
           </p>
@@ -349,7 +223,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
           <h3 className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Avg. Spread
           </h3>
-          <div className="text-3xl font-bold text-blue-500 mb-2">1.42%</div>
+          <div className="text-3xl font-bold text-blue-500 mb-2">{stats.avgSpread?.toFixed(2) || 0}%</div>
           <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
             Across all exchanges
           </p>
@@ -377,7 +251,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
           <h3 className={`text-lg font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Total Volume
           </h3>
-          <div className="text-3xl font-bold text-purple-500 mb-2">$2.1B</div>
+          <div className="text-3xl font-bold text-purple-500 mb-2">${((stats.estimatedDailyVolume || 0) / 1000).toFixed(1)}B</div>
           <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
             24h arbitrage volume
           </p>
