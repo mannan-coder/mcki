@@ -15,7 +15,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
 
   if (!arbitrageData) {
     return (
-      <section id="arbitrage" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <section id="arbitrage" className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6">
         {/* Header Skeleton */}
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -110,57 +110,57 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
   };
 
   return (
-    <section id="arbitrage" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="flex items-center justify-between mb-10">
+    <section id="arbitrage" className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-4 space-y-3 lg:space-y-0">
         <div>
-          <h2 className={`text-3xl lg:text-4xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <h2 className={`text-xl font-bold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             💰 Live Arbitrage Opportunities
           </h2>
-          <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-3`}>
+          <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-2`}>
             Real-time profit opportunities across exchanges - Updated every 30 seconds
           </p>
-          <div className="flex items-center space-x-6 text-sm">
-            <div className="flex items-center space-x-2">
+          <div className="flex flex-wrap items-center gap-4 text-xs">
+            <div className="flex items-center space-x-1">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className={`${isDarkMode ? 'text-green-400' : 'text-green-600'} font-semibold`}>
-                {opportunities.length} Active Opportunities
+              <span className={`${isDarkMode ? 'text-green-400' : 'text-green-600'} font-medium`}>
+                {opportunities.length} Active
               </span>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
               <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <span className={`${isDarkMode ? 'text-blue-400' : 'text-blue-600'} font-semibold`}>
-                Avg Spread: {stats.avgSpread?.toFixed(2)}%
+              <span className={`${isDarkMode ? 'text-blue-400' : 'text-blue-600'} font-medium`}>
+                Avg: {stats.avgSpread?.toFixed(2)}%
               </span>
             </div>
           </div>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2">
           <Link 
             to="/arbitrage"
-            className="flex items-center space-x-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
+            className="flex items-center space-x-1 px-3 py-1.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm"
           >
-            <span>View Full Analysis</span>
-            <ExternalLink size={18} />
+            <span>Analysis</span>
+            <ExternalLink size={14} />
           </Link>
           <button
             onClick={handleRefresh}
             disabled={loading}
-            className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-xl hover:from-blue-600 hover:to-purple-700 transition-all duration-200 disabled:opacity-50 shadow-lg hover:shadow-xl font-medium"
+            className="flex items-center space-x-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 disabled:opacity-50 text-sm"
           >
-            <RefreshCw size={18} className={loading ? 'animate-spin' : ''} />
-            <span>Refresh Data</span>
+            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+            <span>Refresh</span>
           </button>
         </div>
       </div>
 
-      <div className={`rounded-2xl border backdrop-blur-sm overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300 ${
+      <div className={`rounded-lg border backdrop-blur-sm overflow-hidden ${
         isDarkMode 
           ? 'bg-gray-800/95 border-gray-700/60' 
           : 'bg-white/98 border-gray-200/60'
       }`}>
         {/* Table Header */}
-        <div className={`px-6 py-5 border-b ${isDarkMode ? 'border-gray-700/60 bg-gray-800/98' : 'border-gray-200/60 bg-gray-50/95'}`}>
-          <div className="text-lg font-bold flex items-center space-x-2">
+        <div className={`px-4 py-3 border-b ${isDarkMode ? 'border-gray-700/60 bg-gray-800/98' : 'border-gray-200/60 bg-gray-50/95'}`}>
+          <div className="text-base font-bold flex items-center space-x-2">
             <span>🏆</span>
             <span className={isDarkMode ? 'text-white' : 'text-gray-900'}>Top Arbitrage Opportunities</span>
           </div>
@@ -171,28 +171,28 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
           <table className="w-full">
             <thead className={`${isDarkMode ? 'bg-gray-800/90' : 'bg-gray-50/90'}`}>
               <tr className={`border-b ${isDarkMode ? 'border-gray-700/40' : 'border-gray-200/40'}`}>
-                <th className={`px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  Rank
+                <th className={`px-3 py-2 text-left text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  #
                 </th>
-                <th className={`px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <th className={`px-3 py-2 text-left text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Asset
                 </th>
-                <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <th className={`px-3 py-2 text-center text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Buy From
                 </th>
-                <th className={`px-2 py-4 text-center text-xs font-semibold uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <th className={`px-1 py-2 text-center text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   →
                 </th>
-                <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <th className={`px-3 py-2 text-center text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Sell To
                 </th>
-                <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <th className={`px-3 py-2 text-center text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Spread
                 </th>
-                <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <th className={`px-3 py-2 text-center text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Profit
                 </th>
-                <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <th className={`px-3 py-2 text-center text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Action
                 </th>
               </tr>
