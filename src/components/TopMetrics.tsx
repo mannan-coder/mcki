@@ -82,35 +82,34 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
 
   const MetricCard = ({ title, icon: Icon, children, gradient }: any) => (
     <motion.div 
-      className={`rounded-xl sm:rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:shadow-lg ${
+      className={`rounded-lg border backdrop-blur-sm transition-all duration-300 hover:shadow-md ${
         isDarkMode 
           ? 'bg-gray-800/60 border-gray-700/50 hover:border-gray-600/70' 
           : 'bg-white/80 border-gray-200/50 hover:border-gray-300/70'
       }`}
-      whileHover={{ y: -2 }}
+      whileHover={{ y: -1 }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className={`p-4 sm:p-5 border-b ${isDarkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
+      <div className={`p-3 border-b ${isDarkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2 sm:space-x-3">
-            <div className={`p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-gradient-to-r ${gradient} shadow-lg`}>
-              <Icon size={18} className="text-white sm:hidden" />
-              <Icon size={22} className="text-white hidden sm:block" />
+          <div className="flex items-center space-x-2">
+            <div className={`p-1.5 rounded-lg bg-gradient-to-r ${gradient} shadow-lg`}>
+              <Icon size={16} className="text-white" />
             </div>
-            <h3 className={`font-bold text-sm sm:text-base lg:text-lg ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <h3 className={`font-bold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               {title}
             </h3>
           </div>
           <div className={`text-xs px-2 py-1 rounded-full ${
             isDarkMode ? 'bg-gray-700/50 text-gray-300' : 'bg-gray-100 text-gray-600'
           }`}>
-            Top 5
+            Top 3
           </div>
         </div>
       </div>
-      <div className="p-4 sm:p-5 space-y-2 sm:space-y-3 max-h-48 sm:max-h-60 overflow-y-auto">
+      <div className="p-3 space-y-2 max-h-40 overflow-y-auto">
         {children}
       </div>
     </motion.div>
@@ -193,7 +192,7 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
           icon={ArrowUp} 
           gradient="from-green-500 to-emerald-600"
         >
-          {topGainers.map((coin, index) => (
+          {topGainers.slice(0, 3).map((coin, index) => (
             <CoinItem key={index} {...coin} />
           ))}
         </MetricCard>
@@ -203,7 +202,7 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
           icon={ArrowDown} 
           gradient="from-red-500 to-rose-600"
         >
-          {topLosers.map((coin, index) => (
+          {topLosers.slice(0, 3).map((coin, index) => (
             <CoinItem key={index} {...coin} />
           ))}
         </MetricCard>
@@ -213,18 +212,8 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
           icon={TrendingUp} 
           gradient="from-blue-500 to-cyan-600"
         >
-          {topVolume.map((coin, index) => (
+          {topVolume.slice(0, 3).map((coin, index) => (
             <CoinItem key={index} symbol={coin.symbol} volume={coin.volume} />
-          ))}
-        </MetricCard>
-
-        <MetricCard 
-          title="✨ Newly Launched" 
-          icon={Sparkles} 
-          gradient="from-purple-500 to-violet-600"
-        >
-          {newlyLaunched.map((coin, index) => (
-            <CoinItem key={index} symbol={coin.symbol} price={coin.price} launched={coin.launched} />
           ))}
         </MetricCard>
       </div>
