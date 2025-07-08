@@ -132,17 +132,17 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
   return (
     <motion.section 
       id="market" 
-      className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8"
+      className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 lg:py-6"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
       <MarketHeader isDarkMode={isDarkMode} totalMarketCap={marketStats.totalMarketCap} />
 
-      {/* Compact Mobile-First Layout */}
-      <div className="space-y-4 sm:space-y-6">
-        {/* Market Stats Cards - Always Stacked on Mobile */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+      {/* Ultra-Compact Layout */}
+      <div className="space-y-3 sm:space-y-4">
+        {/* Market Stats Cards - Compact Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
           <MarketCapCard 
             isDarkMode={isDarkMode}
             totalMarketCap={marketStats.totalMarketCap}
@@ -155,7 +155,7 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
             volumeValue={marketData.totalVolume}
           />
           
-          {/* Fear & Greed - Mobile Optimized */}
+          {/* Fear & Greed - Compact */}
           <div className="sm:col-span-2 lg:col-span-1">
             <FearGreedIndex 
               isDarkMode={isDarkMode}
@@ -166,102 +166,86 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
         </div>
 
         {/* Market Insights - Compact */}
-        <div className="mt-4 sm:mt-6">
+        <div className="mt-2 sm:mt-3">
           <TopMetrics isDarkMode={isDarkMode} />
         </div>
       </div>
 
-      {/* Additional Stats Row - Animated */}
+      {/* Compact Stats Row */}
       <motion.div 
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mt-6 lg:mt-8"
-        initial={{ y: 30, opacity: 0 }}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 mt-3 sm:mt-4"
+        initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.5 }}
+        transition={{ delay: 0.3 }}
       >
-        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
-          isDarkMode 
-            ? 'bg-gray-800/60 border-gray-700/50' 
-            : 'bg-white/80 border-gray-200/50'
-        }`}>
-          <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+        <div className="p-3 rounded-lg border backdrop-blur-sm bg-card/80 border-border/50">
+          <h3 className="text-sm font-semibold mb-2 text-foreground">
             Market Dominance
           </h3>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Bitcoin</span>
-              <span className="text-orange-500 font-semibold">{marketStats.btcDominance}</span>
+              <span className="text-xs text-muted-foreground">Bitcoin</span>
+              <span className="text-warning font-semibold text-xs">{marketStats.btcDominance}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Ethereum</span>
-              <span className="text-blue-500 font-semibold">{marketStats.ethDominance}</span>
+              <span className="text-xs text-muted-foreground">Ethereum</span>
+              <span className="text-primary font-semibold text-xs">{marketStats.ethDominance}</span>
             </div>
           </div>
         </div>
 
-        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
-          isDarkMode 
-            ? 'bg-gray-800/60 border-gray-700/50' 
-            : 'bg-white/80 border-gray-200/50'
-        }`}>
-          <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+        <div className="p-3 rounded-lg border backdrop-blur-sm bg-card/80 border-border/50">
+          <h3 className="text-sm font-semibold mb-2 text-foreground">
             Market Statistics
           </h3>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Active Coins</span>
-              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <span className="text-xs text-muted-foreground">Active Coins</span>
+              <span className="font-semibold text-xs text-foreground">
                 {marketStats.activeCoins}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Exchanges</span>
-              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <span className="text-xs text-muted-foreground">Exchanges</span>
+              <span className="font-semibold text-xs text-foreground">
                 {marketStats.exchanges}
               </span>
             </div>
           </div>
         </div>
 
-        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
-          isDarkMode 
-            ? 'bg-gray-800/60 border-gray-700/50' 
-            : 'bg-white/80 border-gray-200/50'
-        }`}>
-          <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+        <div className="p-3 rounded-lg border backdrop-blur-sm bg-card/80 border-border/50">
+          <h3 className="text-sm font-semibold mb-2 text-foreground">
             24h Trading Volume
           </h3>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Total Volume</span>
-              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <span className="text-xs text-muted-foreground">Total Volume</span>
+              <span className="font-semibold text-xs text-foreground">
                 {marketStats.totalVolume}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Change</span>
-              <span className="text-red-500 font-semibold text-sm">-1.5%</span>
+              <span className="text-xs text-muted-foreground">Change</span>
+              <span className="text-destructive font-semibold text-xs">-1.5%</span>
             </div>
           </div>
         </div>
 
-        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
-          isDarkMode 
-            ? 'bg-gray-800/60 border-gray-700/50' 
-            : 'bg-white/80 border-gray-200/50'
-        }`}>
-          <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+        <div className="p-3 rounded-lg border backdrop-blur-sm bg-card/80 border-border/50">
+          <h3 className="text-sm font-semibold mb-2 text-foreground">
             Global Metrics
           </h3>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Market Cap</span>
-              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              <span className="text-xs text-muted-foreground">Market Cap</span>
+              <span className="font-semibold text-xs text-foreground">
                 {marketStats.totalMarketCap}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>24h Change</span>
-              <span className="text-green-500 font-semibold text-sm">+2.9%</span>
+              <span className="text-xs text-muted-foreground">24h Change</span>
+              <span className="text-success font-semibold text-xs">+2.9%</span>
             </div>
           </div>
         </div>

@@ -82,34 +82,28 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
 
   const MetricCard = ({ title, icon: Icon, children, gradient }: any) => (
     <motion.div 
-      className={`rounded-lg border backdrop-blur-sm transition-all duration-300 hover:shadow-md ${
-        isDarkMode 
-          ? 'bg-gray-800/60 border-gray-700/50 hover:border-gray-600/70' 
-          : 'bg-white/80 border-gray-200/50 hover:border-gray-300/70'
-      }`}
-      whileHover={{ y: -1 }}
+      className="rounded-lg border backdrop-blur-sm transition-all duration-300 hover:shadow-card-hover bg-card/80 border-border/50 hover:border-border/70"
+      whileHover={{ y: -2 }}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <div className={`p-3 border-b ${isDarkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
+      <div className="p-2 sm:p-3 border-b border-border/50">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <div className={`p-1.5 rounded-lg bg-gradient-to-r ${gradient} shadow-lg`}>
-              <Icon size={16} className="text-white" />
+            <div className={`p-1 sm:p-1.5 rounded-md bg-gradient-to-r ${gradient} shadow-lg`}>
+              <Icon size={12} className="text-white sm:w-4 sm:h-4" />
             </div>
-            <h3 className={`font-bold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <h3 className="font-semibold text-xs sm:text-sm text-foreground">
               {title}
             </h3>
           </div>
-          <div className={`text-xs px-2 py-1 rounded-full ${
-            isDarkMode ? 'bg-gray-700/50 text-gray-300' : 'bg-gray-100 text-gray-600'
-          }`}>
+          <div className="text-xs px-1.5 py-0.5 rounded-full bg-muted/70 text-muted-foreground">
             Top 3
           </div>
         </div>
       </div>
-      <div className="p-3 space-y-2 max-h-40 overflow-y-auto">
+      <div className="p-2 sm:p-3 space-y-1 sm:space-y-2 max-h-32 sm:max-h-40 overflow-y-auto">
         {children}
       </div>
     </motion.div>
@@ -117,22 +111,20 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
 
   const CoinItem = ({ symbol, change, price, volume, launched }: any) => (
     <motion.div 
-      className="flex items-center justify-between py-2 px-2 sm:px-3 rounded-lg hover:bg-muted/30 transition-colors cursor-pointer"
-      whileHover={{ x: 4 }}
+      className="flex items-center justify-between py-1.5 px-2 rounded-md hover:bg-muted/50 transition-colors cursor-pointer"
+      whileHover={{ x: 2 }}
       transition={{ type: "spring", stiffness: 300, damping: 30 }}
     >
-      <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
-        <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold shadow-md flex-shrink-0 ${
-          isDarkMode ? 'bg-gradient-to-br from-gray-700 to-gray-800 text-gray-200' : 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700'
-        }`}>
+      <div className="flex items-center space-x-2 flex-1 min-w-0">
+        <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-xs font-bold shadow-sm flex-shrink-0 bg-gradient-to-br from-muted to-muted-foreground/20 text-foreground">
           {symbol.charAt(0)}
         </div>
         <div className="flex-1 min-w-0">
-          <div className={`font-semibold text-sm sm:text-base truncate ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+          <div className="font-semibold text-xs sm:text-sm truncate text-foreground">
             {symbol}
           </div>
           {price && (
-            <div className={`text-xs font-medium truncate ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            <div className="text-xs font-medium truncate text-muted-foreground">
               {price}
             </div>
           )}
@@ -141,18 +133,18 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
       <div className="text-right flex-shrink-0">
         {change && (
           <div className={`text-xs sm:text-sm font-bold ${
-            change.startsWith('+') ? 'text-green-500' : 'text-red-500'
+            change.startsWith('+') ? 'text-success' : 'text-destructive'
           }`}>
             {change}
           </div>
         )}
         {volume && (
-          <div className={`text-xs sm:text-sm font-bold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+          <div className="text-xs sm:text-sm font-bold text-primary">
             {volume}
           </div>
         )}
         {launched && (
-          <div className={`text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+          <div className="text-xs font-medium text-muted-foreground">
             {launched}
           </div>
         )}
@@ -162,35 +154,27 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
 
   return (
     <div className="space-y-4">
-      {/* Header - Responsive */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-        <h2 className={`text-lg sm:text-xl lg:text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+      {/* Compact Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 mb-3 sm:mb-4">
+        <h2 className="text-base sm:text-lg lg:text-xl font-bold text-foreground">
           Market Insights
         </h2>
-        <div className="flex items-center space-x-2 sm:space-x-4">
-          <button className={`px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-lg border transition-colors ${
-            isDarkMode 
-              ? 'border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700' 
-              : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
-          }`}>
+        <div className="flex items-center space-x-2">
+          <button className="px-2 py-1 sm:px-3 sm:py-1.5 text-xs rounded-md border transition-colors bg-card border-border text-foreground hover:bg-muted/50">
             All
           </button>
-          <button className={`px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-lg border transition-colors ${
-            isDarkMode 
-              ? 'border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700' 
-              : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
-          }`}>
+          <button className="px-2 py-1 sm:px-3 sm:py-1.5 text-xs rounded-md border transition-colors bg-card border-border text-foreground hover:bg-muted/50">
             Highlights
           </button>
         </div>
       </div>
 
-      {/* Horizontal Grid - One Row Layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+      {/* Compact Grid - One Row Layout */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
         <MetricCard 
           title="🔥 Top Gainers" 
           icon={ArrowUp} 
-          gradient="from-green-500 to-emerald-600"
+          gradient="from-success to-success/80"
         >
           {topGainers.slice(0, 3).map((coin, index) => (
             <CoinItem key={index} {...coin} />
@@ -200,7 +184,7 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
         <MetricCard 
           title="📉 Top Losers" 
           icon={ArrowDown} 
-          gradient="from-red-500 to-rose-600"
+          gradient="from-destructive to-destructive/80"
         >
           {topLosers.slice(0, 3).map((coin, index) => (
             <CoinItem key={index} {...coin} />
@@ -210,7 +194,7 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
         <MetricCard 
           title="💰 Top Volume" 
           icon={TrendingUp} 
-          gradient="from-blue-500 to-cyan-600"
+          gradient="from-primary to-primary/80"
         >
           {topVolume.slice(0, 3).map((coin, index) => (
             <CoinItem key={index} symbol={coin.symbol} volume={coin.volume} />

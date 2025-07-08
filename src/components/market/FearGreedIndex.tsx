@@ -41,42 +41,38 @@ export const FearGreedIndex = ({ isDarkMode, fearGreedIndex, historicalData }: F
 
   return (
     <motion.div 
-      className={`p-3 sm:p-4 rounded-lg sm:rounded-xl border backdrop-blur-sm ${
-        isDarkMode 
-          ? 'bg-gray-800/60 border-gray-700/50' 
-          : 'bg-white/80 border-gray-200/50'
-      }`}
+      className="p-3 rounded-lg border backdrop-blur-sm bg-card/80 border-border/50"
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ delay: 0.4 }}
     >
-      {/* Compact Header */}
-      <div className="flex items-center justify-between mb-3">
-        <h3 className={`text-sm sm:text-base font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+      {/* Ultra-Compact Header */}
+      <div className="flex items-center justify-between mb-2">
+        <h3 className="text-sm font-semibold text-foreground">
           Fear & Greed Index
         </h3>
-        <div className="flex items-center gap-2">
-          <div className={`text-lg sm:text-xl font-bold ${getFearGreedColor(fearGreedIndex)}`}>
+        <div className="flex items-center gap-1.5">
+          <div className={`text-base font-bold ${getFearGreedColor(fearGreedIndex)}`}>
             {fearGreedIndex}
           </div>
-          <div className={`px-2 py-1 rounded-full text-xs font-medium ${getFearGreedColor(fearGreedIndex)} ${
-            fearGreedIndex >= 75 ? 'bg-green-500/20' :
-            fearGreedIndex >= 50 ? 'bg-yellow-500/20' :
-            fearGreedIndex >= 25 ? 'bg-orange-500/20' : 'bg-red-500/20'
+          <div className={`px-1.5 py-0.5 rounded-full text-xs font-medium ${getFearGreedColor(fearGreedIndex)} ${
+            fearGreedIndex >= 75 ? 'bg-success/20' :
+            fearGreedIndex >= 50 ? 'bg-warning/20' :
+            fearGreedIndex >= 25 ? 'bg-warning/20' : 'bg-destructive/20'
           }`}>
             {getFearGreedLabel(fearGreedIndex)}
           </div>
         </div>
       </div>
       
-      {/* Compact Progress Bar */}
-      <div className="mb-3">
-        <div className={`w-full h-3 rounded-full ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'} overflow-hidden`}>
+      {/* Ultra-Compact Progress Bar */}
+      <div className="mb-2">
+        <div className="w-full h-2 rounded-full bg-muted overflow-hidden">
           <motion.div 
             className={`h-full rounded-full transition-all duration-1000 ${
-              fearGreedIndex >= 75 ? 'bg-gradient-to-r from-green-400 to-green-600' :
-              fearGreedIndex >= 50 ? 'bg-gradient-to-r from-yellow-400 to-yellow-600' :
-              fearGreedIndex >= 25 ? 'bg-gradient-to-r from-orange-400 to-orange-600' : 'bg-gradient-to-r from-red-400 to-red-600'
+              fearGreedIndex >= 75 ? 'bg-gradient-to-r from-success to-success/80' :
+              fearGreedIndex >= 50 ? 'bg-gradient-to-r from-warning to-warning/80' :
+              fearGreedIndex >= 25 ? 'bg-gradient-to-r from-warning to-warning/80' : 'bg-gradient-to-r from-destructive to-destructive/80'
             }`}
             initial={{ width: 0 }}
             animate={{ width: `${fearGreedIndex}%` }}
@@ -84,13 +80,13 @@ export const FearGreedIndex = ({ isDarkMode, fearGreedIndex, historicalData }: F
           />
         </div>
         <div className="flex justify-between text-xs mt-1">
-          <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Fear</span>
-          <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Greed</span>
+          <span className="text-muted-foreground">Fear</span>
+          <span className="text-muted-foreground">Greed</span>
         </div>
       </div>
       
-      {/* Compact Chart */}
-      <div className="h-10 sm:h-12 mb-3">
+      {/* Ultra-Compact Chart */}
+      <div className="h-8 sm:h-10 mb-2">
         <ChartContainer
           config={{
             fearGreed: { label: "Fear & Greed Index", color: getFearGreedColor(fearGreedIndex).replace('text-', '') }
@@ -103,22 +99,22 @@ export const FearGreedIndex = ({ isDarkMode, fearGreedIndex, historicalData }: F
           >
             <Bar
               dataKey="value"
-              fill={fearGreedIndex >= 75 ? '#10b981' :
-                   fearGreedIndex >= 50 ? '#f59e0b' :
-                   fearGreedIndex >= 25 ? '#f97316' : '#ef4444'}
-              radius={[2, 2, 0, 0]}
+              fill={fearGreedIndex >= 75 ? 'hsl(var(--success))' :
+                   fearGreedIndex >= 50 ? 'hsl(var(--warning))' :
+                   fearGreedIndex >= 25 ? 'hsl(var(--warning))' : 'hsl(var(--destructive))'}
+              radius={[1, 1, 0, 0]}
             />
           </BarChart>
         </ChartContainer>
       </div>
       
-      {/* Compact Historical Data */}
+      {/* Ultra-Compact Historical Data */}
       <div className="flex justify-between items-center text-xs">
-        <div className="flex items-center space-x-3">
-          <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+        <div className="flex items-center space-x-2">
+          <span className="text-muted-foreground">
             7d: {historicalData.weekAgo}
           </span>
-          <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+          <span className="text-muted-foreground">
             30d: {historicalData.monthAgo}
           </span>
         </div>

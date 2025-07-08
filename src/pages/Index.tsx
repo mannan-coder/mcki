@@ -30,22 +30,22 @@ const Index = () => {
           {/* Compact Top Banner */}
           <TopMetricsBanner isDarkMode={isDarkMode} />
           
-          {/* Compact Hero Section */}
-          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 pt-4 sm:pt-6 pb-2 sm:pb-4">
-            <div className="text-center mb-4 sm:mb-6">
-              <h1 className={`text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          {/* Ultra-Compact Hero Section */}
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 pt-3 sm:pt-4 pb-2 sm:pb-3">
+            <div className="text-center mb-3 sm:mb-4">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 text-foreground">
                 <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-gradient">
                   Professional Crypto Analytics
                 </span>
               </h1>
-              <p className={`text-sm sm:text-base lg:text-lg max-w-2xl mx-auto ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+              <p className="text-sm sm:text-base max-w-2xl mx-auto text-muted-foreground">
                 Real-time market data, arbitrage opportunities, and comprehensive cryptocurrency analytics
               </p>
             </div>
           </div>
 
-          {/* Compact Content Sections with Lazy Loading */}
-          <div className="space-y-6 sm:space-y-8 lg:space-y-12 pb-6 sm:pb-8">
+          {/* Ultra-Compact Content Sections with Lazy Loading */}
+          <div className="space-y-4 sm:space-y-6 lg:space-y-8 pb-4 sm:pb-6">
             <Suspense fallback={<div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6"><SkeletonCard isDarkMode={isDarkMode} /></div>}>
               <MarketOverview isDarkMode={isDarkMode} />
             </Suspense>

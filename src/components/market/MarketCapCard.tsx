@@ -25,38 +25,34 @@ export const MarketCapCard = ({ isDarkMode, totalMarketCap, marketCapValue }: Ma
 
   return (
     <motion.div 
-      className={`p-3 sm:p-4 rounded-lg sm:rounded-xl border backdrop-blur-sm cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-[1.01] ${
-        isDarkMode 
-          ? 'bg-gray-800/60 border-gray-700/50 hover:bg-gray-800/80' 
-          : 'bg-white/80 border-gray-200/50 hover:bg-white/90'
-      }`}
+      className="p-3 rounded-lg border backdrop-blur-sm cursor-pointer transition-all duration-300 hover:shadow-card-hover hover:scale-[1.01] bg-card/80 border-border/50 hover:bg-card/90"
       onClick={() => navigate('/market-cap-details')}
-      whileHover={{ y: -1 }}
+      whileHover={{ y: -2 }}
       whileTap={{ scale: 0.99 }}
     >
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center space-x-2">
-          <div className="p-1.5 sm:p-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-md sm:rounded-lg">
-            <TrendingUp className="text-white" size={14} />
+          <div className="p-1.5 bg-gradient-to-r from-success to-success/80 rounded-md">
+            <TrendingUp className="text-white" size={12} />
           </div>
           <div>
-            <div className={`text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            <div className="text-xs font-medium text-muted-foreground">
               Market Cap
             </div>
-            <div className={`text-lg sm:text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className="text-base sm:text-lg font-bold text-foreground">
               {totalMarketCap}
             </div>
           </div>
         </div>
         <div className="text-right">
-          <div className="text-green-500 text-sm font-medium">+2.9%</div>
-          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+          <div className="text-success text-sm font-medium">+2.9%</div>
+          <div className="text-xs text-muted-foreground">
             24h
           </div>
         </div>
       </div>
       
-      <div className="h-12 sm:h-14 -mx-1 mb-2">
+      <div className="h-10 sm:h-12 -mx-1 mb-2">
         <ChartContainer
           config={{
             value: { label: "Market Cap", color: "#10b981" }
@@ -85,7 +81,7 @@ export const MarketCapCard = ({ isDarkMode, totalMarketCap, marketCapValue }: Ma
         </ChartContainer>
       </div>
       
-      <div className={`flex items-center justify-end space-x-1 text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+      <div className="flex items-center justify-end space-x-1 text-xs text-muted-foreground">
         <ExternalLink size={10} />
         <span>Details</span>
       </div>

@@ -28,38 +28,34 @@ export const VolumeCard = ({ isDarkMode, totalVolume, volumeValue }: VolumeCardP
 
   return (
     <motion.div 
-      className={`p-3 sm:p-4 rounded-lg sm:rounded-xl border backdrop-blur-sm cursor-pointer transition-all duration-300 hover:shadow-md hover:scale-[1.01] ${
-        isDarkMode 
-          ? 'bg-gray-800/60 border-gray-700/50 hover:bg-gray-800/80' 
-          : 'bg-white/80 border-gray-200/50 hover:bg-white/90'
-      }`}
+      className="p-3 rounded-lg border backdrop-blur-sm cursor-pointer transition-all duration-300 hover:shadow-card-hover hover:scale-[1.01] bg-card/80 border-border/50 hover:bg-card/90"
       onClick={() => navigate('/volume-details')}
-      whileHover={{ y: -1 }}
+      whileHover={{ y: -2 }}
       whileTap={{ scale: 0.99 }}
     >
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center space-x-2">
-          <div className="p-1.5 sm:p-2 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-md sm:rounded-lg">
-            <Activity className="text-white" size={14} />
+          <div className="p-1.5 bg-gradient-to-r from-primary to-primary/80 rounded-md">
+            <Activity className="text-white" size={12} />
           </div>
           <div>
-            <div className={`text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            <div className="text-xs font-medium text-muted-foreground">
               24h Volume
             </div>
-            <div className={`text-lg sm:text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className="text-base sm:text-lg font-bold text-foreground">
               {totalVolume}
             </div>
           </div>
         </div>
         <div className="text-right">
-          <div className="text-red-500 text-sm font-medium">-1.5%</div>
-          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+          <div className="text-destructive text-sm font-medium">-1.5%</div>
+          <div className="text-xs text-muted-foreground">
             24h
           </div>
         </div>
       </div>
       
-      <div className="h-12 sm:h-14 -mx-1 mb-2">
+      <div className="h-10 sm:h-12 -mx-1 mb-2">
         <ChartContainer
           config={{
             volume: { label: "Volume", color: "#3b82f6" }
@@ -79,7 +75,7 @@ export const VolumeCard = ({ isDarkMode, totalVolume, volumeValue }: VolumeCardP
         </ChartContainer>
       </div>
       
-      <div className={`flex items-center justify-end space-x-1 text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+      <div className="flex items-center justify-end space-x-1 text-xs text-muted-foreground">
         <BarChart3 size={10} />
         <span>Details</span>
       </div>
