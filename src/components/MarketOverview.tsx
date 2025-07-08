@@ -132,52 +132,43 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
   return (
     <motion.section 
       id="market" 
-      className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12"
+      className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-4 sm:py-6 lg:py-8"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
       <MarketHeader isDarkMode={isDarkMode} totalMarketCap={marketStats.totalMarketCap} />
 
-      {/* Optimized Responsive Layout */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 lg:gap-8">
-        {/* Main Market Stats - Responsive */}
-        <motion.div 
-          className="xl:col-span-8 order-1"
-          initial={{ x: -50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6 mb-6 lg:mb-8">
-            <MarketCapCard 
+      {/* Compact Mobile-First Layout */}
+      <div className="space-y-4 sm:space-y-6">
+        {/* Market Stats Cards - Always Stacked on Mobile */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <MarketCapCard 
+            isDarkMode={isDarkMode}
+            totalMarketCap={marketStats.totalMarketCap}
+            marketCapValue={marketData.totalMarketCap}
+          />
+          
+          <VolumeCard 
+            isDarkMode={isDarkMode}
+            totalVolume={marketStats.totalVolume}
+            volumeValue={marketData.totalVolume}
+          />
+          
+          {/* Fear & Greed - Mobile Optimized */}
+          <div className="sm:col-span-2 lg:col-span-1">
+            <FearGreedIndex 
               isDarkMode={isDarkMode}
-              totalMarketCap={marketStats.totalMarketCap}
-              marketCapValue={marketData.totalMarketCap}
-            />
-            
-            <VolumeCard 
-              isDarkMode={isDarkMode}
-              totalVolume={marketStats.totalVolume}
-              volumeValue={marketData.totalVolume}
+              fearGreedIndex={fearGreedIndex}
+              historicalData={historicalData}
             />
           </div>
+        </div>
 
-          <FearGreedIndex 
-            isDarkMode={isDarkMode}
-            fearGreedIndex={fearGreedIndex}
-            historicalData={historicalData}
-          />
-        </motion.div>
-
-        {/* Market Insights Sidebar - Responsive */}
-        <motion.div 
-          className="xl:col-span-4 order-2"
-          initial={{ x: 50, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
+        {/* Market Insights - Compact */}
+        <div className="mt-4 sm:mt-6">
           <TopMetrics isDarkMode={isDarkMode} />
-        </motion.div>
+        </div>
       </div>
 
       {/* Additional Stats Row - Animated */}

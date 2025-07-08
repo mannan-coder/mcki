@@ -1,14 +1,17 @@
 
-import { useState } from 'react';
+import { useState, Suspense, lazy } from 'react';
 import Navbar from '@/components/Navbar';
 import TopMetricsBanner from '@/components/TopMetricsBanner';
-import ArbitrageDashboard from '@/components/ArbitrageDashboard';
-import MarketOverview from '@/components/MarketOverview';
-import OnChainAnalysis from '@/components/OnChainAnalysis';
-import NewsAlert from '@/components/NewsAlert';
-import InsightsAlerts from '@/components/InsightsAlerts';
-import CalculatorsSection from '@/components/CalculatorsSection';
 import Footer from '@/components/Footer';
+import { SkeletonCard } from '@/components/ui/skeleton-card';
+
+// Lazy load heavy components
+const ArbitrageDashboard = lazy(() => import('@/components/ArbitrageDashboard'));
+const MarketOverview = lazy(() => import('@/components/MarketOverview'));
+const OnChainAnalysis = lazy(() => import('@/components/OnChainAnalysis'));
+const NewsAlert = lazy(() => import('@/components/NewsAlert'));
+const InsightsAlerts = lazy(() => import('@/components/InsightsAlerts'));
+const CalculatorsSection = lazy(() => import('@/components/CalculatorsSection'));
 
 const Index = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
@@ -16,37 +19,56 @@ const Index = () => {
   return (
     <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'dark' : ''}`}>
       <div className="relative bg-gradient-to-br from-background via-background to-muted/20 min-h-screen">
-        {/* Professional gradient background */}
         <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />
         
-        <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+        {/* Sticky Navbar */}
+        <div className="sticky top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border/50">
+          <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+        </div>
         
-        <main className="relative z-10 pb-8">
-          {/* CoinGecko-style Top Banner */}
+        <main className="relative z-10">
+          {/* Compact Top Banner */}
           <TopMetricsBanner isDarkMode={isDarkMode} />
           
-          {/* Hero Section */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4">
-            <div className="text-center mb-8">
-              <h1 className={`text-4xl lg:text-5xl font-bold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          {/* Compact Hero Section */}
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 pt-4 sm:pt-6 pb-2 sm:pb-4">
+            <div className="text-center mb-4 sm:mb-6">
+              <h1 className={`text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-gradient">
                   Professional Crypto Analytics
                 </span>
               </h1>
-              <p className={`text-xl max-w-3xl mx-auto ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
-                Real-time market data, arbitrage opportunities, and comprehensive cryptocurrency analytics platform
+              <p className={`text-sm sm:text-base lg:text-lg max-w-2xl mx-auto ${isDarkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+                Real-time market data, arbitrage opportunities, and comprehensive cryptocurrency analytics
               </p>
             </div>
           </div>
 
-          {/* Main Content Sections */}
-          <div className="space-y-12">
-            <MarketOverview isDarkMode={isDarkMode} />
-            <ArbitrageDashboard isDarkMode={isDarkMode} />
-            <OnChainAnalysis isDarkMode={isDarkMode} />
-            <NewsAlert isDarkMode={isDarkMode} />
-            <InsightsAlerts isDarkMode={isDarkMode} />
-            <CalculatorsSection isDarkMode={isDarkMode} />
+          {/* Compact Content Sections with Lazy Loading */}
+          <div className="space-y-6 sm:space-y-8 lg:space-y-12 pb-6 sm:pb-8">
+            <Suspense fallback={<div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6"><SkeletonCard isDarkMode={isDarkMode} /></div>}>
+              <MarketOverview isDarkMode={isDarkMode} />
+            </Suspense>
+            
+            <Suspense fallback={<div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6"><SkeletonCard isDarkMode={isDarkMode} /></div>}>
+              <ArbitrageDashboard isDarkMode={isDarkMode} />
+            </Suspense>
+            
+            <Suspense fallback={<div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6"><SkeletonCard isDarkMode={isDarkMode} /></div>}>
+              <OnChainAnalysis isDarkMode={isDarkMode} />
+            </Suspense>
+            
+            <Suspense fallback={<div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6"><SkeletonCard isDarkMode={isDarkMode} /></div>}>
+              <NewsAlert isDarkMode={isDarkMode} />
+            </Suspense>
+            
+            <Suspense fallback={<div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6"><SkeletonCard isDarkMode={isDarkMode} /></div>}>
+              <InsightsAlerts isDarkMode={isDarkMode} />
+            </Suspense>
+            
+            <Suspense fallback={<div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6"><SkeletonCard isDarkMode={isDarkMode} /></div>}>
+              <CalculatorsSection isDarkMode={isDarkMode} />
+            </Suspense>
           </div>
         </main>
         
