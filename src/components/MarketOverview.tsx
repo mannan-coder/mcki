@@ -1,4 +1,7 @@
 
+import { TrendingUp, ArrowUp, ArrowDown, Activity, DollarSign, Users, BarChart3, ExternalLink } from 'lucide-react';
+import { Link } from 'react-router-dom';
+
 interface MarketOverviewProps {
   isDarkMode: boolean;
 }
@@ -43,13 +46,22 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
 
   return (
     <section id="market" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="mb-8">
-        <h2 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-          Market Overview
-        </h2>
-        <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-          Real-time cryptocurrency market statistics
-        </p>
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h2 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            Market Overview
+          </h2>
+          <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            Real-time cryptocurrency market statistics
+          </p>
+        </div>
+        <Link 
+          to="/market"
+          className="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+        >
+          <span>View Details</span>
+          <ExternalLink size={16} />
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">

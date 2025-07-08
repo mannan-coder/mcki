@@ -92,13 +92,22 @@ const NewsAlert = ({ isDarkMode }: NewsAlertProps) => {
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="mb-8">
-        <h2 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-          📰 News & Market Alerts
-        </h2>
-        <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-          Latest crypto news, trends, and market situation updates
-        </p>
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h2 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            📰 News & Market Alerts
+          </h2>
+          <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            Latest crypto news, trends, and market situation updates
+          </p>
+        </div>
+        <Link 
+          to="/news"
+          className="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+        >
+          <span>All News</span>
+          <ExternalLink size={16} />
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
