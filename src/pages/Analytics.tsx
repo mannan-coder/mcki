@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -19,9 +19,37 @@ import {
 
 
 const Analytics = () => {
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark');
+    }
+    return true;
+  });
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+    const handleThemeChange = () => {
+      setIsDarkMode(document.documentElement.classList.contains('dark'));
+    };
+
+    const observer = new MutationObserver(handleThemeChange);
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
+    });
+
+    return () => observer.disconnect();
+  }, []);
+
+  const handleThemeToggle = (newMode: boolean) => {
+    setIsDarkMode(newMode);
+    if (newMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
 
   const overallStats = {
     totalTVL: 113416942409,
@@ -205,12 +233,10 @@ const Analytics = () => {
   });
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'dark' : ''}`} style={{backgroundColor: isDarkMode ? '#121212' : '#f8f9fa'}}>
-      <div className="relative">
-        {/* Binance-style background */}
-        <div className="absolute inset-0 bg-background" />
-        
-        <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
+      <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />
+      
+      <Navbar isDarkMode={isDarkMode} setIsDarkMode={handleThemeToggle} />
         
         <main className="relative z-10">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -497,8 +523,7 @@ const Analytics = () => {
           </div>
         </main>
       </div>
-    </div>
-  );
+    );
 };
 
 export default Analytics;
