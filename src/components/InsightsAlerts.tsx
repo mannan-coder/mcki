@@ -99,53 +99,53 @@ const InsightsAlerts = ({ isDarkMode }: InsightsAlertsProps) => {
   };
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="flex items-center justify-between mb-8">
+    <section className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6">
+      <div className="flex items-center justify-between mb-4">
         <div>
-          <h2 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Insights & Alerts
+          <h2 className={`text-xl font-bold mb-1 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            💡 Insights & Alerts
           </h2>
-          <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+          <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
             Real-time market intelligence and opportunities
           </p>
         </div>
         <Link 
           to="/analytics"
-          className="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+          className="flex items-center space-x-1 px-3 py-1.5 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm"
         >
-          <span>View Insights</span>
-          <ExternalLink size={16} />
+          <span>Analytics</span>
+          <ExternalLink size={14} />
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
         {/* Tomorrow's Events */}
-        <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+        <div className={`p-4 rounded-lg border backdrop-blur-sm ${
           isDarkMode 
             ? 'bg-gray-800/50 border-gray-700/50' 
             : 'bg-white/70 border-gray-200/50'
         }`}>
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="p-2 bg-gradient-to-r from-purple-500 to-violet-600 rounded-lg">
-              <Calendar className="text-white" size={20} />
+          <div className="flex items-center space-x-2 mb-3">
+            <div className="p-1.5 bg-gradient-to-r from-purple-500 to-violet-600 rounded-md">
+              <Calendar className="text-white" size={16} />
             </div>
-            <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              📅 Tomorrow's Key Events
+            <h3 className={`text-base font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              📅 Tomorrow's Events
             </h3>
           </div>
 
-          <div className="space-y-4">
-            {tomorrowEvents.map((event, index) => (
-              <div key={index} className={`flex items-center justify-between p-4 rounded-lg border ${
+          <div className="space-y-2">
+            {tomorrowEvents.slice(0, 3).map((event, index) => (
+              <div key={index} className={`flex items-center justify-between p-2 rounded-md border ${
                 isDarkMode 
                   ? 'bg-gray-700/30 border-gray-600/30' 
                   : 'bg-gray-50 border-gray-200'
               }`}>
                 <div className="flex-1">
-                  <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <div className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                     {event.event}
                   </div>
-                  <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                     {event.time}
                   </div>
                 </div>
@@ -158,51 +158,51 @@ const InsightsAlerts = ({ isDarkMode }: InsightsAlertsProps) => {
         </div>
 
         {/* Live Status */}
-        <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+        <div className={`p-4 rounded-lg border backdrop-blur-sm ${
           isDarkMode 
             ? 'bg-gray-800/50 border-gray-700/50' 
             : 'bg-white/70 border-gray-200/50'
         }`}>
-          <div className="flex items-center justify-between mb-6">
-            <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className={`text-base font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               🚨 Live Status
             </h3>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-1">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-              <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Live</span>
+              <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Live</span>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
-              <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <div className="grid grid-cols-2 gap-2">
+            <div className={`p-3 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
+              <div className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 847
               </div>
-              <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 Active Alerts
               </div>
             </div>
-            <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
-              <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <div className={`p-3 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
+              <div className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 15
               </div>
-              <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Exchanges Tracked
+              <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Exchanges
               </div>
             </div>
-            <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
-              <div className={`text-2xl font-bold text-red-500`}>
+            <div className={`p-3 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
+              <div className={`text-lg font-bold text-red-500`}>
                 $234M
               </div>
-              <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Liquidations (24h)
+              <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Liquidations
               </div>
             </div>
-            <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
-              <div className={`text-2xl font-bold text-green-500`}>
+            <div className={`p-3 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
+              <div className={`text-lg font-bold text-green-500`}>
                 23
               </div>
-              <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 New Listings
               </div>
             </div>
@@ -211,30 +211,28 @@ const InsightsAlerts = ({ isDarkMode }: InsightsAlertsProps) => {
       </div>
 
       {/* Liquidation Alerts */}
-      <div className={`p-6 rounded-xl border backdrop-blur-sm mb-8 ${
+      <div className={`p-4 rounded-lg border backdrop-blur-sm mb-4 ${
         isDarkMode 
           ? 'bg-gray-800/50 border-gray-700/50' 
           : 'bg-white/70 border-gray-200/50'
       }`}>
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="p-3 bg-gradient-to-r from-red-500 to-rose-600 rounded-lg">
-            <AlertTriangle className="text-white" size={24} />
+        <div className="flex items-center space-x-2 mb-3">
+          <div className="p-1.5 bg-gradient-to-r from-red-500 to-rose-600 rounded-md">
+            <AlertTriangle className="text-white" size={16} />
           </div>
-          <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <h3 className={`text-base font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             🚨 Liquidation Alerts
           </h3>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div>
-            <h4 className={`text-lg font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <h4 className={`text-sm font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               24h Liquidation Volume
             </h4>
-            <ChartContainer config={chartConfig} className="h-64">
+            <ChartContainer config={chartConfig} className="h-32">
               <LineChart data={liquidationData}>
-                <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="time" />
-                <YAxis />
                 <ChartTooltip content={<ChartTooltipContent />} />
                 <Line type="monotone" dataKey="amount" stroke="#ef4444" strokeWidth={2} />
               </LineChart>
@@ -242,30 +240,30 @@ const InsightsAlerts = ({ isDarkMode }: InsightsAlertsProps) => {
           </div>
 
           <div>
-            <h4 className={`text-lg font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <h4 className={`text-sm font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Recent Liquidations
             </h4>
-            <div className="space-y-3">
-              {liquidationAlerts.map((alert, index) => (
-                <div key={index} className={`flex items-center justify-between p-3 rounded-lg border ${
+            <div className="space-y-2">
+              {liquidationAlerts.slice(0, 3).map((alert, index) => (
+                <div key={index} className={`flex items-center justify-between p-2 rounded-md border ${
                   isDarkMode ? 'bg-gray-700/30 border-gray-600/30' : 'bg-gray-50 border-gray-200'
                 }`}>
-                  <div className="flex items-center space-x-3">
-                    <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <div className="flex items-center space-x-2">
+                    <div className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       {alert.coin}
                     </div>
-                    <div className={`text-sm px-2 py-1 rounded ${
+                    <div className={`text-xs px-2 py-1 rounded ${
                       alert.type === 'Long' ? 'bg-green-500/20 text-green-500' : 'bg-red-500/20 text-red-500'
                     }`}>
                       {alert.type}
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <div className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       {alert.amount}
                     </div>
                     <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      {alert.exchange} • {alert.time}
+                      {alert.exchange}
                     </div>
                   </div>
                 </div>
@@ -276,64 +274,61 @@ const InsightsAlerts = ({ isDarkMode }: InsightsAlertsProps) => {
       </div>
 
       {/* Pump & Dump Alerts */}
-      <div className={`p-6 rounded-xl border backdrop-blur-sm mb-8 ${
+      <div className={`p-4 rounded-lg border backdrop-blur-sm mb-4 ${
         isDarkMode 
           ? 'bg-gray-800/50 border-gray-700/50' 
           : 'bg-white/70 border-gray-200/50'
       }`}>
-        <div className="flex items-center space-x-3 mb-6">
-          <div className="p-3 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg">
-            <TrendingUp className="text-white" size={24} />
+        <div className="flex items-center space-x-2 mb-3">
+          <div className="p-1.5 bg-gradient-to-r from-green-500 to-emerald-600 rounded-md">
+            <TrendingUp className="text-white" size={16} />
           </div>
-          <h3 className={`text-xl font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <h3 className={`text-base font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             📈 Pump & Dump Detection
           </h3>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div>
-            <h4 className={`text-lg font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            <h4 className={`text-sm font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
               Price & Volume Pattern
             </h4>
-            <ChartContainer config={chartConfig} className="h-64">
+            <ChartContainer config={chartConfig} className="h-32">
               <LineChart data={pumpDumpData}>
-                <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="time" />
-                <YAxis yAxisId="left" />
-                <YAxis yAxisId="right" orientation="right" />
                 <ChartTooltip content={<ChartTooltipContent />} />
-                <Line yAxisId="left" type="monotone" dataKey="price" stroke="#3b82f6" strokeWidth={2} />
-                <Line yAxisId="right" type="monotone" dataKey="volume" stroke="#8b5cf6" strokeWidth={2} />
+                <Line type="monotone" dataKey="price" stroke="#3b82f6" strokeWidth={2} />
+                <Line type="monotone" dataKey="volume" stroke="#8b5cf6" strokeWidth={2} />
               </LineChart>
             </ChartContainer>
           </div>
 
           <div>
-            <h4 className={`text-lg font-medium mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              Active Pump & Dump Alerts
+            <h4 className={`text-sm font-medium mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              Active Alerts
             </h4>
-            <div className="space-y-3">
-              {pumpDumpAlerts.map((alert, index) => (
-                <div key={index} className={`flex items-center justify-between p-3 rounded-lg border ${
+            <div className="space-y-2">
+              {pumpDumpAlerts.slice(0, 3).map((alert, index) => (
+                <div key={index} className={`flex items-center justify-between p-2 rounded-md border ${
                   isDarkMode ? 'bg-gray-700/30 border-gray-600/30' : 'bg-gray-50 border-gray-200'
                 }`}>
-                  <div className="flex items-center space-x-3">
-                    <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <div className="flex items-center space-x-2">
+                    <div className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       {alert.coin}
                     </div>
-                    <div className={`flex items-center text-sm ${
+                    <div className={`flex items-center text-xs ${
                       alert.type === 'pump' ? 'text-green-500' : 'text-red-500'
                     }`}>
-                      {alert.type === 'pump' ? <ArrowUpRight size={16} /> : <ArrowDownRight size={16} />}
+                      {alert.type === 'pump' ? <ArrowUpRight size={12} /> : <ArrowDownRight size={12} />}
                       {alert.change}
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                    <div className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                       {alert.volume}
                     </div>
                     <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      {alert.exchange} • {alert.time}
+                      {alert.exchange}
                     </div>
                   </div>
                 </div>
