@@ -1,5 +1,6 @@
-import React from 'react';
-import { ArrowUp, ArrowDown, TrendingUp, Activity } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowUp, ArrowDown, TrendingUp, Activity, Eye } from 'lucide-react';
+import CoinDetailModal from './CoinDetailModal';
 
 interface CryptoTableProps {
   coins: Array<{
@@ -19,6 +20,7 @@ interface CryptoTableProps {
 }
 
 const CryptoTable: React.FC<CryptoTableProps> = ({ coins, isDarkMode, onCoinClick }) => {
+  const [selectedCoinId, setSelectedCoinId] = useState<string | null>(null);
   const formatPrice = (price: number) => {
     if (price >= 1) {
       return `$${price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -49,124 +51,152 @@ const CryptoTable: React.FC<CryptoTableProps> = ({ coins, isDarkMode, onCoinClic
     }
   };
 
+  const handleCoinClick = (coinId: string) => {
+    setSelectedCoinId(coinId);
+    onCoinClick?.(coinId);
+  };
+
   return (
-    <div className={`rounded-xl border backdrop-blur-sm overflow-hidden ${
-      isDarkMode 
-        ? 'bg-gray-800/50 border-gray-700/50' 
-        : 'bg-white/70 border-gray-200/50'
-    }`}>
-      <div className="overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            <tr className={`border-b ${isDarkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
-              <th className={`text-left p-4 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Rank
-              </th>
-              <th className={`text-left p-4 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Name
-              </th>
-              <th className={`text-right p-4 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Price
-              </th>
-              <th className={`text-right p-4 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                24h %
-              </th>
-              <th className={`text-right p-4 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                7d %
-              </th>
-              <th className={`text-right p-4 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Market Cap
-              </th>
-              <th className={`text-right p-4 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                Volume (24h)
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {coins.map((coin) => (
-              <tr 
-                key={coin.id}
-                className={`border-b cursor-pointer transition-colors hover:bg-opacity-50 ${
-                  isDarkMode 
-                    ? 'border-gray-700/30 hover:bg-gray-700/30' 
-                    : 'border-gray-200/30 hover:bg-gray-100/50'
-                }`}
-                onClick={() => onCoinClick?.(coin.id)}
-              >
-                <td className="p-4">
-                  <span className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    #{coin.rank}
-                  </span>
-                </td>
-                <td className="p-4">
-                  <div className="flex items-center space-x-3">
-                    <img 
-                      src={coin.image} 
-                      alt={coin.name}
-                      className="w-8 h-8 rounded-full"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/placeholder.svg';
-                      }}
-                    />
-                    <div>
-                      <div className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {coin.name}
-                      </div>
-                      <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        {coin.symbol}
+    <>
+      <CoinDetailModal 
+        coinId={selectedCoinId || ''}
+        isOpen={!!selectedCoinId}
+        onClose={() => setSelectedCoinId(null)}
+        isDarkMode={isDarkMode}
+      />
+      
+      <div className={`rounded-xl border backdrop-blur-sm overflow-hidden ${
+        isDarkMode 
+          ? 'bg-gray-800/50 border-gray-700/50' 
+          : 'bg-white/70 border-gray-200/50'
+      }`}>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className={`border-b ${isDarkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
+                <th className={`text-left p-4 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Rank
+                </th>
+                <th className={`text-left p-4 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Name
+                </th>
+                <th className={`text-right p-4 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Price
+                </th>
+                <th className={`text-right p-4 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  24h %
+                </th>
+                <th className={`text-right p-4 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  7d %
+                </th>
+                <th className={`text-right p-4 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Market Cap
+                </th>
+                <th className={`text-right p-4 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Volume (24h)
+                </th>
+                <th className={`text-center p-4 font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {coins.map((coin) => (
+                <tr 
+                  key={coin.id}
+                  className={`border-b cursor-pointer transition-colors hover:bg-opacity-50 ${
+                    isDarkMode 
+                      ? 'border-gray-700/30 hover:bg-gray-700/30' 
+                      : 'border-gray-200/30 hover:bg-gray-100/50'
+                  }`}
+                >
+                  <td className="p-4">
+                    <span className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      #{coin.rank}
+                    </span>
+                  </td>
+                  <td className="p-4">
+                    <div className="flex items-center space-x-3">
+                      <img 
+                        src={coin.image} 
+                        alt={coin.name}
+                        className="w-8 h-8 rounded-full"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = '/placeholder.svg';
+                        }}
+                      />
+                      <div>
+                        <div className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                          {coin.name}
+                        </div>
+                        <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                          {coin.symbol}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </td>
-                <td className="p-4 text-right">
-                  <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    {formatPrice(coin.price)}
-                  </span>
-                </td>
-                <td className="p-4 text-right">
-                  <div className={`flex items-center justify-end space-x-1 ${
-                    coin.change24h >= 0 ? 'text-green-500' : 'text-red-500'
-                  }`}>
-                    {coin.change24h >= 0 ? (
-                      <ArrowUp size={14} />
-                    ) : (
-                      <ArrowDown size={14} />
-                    )}
-                    <span className="font-medium">
-                      {Math.abs(coin.change24h).toFixed(2)}%
+                  </td>
+                  <td className="p-4 text-right">
+                    <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {formatPrice(coin.price)}
                     </span>
-                  </div>
-                </td>
-                <td className="p-4 text-right">
-                  <div className={`flex items-center justify-end space-x-1 ${
-                    coin.change7d >= 0 ? 'text-green-500' : 'text-red-500'
-                  }`}>
-                    {coin.change7d >= 0 ? (
-                      <TrendingUp size={14} />
-                    ) : (
-                      <ArrowDown size={14} />
-                    )}
-                    <span className="font-medium">
-                      {Math.abs(coin.change7d).toFixed(2)}%
+                  </td>
+                  <td className="p-4 text-right">
+                    <div className={`flex items-center justify-end space-x-1 ${
+                      coin.change24h >= 0 ? 'text-green-500' : 'text-red-500'
+                    }`}>
+                      {coin.change24h >= 0 ? (
+                        <ArrowUp size={14} />
+                      ) : (
+                        <ArrowDown size={14} />
+                      )}
+                      <span className="font-medium">
+                        {Math.abs(coin.change24h).toFixed(2)}%
+                      </span>
+                    </div>
+                  </td>
+                  <td className="p-4 text-right">
+                    <div className={`flex items-center justify-end space-x-1 ${
+                      coin.change7d >= 0 ? 'text-green-500' : 'text-red-500'
+                    }`}>
+                      {coin.change7d >= 0 ? (
+                        <TrendingUp size={14} />
+                      ) : (
+                        <ArrowDown size={14} />
+                      )}
+                      <span className="font-medium">
+                        {Math.abs(coin.change7d).toFixed(2)}%
+                      </span>
+                    </div>
+                  </td>
+                  <td className="p-4 text-right">
+                    <span className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      {formatMarketCap(coin.marketCap)}
                     </span>
-                  </div>
-                </td>
-                <td className="p-4 text-right">
-                  <span className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    {formatMarketCap(coin.marketCap)}
-                  </span>
-                </td>
-                <td className="p-4 text-right">
-                  <span className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                    {formatVolume(coin.volume)}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                  </td>
+                  <td className="p-4 text-right">
+                    <span className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      {formatVolume(coin.volume)}
+                    </span>
+                  </td>
+                  <td className="p-4 text-center">
+                    <button
+                      onClick={() => handleCoinClick(coin.id)}
+                      className={`p-2 rounded-lg transition-colors ${
+                        isDarkMode 
+                          ? 'hover:bg-gray-700 text-gray-400 hover:text-white' 
+                          : 'hover:bg-gray-200 text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      <Eye size={16} />
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
