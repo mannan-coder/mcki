@@ -1,21 +1,19 @@
 import { useState } from 'react';
-import { TrendingUp, ArrowUp, ArrowDown, Activity, DollarSign, Users, BarChart3, ExternalLink, RefreshCw } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 import { useSentimentData } from '@/hooks/useSentimentData';
-import { ChartContainer } from '@/components/ui/chart';
-import { LineChart, Line, BarChart, Bar, Area, AreaChart } from 'recharts';
 import { SkeletonCard, SkeletonMetricCard, SkeletonSidebarCard } from '@/components/ui/skeleton-card';
-import MarketCapModal from './MarketCapModal';
-import VolumeModal from './VolumeModal';
+import { MarketHeader } from './market/MarketHeader';
+import { MarketCapCard } from './market/MarketCapCard';
+import { VolumeCard } from './market/VolumeCard';
+import { FearGreedIndex } from './market/FearGreedIndex';
+import TopMetrics from './TopMetrics';
 
 interface MarketOverviewProps {
   isDarkMode: boolean;
 }
 
 const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
-  const navigate = useNavigate();
   const [showMarketCapModal, setShowMarketCapModal] = useState(false);
   const [showVolumeModal, setShowVolumeModal] = useState(false);
   const { data: marketData, isLoading, error, refetch } = useOptimizedCryptoData();
@@ -139,30 +137,7 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
-      <motion.div 
-        className="flex flex-col lg:flex-row lg:items-start justify-between mb-6 lg:mb-8 gap-4"
-        initial={{ y: -20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.1 }}
-      >
-        <div className="flex-1">
-          <h2 className={`text-xl sm:text-2xl lg:text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Cryptocurrency Prices by Market Cap
-          </h2>
-          <p className={`text-sm lg:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} leading-relaxed`}>
-            The global cryptocurrency market cap today is{' '}
-            <span className="font-semibold text-primary">{marketStats.totalMarketCap}</span>, a{' '}
-            <span className="text-green-500 font-semibold">+2.9% change</span> in the last 24 hours.{' '}
-            <Link to="/market" className="text-primary hover:underline">Read more</Link>
-          </p>
-        </div>
-        <div className="flex items-center space-x-2 lg:mt-2">
-          <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Highlights</span>
-          <div className="w-10 h-5 bg-green-500 rounded-full relative transition-colors duration-300">
-            <div className="w-4 h-4 bg-white rounded-full absolute top-0.5 right-0.5 transition-transform duration-300"></div>
-          </div>
-        </div>
-      </motion.div>
+      <MarketHeader isDarkMode={isDarkMode} totalMarketCap={marketStats.totalMarketCap} />
 
       {/* Responsive Grid Layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 xl:grid-cols-12 gap-4 lg:gap-6 xl:gap-8">
@@ -174,354 +149,34 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
           transition={{ delay: 0.2 }}
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-            {/* Compact Market Cap Card - Animated */}
-            <motion.div 
-              className={`p-4 rounded-xl border backdrop-blur-sm cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02] ${
-                isDarkMode 
-                  ? 'bg-gray-800/60 border-gray-700/50 hover:bg-gray-800/80' 
-                  : 'bg-white/80 border-gray-200/50 hover:bg-white/90'
-              }`}
-              onClick={() => navigate('/market-cap-details')}
-              whileHover={{ y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center space-x-2">
-                  <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg">
-                    <TrendingUp className="text-white" size={16} />
-                  </div>
-                  <div>
-                    <div className={`text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      Market Cap
-                    </div>
-                    <div className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      {marketStats.totalMarketCap}
-                    </div>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-green-500 text-sm font-medium">+2.9%</div>
-                  <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    24h change
-                  </div>
-                </div>
-              </div>
-              
-              {/* Live Chart with Recharts */}
-              <div className="h-16 -mx-2">
-                <ChartContainer
-                  config={{
-                    value: { label: "Market Cap", color: "#10b981" }
-                  }}
-                  className="h-full"
-                >
-                  <AreaChart
-                    data={[
-                      { time: 0, value: marketData.totalMarketCap * 0.97 },
-                      { time: 1, value: marketData.totalMarketCap * 0.98 },
-                      { time: 2, value: marketData.totalMarketCap * 0.99 },
-                      { time: 3, value: marketData.totalMarketCap * 1.01 },
-                      { time: 4, value: marketData.totalMarketCap * 1.02 },
-                      { time: 5, value: marketData.totalMarketCap * 1.029 },
-                      { time: 6, value: marketData.totalMarketCap }
-                    ]}
-                    margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
-                  >
-                    <defs>
-                      <linearGradient id="marketCapMiniGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <Area
-                      type="monotone"
-                      dataKey="value"
-                      stroke="#10b981"
-                      strokeWidth={2}
-                      fill="url(#marketCapMiniGradient)"
-                      dot={false}
-                    />
-                  </AreaChart>
-                </ChartContainer>
-              </div>
-              
-              <div className={`flex items-center justify-end space-x-1 text-xs mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                <ExternalLink size={12} />
-                <span>Click for detailed view</span>
-              </div>
-            </motion.div>
-
-            {/* Compact Volume Card - Animated */}
-            <motion.div 
-              className={`p-4 rounded-xl border backdrop-blur-sm cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02] ${
-                isDarkMode 
-                  ? 'bg-gray-800/60 border-gray-700/50 hover:bg-gray-800/80' 
-                  : 'bg-white/80 border-gray-200/50 hover:bg-white/90'
-              }`}
-              onClick={() => navigate('/volume-details')}
-              whileHover={{ y: -2 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <div className="flex items-center justify-between mb-3">
-                <div className="flex items-center space-x-2">
-                  <div className="p-2 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-lg">
-                    <Activity className="text-white" size={16} />
-                  </div>
-                  <div>
-                    <div className={`text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      24h Volume
-                    </div>
-                    <div className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      {marketStats.totalVolume}
-                    </div>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <div className="text-red-500 text-sm font-medium">-1.5%</div>
-                  <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    24h change
-                  </div>
-                </div>
-              </div>
-              
-              {/* Live Volume Chart with Recharts */}
-              <div className="h-16 -mx-2">
-                <ChartContainer
-                  config={{
-                    volume: { label: "Volume", color: "#3b82f6" }
-                  }}
-                  className="h-full"
-                >
-                  <BarChart
-                    data={[
-                      { time: 0, volume: marketData.totalVolume * 1.05 },
-                      { time: 1, volume: marketData.totalVolume * 1.12 },
-                      { time: 2, volume: marketData.totalVolume * 0.98 },
-                      { time: 3, volume: marketData.totalVolume * 1.08 },
-                      { time: 4, volume: marketData.totalVolume * 0.92 },
-                      { time: 5, volume: marketData.totalVolume * 1.15 },
-                      { time: 6, volume: marketData.totalVolume * 0.95 },
-                      { time: 7, volume: marketData.totalVolume * 1.03 },
-                      { time: 8, volume: marketData.totalVolume * 1.07 },
-                      { time: 9, volume: marketData.totalVolume }
-                    ]}
-                    margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
-                  >
-                    <Bar
-                      dataKey="volume"
-                      fill="#3b82f6"
-                      radius={[1, 1, 0, 0]}
-                    />
-                  </BarChart>
-                </ChartContainer>
-              </div>
-              
-              <div className={`flex items-center justify-end space-x-1 text-xs mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                <BarChart3 size={12} />
-                <span>Click for detailed view</span>
-              </div>
-            </motion.div>
+            <MarketCapCard 
+              isDarkMode={isDarkMode}
+              totalMarketCap={marketStats.totalMarketCap}
+              marketCapValue={marketData.totalMarketCap}
+            />
+            
+            <VolumeCard 
+              isDarkMode={isDarkMode}
+              totalVolume={marketStats.totalVolume}
+              volumeValue={marketData.totalVolume}
+            />
           </div>
 
-          {/* Fear & Greed Index with Enhanced Visual Bar */}
-          <motion.div 
-            className={`p-4 rounded-xl border backdrop-blur-sm ${
-              isDarkMode 
-                ? 'bg-gray-800/60 border-gray-700/50' 
-                : 'bg-white/80 border-gray-200/50'
-            }`}
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                Fear & Greed Index
-              </h3>
-              <div className={`text-2xl font-bold ${getFearGreedColor(fearGreedIndex)}`}>
-                {fearGreedIndex}
-              </div>
-            </div>
-            
-            {/* Progress Bar Style Indicator */}
-            <div className="mb-4">
-              <div className={`w-full h-3 rounded-full ${isDarkMode ? 'bg-gray-700' : 'bg-gray-200'}`}>
-                <div 
-                  className={`h-3 rounded-full transition-all duration-500 ${
-                    fearGreedIndex >= 75 ? 'bg-green-500' :
-                    fearGreedIndex >= 50 ? 'bg-yellow-500' :
-                    fearGreedIndex >= 25 ? 'bg-orange-500' : 'bg-red-500'
-                  }`}
-                  style={{ width: `${fearGreedIndex}%` }}
-                />
-              </div>
-              <div className="flex justify-between text-xs mt-1">
-                <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Extreme Fear</span>
-                <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Extreme Greed</span>
-              </div>
-            </div>
-            
-            {/* Historical Bar Chart */}
-            <div className="h-12 mb-4">
-              <ChartContainer
-                config={{
-                  fearGreed: { label: "Fear & Greed Index", color: getFearGreedColor(fearGreedIndex).replace('text-', '') }
-                }}
-                className="h-full"
-              >
-                <BarChart
-                  data={[
-                    { period: '7d', value: historicalData.weekAgo },
-                    { period: '6d', value: historicalData.weekAgo + 3 },
-                    { period: '5d', value: historicalData.weekAgo - 2 },
-                    { period: '4d', value: historicalData.weekAgo + 5 },
-                    { period: '3d', value: historicalData.weekAgo - 1 },
-                    { period: '2d', value: historicalData.yesterday + 2 },
-                    { period: '1d', value: historicalData.yesterday },
-                    { period: 'Now', value: fearGreedIndex }
-                  ]}
-                  margin={{ top: 2, right: 2, left: 2, bottom: 2 }}
-                >
-                  <Bar
-                    dataKey="value"
-                    fill={fearGreedIndex >= 75 ? '#10b981' :
-                         fearGreedIndex >= 50 ? '#f59e0b' :
-                         fearGreedIndex >= 25 ? '#f97316' : '#ef4444'}
-                    radius={[1, 1, 0, 0]}
-                  />
-                </BarChart>
-              </ChartContainer>
-            </div>
-            
-            <div className="flex items-center justify-between">
-              <span className={`text-sm font-medium ${getFearGreedColor(fearGreedIndex)}`}>
-                {getFearGreedLabel(fearGreedIndex)}
-              </span>
-              <div className="flex items-center space-x-3 text-xs">
-                <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  7d: {historicalData.weekAgo}
-                </span>
-                <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  30d: {historicalData.monthAgo}
-                </span>
-              </div>
-            </div>
-          </motion.div>
+          <FearGreedIndex 
+            isDarkMode={isDarkMode}
+            fearGreedIndex={fearGreedIndex}
+            historicalData={historicalData}
+          />
         </motion.div>
 
-        {/* Right Sidebar - Responsive */}
+        {/* Right Sidebar - Use TopMetrics component */}
         <motion.div 
-          className="lg:col-span-4 xl:col-span-3 space-y-4"
+          className="lg:col-span-4 xl:col-span-3"
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
         >
-          {/* Trending Section */}
-          <div className={`p-6 rounded-xl border backdrop-blur-sm ${
-            isDarkMode 
-              ? 'bg-gray-800/60 border-gray-700/50' 
-              : 'bg-white/80 border-gray-200/50'
-          }`}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                🔥 Trending
-              </h3>
-              <Link to="/market" className="text-primary text-sm hover:underline">View more</Link>
-            </div>
-            <div className="space-y-3">
-              {marketData.coins.slice(0, 3).map((coin, index) => (
-                <div key={index} className="flex items-center space-x-3">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                    isDarkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-700'
-                  }`}>
-                    {coin.symbol.charAt(0)}
-                  </div>
-                  <div className="flex-1">
-                    <div className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      {coin.symbol}
-                    </div>
-                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      ${coin.price.toFixed(coin.price > 1 ? 2 : 6)}
-                    </div>
-                  </div>
-                  <div className={`text-sm font-medium ${coin.change24h > 0 ? 'text-green-500' : 'text-red-500'}`}>
-                    {coin.change24h > 0 ? '+' : ''}{coin.change24h.toFixed(2)}%
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Top Gainers Section */}
-          <div className={`p-6 rounded-xl border backdrop-blur-sm ${
-            isDarkMode 
-              ? 'bg-gray-800/60 border-gray-700/50' 
-              : 'bg-white/80 border-gray-200/50'
-          }`}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                🚀 Top Gainers
-              </h3>
-              <Link to="/market" className="text-primary text-sm hover:underline">View more</Link>
-            </div>
-            <div className="space-y-3">
-              {[...marketData.coins].sort((a, b) => b.change24h - a.change24h).slice(0, 3).map((coin, index) => (
-                <div key={index} className="flex items-center space-x-3">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                    isDarkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-700'
-                  }`}>
-                    {coin.symbol.charAt(0)}
-                  </div>
-                  <div className="flex-1">
-                    <div className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      {coin.symbol}
-                    </div>
-                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      ${coin.price.toFixed(coin.price > 1 ? 2 : 6)}
-                    </div>
-                  </div>
-                  <div className="text-sm font-medium text-green-500">
-                    +{coin.change24h.toFixed(2)}%
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          {/* Top Losers Section */}
-          <div className={`p-6 rounded-xl border backdrop-blur-sm ${
-            isDarkMode 
-              ? 'bg-gray-800/60 border-gray-700/50' 
-              : 'bg-white/80 border-gray-200/50'
-          }`}>
-            <div className="flex items-center justify-between mb-4">
-              <h3 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                📉 Top Losers
-              </h3>
-              <Link to="/market" className="text-primary text-sm hover:underline">View more</Link>
-            </div>
-            <div className="space-y-3">
-              {[...marketData.coins].sort((a, b) => a.change24h - b.change24h).slice(0, 3).map((coin, index) => (
-                <div key={index} className="flex items-center space-x-3">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                    isDarkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-700'
-                  }`}>
-                    {coin.symbol.charAt(0)}
-                  </div>
-                  <div className="flex-1">
-                    <div className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                      {coin.symbol}
-                    </div>
-                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                      ${coin.price.toFixed(coin.price > 1 ? 2 : 6)}
-                    </div>
-                  </div>
-                  <div className="text-sm font-medium text-red-500">
-                    {coin.change24h.toFixed(2)}%
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+          <TopMetrics isDarkMode={isDarkMode} />
         </motion.div>
       </div>
 
