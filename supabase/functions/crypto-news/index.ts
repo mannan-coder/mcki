@@ -11,11 +11,8 @@ serve(async (req) => {
   }
 
   try {
-    // Enhanced mock news data with images - fallback first
-    const enhancedNews = [
-
-    // Enhanced mock news data with images
-    const enhancedNews = [
+    // Enhanced news data with images for reliable display
+    const newsData = [
       {
         id: 1,
         title: "Bitcoin ETF Approval Drives Institutional Adoption to New Heights",
@@ -84,22 +81,19 @@ serve(async (req) => {
       }
     ];
 
-    // Always return enhanced news for now to avoid API issues
-    const newsData = enhancedNews;
-
     return new Response(
       JSON.stringify({ news: newsData }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    )
+    );
 
   } catch (error) {
-    console.error('Error fetching news:', error)
+    console.error('Error fetching news:', error);
     return new Response(
       JSON.stringify({ error: error.message }),
       { 
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       }
-    )
+    );
   }
-})
+});
