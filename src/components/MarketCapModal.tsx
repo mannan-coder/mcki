@@ -78,7 +78,7 @@ const MarketCapModal = ({ isOpen, onClose, isDarkMode, marketData }: MarketCapMo
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className={`max-w-4xl h-[80vh] ${isDarkMode ? 'bg-gray-900' : 'bg-white'}`}>
-        <DialogHeader>
+        <DialogHeader className="flex flex-row items-center justify-between">
           <DialogTitle className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Total Cryptocurrency Market Cap Chart
           </DialogTitle>

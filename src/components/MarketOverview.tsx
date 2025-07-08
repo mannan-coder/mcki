@@ -178,9 +178,25 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
                 </div>
               </div>
               
-              {/* Mini Chart */}
-              <div className="h-12 bg-gradient-to-r from-green-500/10 to-green-500/5 rounded-lg flex items-end justify-center">
-                <div className="text-xs text-green-500 font-medium">📈 Click to view detailed chart</div>
+              {/* Mini Chart Preview */}
+              <div className="h-12 relative">
+                <svg width="100%" height="100%" className="overflow-visible">
+                  <defs>
+                    <linearGradient id="miniMarketCapGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#10b981" stopOpacity="0.3"/>
+                      <stop offset="100%" stopColor="#10b981" stopOpacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  <path
+                    d="M0,40 Q25,35 50,30 T100,25 T150,20 T200,25 T250,30 L250,48 L0,48 Z"
+                    fill="url(#miniMarketCapGradient)"
+                    stroke="#10b981"
+                    strokeWidth="2"
+                  />
+                </svg>
+                <div className={`absolute bottom-0 right-0 text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  📈 Click for detailed view
+                </div>
               </div>
             </div>
 
@@ -214,9 +230,34 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
                 </div>
               </div>
               
-              {/* Mini Chart */}
-              <div className="h-12 bg-gradient-to-r from-blue-500/10 to-blue-500/5 rounded-lg flex items-end justify-center">
-                <div className="text-xs text-blue-500 font-medium">📊 Click to view detailed chart</div>
+              {/* Mini Chart Preview */}
+              <div className="h-12 relative">
+                <svg width="100%" height="100%" className="overflow-visible">
+                  <defs>
+                    <linearGradient id="miniVolumeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                      <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3"/>
+                      <stop offset="100%" stopColor="#3b82f6" stopOpacity="0"/>
+                    </linearGradient>
+                  </defs>
+                  {/* Volume bars */}
+                  <rect x="10" y="25" width="15" height="23" fill="#3b82f6" opacity="0.7"/>
+                  <rect x="30" y="15" width="15" height="33" fill="#3b82f6" opacity="0.7"/>
+                  <rect x="50" y="30" width="15" height="18" fill="#3b82f6" opacity="0.7"/>
+                  <rect x="70" y="20" width="15" height="28" fill="#3b82f6" opacity="0.7"/>
+                  <rect x="90" y="10" width="15" height="38" fill="#3b82f6" opacity="0.7"/>
+                  <rect x="110" y="35" width="15" height="13" fill="#3b82f6" opacity="0.7"/>
+                  <rect x="130" y="25" width="15" height="23" fill="#3b82f6" opacity="0.7"/>
+                  {/* Trend line */}
+                  <path
+                    d="M15,35 L40,25 L60,40 L80,30 L100,20 L120,45 L140,35"
+                    fill="none"
+                    stroke="#ef4444"
+                    strokeWidth="2"
+                  />
+                </svg>
+                <div className={`absolute bottom-0 right-0 text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  📊 Click for detailed view
+                </div>
               </div>
             </div>
           </div>
