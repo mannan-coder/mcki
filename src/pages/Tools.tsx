@@ -17,11 +17,18 @@ import {
   Percent,
   Clock,
   Target,
-  PieChart
+  PieChart,
+  Shield,
+  TrendingDown,
+  Activity,
+  AlertTriangle,
+  Eye,
+  Database
 } from 'lucide-react';
 
 const Tools = () => {
   const [isDarkMode, setIsDarkMode] = useState(true);
+  const [activeTab, setActiveTab] = useState('roi');
   const [investmentAmount, setInvestmentAmount] = useState('1000');
   const [roi, setRoi] = useState('15');
   const [timePeriod, setTimePeriod] = useState('12');
@@ -49,6 +56,22 @@ const Tools = () => {
   const [annualRate, setAnnualRate] = useState('8');
   const [compoundFreq, setCompoundFreq] = useState('12');
   const [years, setYears] = useState('5');
+  
+  // Pump and Dump Detector
+  const [tokenSymbol, setTokenSymbol] = useState('');
+  const [priceData, setPriceData] = useState('');
+  const [volumeData, setVolumeData] = useState('');
+  const [timeframe, setTimeframe] = useState('24');
+  
+  // DCA Calculator
+  const [dcaAmount, setDcaAmount] = useState('100');
+  const [dcaFrequency, setDcaFrequency] = useState('weekly');
+  const [dcaPeriod, setDcaPeriod] = useState('52');
+  
+  // Staking Calculator
+  const [stakingAmount, setStakingAmount] = useState('1000');
+  const [stakingAPY, setStakingAPY] = useState('12');
+  const [stakingPeriod, setStakingPeriod] = useState('12');
 
   const calculateROI = () => {
     const amount = parseFloat(investmentAmount) || 0;
@@ -167,48 +190,178 @@ const Tools = () => {
   const riskResult = calculateRisk();
   const compoundResult = calculateCompound();
 
+  // Additional calculation functions
+  const calculatePumpDump = () => {
+    if (!priceData || !volumeData) return { riskScore: 0, alerts: [], analysis: 'No data' };
+    
+    const prices = priceData.split(',').map(p => parseFloat(p.trim())).filter(p => !isNaN(p));
+    const volumes = volumeData.split(',').map(v => parseFloat(v.trim())).filter(v => !isNaN(v));
+    
+    if (prices.length < 2 || volumes.length < 2) {
+      return { riskScore: 0, alerts: ['Insufficient data'], analysis: 'Need more data points' };
+    }
+    
+    const priceChange = ((prices[prices.length - 1] - prices[0]) / prices[0]) * 100;
+    const avgVolume = volumes.reduce((a, b) => a + b, 0) / volumes.length;
+    const maxVolume = Math.max(...volumes);
+    const volumeSpike = maxVolume / avgVolume;
+    
+    let riskScore = 0;
+    const alerts = [];
+    
+    // High price increase with volume spike
+    if (priceChange > 50 && volumeSpike > 3) {
+      riskScore += 40;
+      alerts.push('Significant price pump with volume spike detected');
+    }
+    
+    // Rapid price changes
+    if (Math.abs(priceChange) > 30) {
+      riskScore += 30;
+      alerts.push('Rapid price movement detected');
+    }
+    
+    // Volume anomalies
+    if (volumeSpike > 5) {
+      riskScore += 20;
+      alerts.push('Unusual volume activity detected');
+    }
+    
+    // Time-based risk
+    const hours = parseFloat(timeframe);
+    if (hours < 24 && Math.abs(priceChange) > 20) {
+      riskScore += 10;
+      alerts.push('Rapid movement in short timeframe');
+    }
+    
+    riskScore = Math.min(riskScore, 100);
+    
+    const analysis = riskScore > 70 ? 'HIGH RISK - Potential pump and dump' :
+                    riskScore > 40 ? 'MEDIUM RISK - Monitor closely' :
+                    'LOW RISK - Normal activity';
+    
+    return {
+      riskScore: riskScore.toFixed(0),
+      alerts: alerts.length > 0 ? alerts : ['No suspicious activity detected'],
+      analysis,
+      priceChange: priceChange.toFixed(2),
+      volumeSpike: volumeSpike.toFixed(2)
+    };
+  };
+  
+  const calculateDCA = () => {
+    const amount = parseFloat(dcaAmount) || 0;
+    const periods = parseFloat(dcaPeriod) || 0;
+    const frequency = dcaFrequency === 'daily' ? 365 : 
+                     dcaFrequency === 'weekly' ? 52 : 
+                     dcaFrequency === 'monthly' ? 12 : 1;
+    
+    const totalInvested = amount * periods;
+    const averageCost = totalInvested / periods; // Simplified - assumes equal amounts
+    const totalPeriods = periods;
+    
+    return {
+      totalInvested: totalInvested.toFixed(2),
+      averageCost: averageCost.toFixed(2),
+      totalPeriods: totalPeriods.toFixed(0),
+      frequency: dcaFrequency
+    };
+  };
+  
+  const calculateStaking = () => {
+    const amount = parseFloat(stakingAmount) || 0;
+    const apy = parseFloat(stakingAPY) / 100 || 0;
+    const months = parseFloat(stakingPeriod) || 0;
+    
+    const monthlyRate = apy / 12;
+    const finalAmount = amount * Math.pow(1 + monthlyRate, months);
+    const rewards = finalAmount - amount;
+    const monthlyRewards = rewards / months;
+    
+    return {
+      finalAmount: finalAmount.toFixed(2),
+      totalRewards: rewards.toFixed(2),
+      monthlyRewards: monthlyRewards.toFixed(2),
+      effectiveAPY: (apy * 100).toFixed(2)
+    };
+  };
+
+  const pumpDumpResult = calculatePumpDump();
+  const dcaResult = calculateDCA();
+  const stakingResult = calculateStaking();
+
   const tools = [
     {
-      id: 'roi-calculator',
+      id: 'roi',
       title: 'ROI Calculator',
       description: 'Calculate potential returns on your cryptocurrency investments',
       icon: Calculator,
-      category: 'investment'
+      category: 'investment',
+      tabValue: 'roi'
     },
     {
-      id: 'price-analyzer',
+      id: 'price',
       title: 'Price Change Analyzer',
       description: 'Analyze price changes and percentage movements',
       icon: TrendingUp,
-      category: 'analysis'
+      category: 'analysis',
+      tabValue: 'price'
     },
     {
-      id: 'arbitrage-finder',
+      id: 'arbitrage',
       title: 'Arbitrage Opportunity Finder',
       description: 'Find profitable arbitrage opportunities across exchanges',
       icon: Zap,
-      category: 'arbitrage'
+      category: 'arbitrage',
+      tabValue: 'arbitrage'
     },
     {
-      id: 'portfolio-tracker',
+      id: 'portfolio',
       title: 'Portfolio Performance Tracker',
       description: 'Track and analyze your cryptocurrency portfolio performance',
       icon: PieChart,
-      category: 'portfolio'
+      category: 'portfolio',
+      tabValue: 'portfolio'
     },
     {
-      id: 'risk-calculator',
+      id: 'risk',
       title: 'Risk Assessment Calculator',
       description: 'Calculate risk-to-reward ratios for your trades',
       icon: Target,
-      category: 'risk'
+      category: 'risk',
+      tabValue: 'risk'
     },
     {
-      id: 'compound-calculator',
+      id: 'compound',
       title: 'Compound Interest Calculator',
       description: 'Calculate compound interest on your crypto holdings',
       icon: BarChart3,
-      category: 'investment'
+      category: 'investment',
+      tabValue: 'compound'
+    },
+    {
+      id: 'pump-dump',
+      title: 'Pump & Dump Detector',
+      description: 'Analyze token patterns to detect potential pump and dump schemes',
+      icon: Shield,
+      category: 'security',
+      tabValue: 'pump-dump'
+    },
+    {
+      id: 'dca',
+      title: 'DCA Calculator',
+      description: 'Calculate dollar-cost averaging strategy returns',
+      icon: TrendingDown,
+      category: 'investment',
+      tabValue: 'dca'
+    },
+    {
+      id: 'staking',
+      title: 'Staking Calculator',
+      description: 'Calculate potential staking rewards and APY',
+      icon: Database,
+      category: 'defi',
+      tabValue: 'staking'
     }
   ];
 
@@ -235,7 +388,7 @@ const Tools = () => {
               <Card className="bg-primary/5 border-primary/20">
                 <CardContent className="p-4 text-center">
                   <Calculator className="h-8 w-8 text-primary mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-primary">12+</div>
+                  <div className="text-2xl font-bold text-primary">9+</div>
                   <div className="text-sm text-muted-foreground">Tools Available</div>
                 </CardContent>
               </Card>
@@ -279,12 +432,29 @@ const Tools = () => {
                   <CardContent>
                     <div className="space-y-3">
                       {tools.map((tool) => (
-                        <div key={tool.id} className="flex items-start space-x-3 p-3 rounded-lg border border-border hover:bg-muted/30 transition-colors cursor-pointer">
-                          <tool.icon className="h-5 w-5 text-primary mt-0.5" />
+                        <div 
+                          key={tool.id} 
+                          onClick={() => setActiveTab(tool.tabValue)}
+                          className={`flex items-start space-x-3 p-3 rounded-lg border transition-colors cursor-pointer ${
+                            activeTab === tool.tabValue 
+                              ? 'bg-primary text-primary-foreground border-primary' 
+                              : 'border-border hover:bg-muted/30'
+                          }`}
+                        >
+                          <tool.icon className={`h-5 w-5 mt-0.5 ${
+                            activeTab === tool.tabValue ? 'text-primary-foreground' : 'text-primary'
+                          }`} />
                           <div className="flex-1 min-w-0">
-                            <div className="font-medium text-sm">{tool.title}</div>
-                            <div className="text-xs text-muted-foreground">{tool.description}</div>
-                            <Badge variant="outline" className="mt-1 text-xs">
+                            <div className={`font-medium text-sm ${
+                              activeTab === tool.tabValue ? 'text-primary-foreground' : ''
+                            }`}>{tool.title}</div>
+                            <div className={`text-xs ${
+                              activeTab === tool.tabValue ? 'text-primary-foreground/80' : 'text-muted-foreground'
+                            }`}>{tool.description}</div>
+                            <Badge 
+                              variant={activeTab === tool.tabValue ? "secondary" : "outline"} 
+                              className="mt-1 text-xs"
+                            >
                               {tool.category}
                             </Badge>
                           </div>
@@ -297,15 +467,17 @@ const Tools = () => {
 
               {/* Active Calculators */}
               <div className="lg:col-span-2">
-                <Tabs defaultValue="roi" className="space-y-6">
-                  <TabsList className="grid w-full grid-cols-6 gap-1">
-                    <TabsTrigger value="roi" className="text-xs">ROI</TabsTrigger>
-                    <TabsTrigger value="price" className="text-xs">Price</TabsTrigger>
-                    <TabsTrigger value="arbitrage" className="text-xs">Arbitrage</TabsTrigger>
-                    <TabsTrigger value="portfolio" className="text-xs">Portfolio</TabsTrigger>
-                    <TabsTrigger value="risk" className="text-xs">Risk</TabsTrigger>
-                    <TabsTrigger value="compound" className="text-xs">Compound</TabsTrigger>
-                  </TabsList>
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+                  <div className="hidden">
+                    <TabsList className="grid w-full grid-cols-6 gap-1">
+                      <TabsTrigger value="roi" className="text-xs">ROI</TabsTrigger>
+                      <TabsTrigger value="price" className="text-xs">Price</TabsTrigger>
+                      <TabsTrigger value="arbitrage" className="text-xs">Arbitrage</TabsTrigger>
+                      <TabsTrigger value="portfolio" className="text-xs">Portfolio</TabsTrigger>
+                      <TabsTrigger value="risk" className="text-xs">Risk</TabsTrigger>
+                      <TabsTrigger value="compound" className="text-xs">Compound</TabsTrigger>
+                    </TabsList>
+                  </div>
 
                   <TabsContent value="roi">
                     <Card>
@@ -744,6 +916,252 @@ const Tools = () => {
                               <Percent className="h-6 w-6 text-accent mx-auto mb-2" />
                               <div className="text-xl font-bold text-accent">{compoundResult.effectiveRate}%</div>
                               <div className="text-sm text-muted-foreground">Effective Rate</div>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+
+                  <TabsContent value="pump-dump">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center space-x-2">
+                          <Shield className="h-5 w-5" />
+                          <span>Pump & Dump Detector</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Token Symbol</label>
+                            <Input
+                              type="text"
+                              value={tokenSymbol}
+                              onChange={(e) => setTokenSymbol(e.target.value)}
+                              placeholder="BTC"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Price Data (comma separated)</label>
+                            <Input
+                              type="text"
+                              value={priceData}
+                              onChange={(e) => setPriceData(e.target.value)}
+                              placeholder="42000,44000,50000,48000"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Volume Data (comma separated)</label>
+                            <Input
+                              type="text"
+                              value={volumeData}
+                              onChange={(e) => setVolumeData(e.target.value)}
+                              placeholder="1000,1500,5000,2000"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Timeframe (hours)</label>
+                            <Input
+                              type="number"
+                              value={timeframe}
+                              onChange={(e) => setTimeframe(e.target.value)}
+                              placeholder="24"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                          <Card className={`border ${parseInt(pumpDumpResult.riskScore.toString()) > 70 ? 'bg-destructive/5 border-destructive/20' : parseInt(pumpDumpResult.riskScore.toString()) > 40 ? 'bg-warning/5 border-warning/20' : 'bg-success/5 border-success/20'}`}>
+                            <CardContent className="p-4 text-center">
+                              <AlertTriangle className={`h-6 w-6 mx-auto mb-2 ${parseInt(pumpDumpResult.riskScore.toString()) > 70 ? 'text-destructive' : parseInt(pumpDumpResult.riskScore.toString()) > 40 ? 'text-warning' : 'text-success'}`} />
+                              <div className={`text-xl font-bold ${parseInt(pumpDumpResult.riskScore.toString()) > 70 ? 'text-destructive' : parseInt(pumpDumpResult.riskScore.toString()) > 40 ? 'text-warning' : 'text-success'}`}>
+                                {pumpDumpResult.riskScore}/100
+                              </div>
+                              <div className="text-sm text-muted-foreground">Risk Score</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-primary/5 border-primary/20">
+                            <CardContent className="p-4 text-center">
+                              <TrendingUp className="h-6 w-6 text-primary mx-auto mb-2" />
+                              <div className="text-xl font-bold text-primary">{pumpDumpResult.priceChange}%</div>
+                              <div className="text-sm text-muted-foreground">Price Change</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-accent/5 border-accent/20">
+                            <CardContent className="p-4 text-center">
+                              <Activity className="h-6 w-6 text-accent mx-auto mb-2" />
+                              <div className="text-xl font-bold text-accent">{pumpDumpResult.volumeSpike}x</div>
+                              <div className="text-sm text-muted-foreground">Volume Spike</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-muted/5 border-muted/20">
+                            <CardContent className="p-4">
+                              <div className="text-sm font-medium mb-2">Analysis</div>
+                              <div className="text-xs text-muted-foreground">{pumpDumpResult.analysis}</div>
+                              <div className="mt-2 space-y-1">
+                                {pumpDumpResult.alerts.map((alert, index) => (
+                                  <div key={index} className="text-xs text-muted-foreground">• {alert}</div>
+                                ))}
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+
+                  <TabsContent value="dca">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center space-x-2">
+                          <TrendingDown className="h-5 w-5" />
+                          <span>DCA Calculator</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">DCA Amount ($)</label>
+                            <Input
+                              type="number"
+                              value={dcaAmount}
+                              onChange={(e) => setDcaAmount(e.target.value)}
+                              placeholder="100"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Frequency</label>
+                            <select 
+                              className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground"
+                              value={dcaFrequency}
+                              onChange={(e) => setDcaFrequency(e.target.value)}
+                            >
+                              <option value="daily">Daily</option>
+                              <option value="weekly">Weekly</option>
+                              <option value="monthly">Monthly</option>
+                            </select>
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Number of Periods</label>
+                            <Input
+                              type="number"
+                              value={dcaPeriod}
+                              onChange={(e) => setDcaPeriod(e.target.value)}
+                              placeholder="52"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                          <Card className="bg-primary/5 border-primary/20">
+                            <CardContent className="p-4 text-center">
+                              <DollarSign className="h-6 w-6 text-primary mx-auto mb-2" />
+                              <div className="text-xl font-bold text-primary">${dcaResult.totalInvested}</div>
+                              <div className="text-sm text-muted-foreground">Total Invested</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-success/5 border-success/20">
+                            <CardContent className="p-4 text-center">
+                              <Calculator className="h-6 w-6 text-success mx-auto mb-2" />
+                              <div className="text-xl font-bold text-success">${dcaResult.averageCost}</div>
+                              <div className="text-sm text-muted-foreground">Average Cost</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-accent/5 border-accent/20">
+                            <CardContent className="p-4 text-center">
+                              <Clock className="h-6 w-6 text-accent mx-auto mb-2" />
+                              <div className="text-xl font-bold text-accent">{dcaResult.totalPeriods}</div>
+                              <div className="text-sm text-muted-foreground">Total Periods</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-warning/5 border-warning/20">
+                            <CardContent className="p-4 text-center">
+                              <Activity className="h-6 w-6 text-warning mx-auto mb-2" />
+                              <div className="text-xl font-bold text-warning capitalize">{dcaResult.frequency}</div>
+                              <div className="text-sm text-muted-foreground">Frequency</div>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+
+                  <TabsContent value="staking">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center space-x-2">
+                          <Database className="h-5 w-5" />
+                          <span>Staking Calculator</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Staking Amount ($)</label>
+                            <Input
+                              type="number"
+                              value={stakingAmount}
+                              onChange={(e) => setStakingAmount(e.target.value)}
+                              placeholder="1000"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">APY (%)</label>
+                            <Input
+                              type="number"
+                              value={stakingAPY}
+                              onChange={(e) => setStakingAPY(e.target.value)}
+                              placeholder="12"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Staking Period (months)</label>
+                            <Input
+                              type="number"
+                              value={stakingPeriod}
+                              onChange={(e) => setStakingPeriod(e.target.value)}
+                              placeholder="12"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                          <Card className="bg-primary/5 border-primary/20">
+                            <CardContent className="p-4 text-center">
+                              <DollarSign className="h-6 w-6 text-primary mx-auto mb-2" />
+                              <div className="text-xl font-bold text-primary">${stakingResult.finalAmount}</div>
+                              <div className="text-sm text-muted-foreground">Final Amount</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-success/5 border-success/20">
+                            <CardContent className="p-4 text-center">
+                              <TrendingUp className="h-6 w-6 text-success mx-auto mb-2" />
+                              <div className="text-xl font-bold text-success">${stakingResult.totalRewards}</div>
+                              <div className="text-sm text-muted-foreground">Total Rewards</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-accent/5 border-accent/20">
+                            <CardContent className="p-4 text-center">
+                              <Clock className="h-6 w-6 text-accent mx-auto mb-2" />
+                              <div className="text-xl font-bold text-accent">${stakingResult.monthlyRewards}</div>
+                              <div className="text-sm text-muted-foreground">Monthly Rewards</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-warning/5 border-warning/20">
+                            <CardContent className="p-4 text-center">
+                              <Percent className="h-6 w-6 text-warning mx-auto mb-2" />
+                              <div className="text-xl font-bold text-warning">{stakingResult.effectiveAPY}%</div>
+                              <div className="text-sm text-muted-foreground">Effective APY</div>
                             </CardContent>
                           </Card>
                         </div>
