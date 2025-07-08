@@ -81,14 +81,7 @@ const NewsAlert = ({ isDarkMode }: NewsAlertProps) => {
             </h3>
           </div>
 
-          {loading ? (
-            <div className="flex items-center justify-center py-8">
-              <RefreshCw className="animate-spin text-primary" size={24} />
-              <span className={`ml-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                Loading news...
-              </span>
-            </div>
-          ) : error ? (
+          {error ? (
             <div className="text-center py-8">
               <p className="text-red-500">Error loading news: {error}</p>
             </div>
@@ -104,28 +97,40 @@ const NewsAlert = ({ isDarkMode }: NewsAlertProps) => {
               <div key={news.id} className={`p-4 rounded-lg border ${
                 isDarkMode ? 'bg-gray-700/30 border-gray-600/30' : 'bg-gray-50 border-gray-200'
               }`}>
-                <div className="flex items-start justify-between mb-2">
-                  <div className="flex items-center space-x-2">
-                    <span className={`px-2 py-1 rounded text-xs font-medium border ${getImpactBg(news.impact)}`}>
-                      {news.category}
-                    </span>
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${getImpactColor(news.impact)}`}>
-                      {news.impact.toUpperCase()}
-                    </span>
-                  </div>
-                  <div className={`flex items-center text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    <Clock size={12} className="mr-1" />
-                    {news.time}
+                <div className="flex items-start space-x-4 mb-3">
+                  {news.image && (
+                    <img 
+                      src={news.image} 
+                      alt={news.title}
+                      className="w-20 h-16 object-cover rounded-lg flex-shrink-0"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                      }}
+                    />
+                  )}
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <span className={`px-2 py-1 rounded text-xs font-medium border ${getImpactBg(news.impact)}`}>
+                        {news.category}
+                      </span>
+                      <span className={`px-2 py-1 rounded text-xs font-medium ${getImpactColor(news.impact)}`}>
+                        {news.impact.toUpperCase()}
+                      </span>
+                      <div className={`flex items-center text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        <Clock size={12} className="mr-1" />
+                        {news.time}
+                      </div>
+                    </div>
+                    
+                    <h4 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {news.title}
+                    </h4>
+                    
+                    <p className={`text-sm mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                      {news.summary}
+                    </p>
                   </div>
                 </div>
-                
-                <h4 className={`font-semibold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  {news.title}
-                </h4>
-                
-                <p className={`text-sm mb-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  {news.summary}
-                </p>
                 
                 <div className="flex items-center justify-between">
                   <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>

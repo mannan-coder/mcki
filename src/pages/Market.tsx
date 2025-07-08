@@ -55,18 +55,7 @@ const MarketPage = () => {
     return matchesSearch && matchesCategory && matchesFavorites;
   }) || [];
 
-  if (loading) {
-    return (
-      <Layout>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex items-center justify-center h-64">
-            <RefreshCw className="animate-spin text-primary" size={32} />
-            <span className="ml-3 text-lg">Loading market data...</span>
-          </div>
-        </div>
-      </Layout>
-    );
-  }
+  // Don't show loading state, just render empty until data loads
 
   if (error) {
     return (

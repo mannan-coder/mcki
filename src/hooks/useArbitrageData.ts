@@ -41,7 +41,9 @@ export const useArbitrageData = () => {
 
   const fetchArbitrageData = async () => {
     try {
-      setLoading(true);
+      // Only set loading on initial fetch
+      if (!data) setLoading(true);
+      
       const { data: result, error } = await supabase.functions.invoke('crypto-arbitrage');
       
       if (error) throw error;

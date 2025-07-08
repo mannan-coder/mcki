@@ -9,17 +9,8 @@ interface TopMetricsProps {
 const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
   const { data: marketData, loading } = useCryptoData();
 
-  if (loading || !marketData) {
-    return (
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex items-center justify-center h-32">
-          <RefreshCw className="animate-spin text-primary" size={24} />
-          <span className={`ml-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Loading metrics...
-          </span>
-        </div>
-      </section>
-    );
+  if (!marketData) {
+    return null; // Don't show anything while loading
   }
 
   // Process real data

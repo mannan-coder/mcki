@@ -10,6 +10,7 @@ interface NewsItem {
   impact: string;
   source: string;
   url?: string;
+  image?: string;
 }
 
 export const useCryptoNews = () => {
@@ -19,7 +20,9 @@ export const useCryptoNews = () => {
 
   const fetchNews = async () => {
     try {
-      setLoading(true);
+      // Only set loading on initial fetch
+      if (news.length === 0) setLoading(true);
+      
       const { data: result, error } = await supabase.functions.invoke('crypto-news');
       
       if (error) throw error;

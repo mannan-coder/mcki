@@ -42,7 +42,9 @@ export const useCryptoData = () => {
 
   const fetchCryptoData = async (limit: number = 250) => {
     try {
-      setLoading(true);
+      // Only set loading on initial fetch
+      if (!data) setLoading(true);
+      
       const { data: result, error } = await supabase.functions.invoke('crypto-market-data', {
         body: { limit: limit.toString() }
       });

@@ -39,7 +39,9 @@ export const useSentimentData = () => {
 
   const fetchSentimentData = async () => {
     try {
-      setLoading(true);
+      // Only set loading on initial fetch
+      if (!data) setLoading(true);
+      
       const { data: result, error } = await supabase.functions.invoke('crypto-sentiment');
       
       if (error) throw error;
