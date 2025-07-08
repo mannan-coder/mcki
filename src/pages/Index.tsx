@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import TopMetrics from '@/components/TopMetrics';
+import TopMetricsBanner from '@/components/TopMetricsBanner';
 import ArbitrageDashboard from '@/components/ArbitrageDashboard';
 import MarketOverview from '@/components/MarketOverview';
 import OnChainAnalysis from '@/components/OnChainAnalysis';
@@ -22,6 +23,9 @@ const Index = () => {
         <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
         
         <main className="relative z-10 pb-8">
+          {/* CoinGecko-style Top Banner */}
+          <TopMetricsBanner isDarkMode={isDarkMode} />
+          
           {/* Hero Section */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-4">
             <div className="text-center mb-8">

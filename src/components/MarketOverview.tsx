@@ -1,4 +1,3 @@
-
 import { TrendingUp, ArrowUp, ArrowDown, Activity, DollarSign, Users, BarChart3, ExternalLink, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCryptoData } from '@/hooks/useCryptoData';
@@ -121,228 +120,153 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
 
   return (
     <section id="market" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="flex items-center justify-between mb-10">
+      <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className={`text-3xl lg:text-4xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            📊 Market Overview
+          <h2 className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            Cryptocurrency Prices by Market Cap
           </h2>
-          <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            Real-time cryptocurrency market statistics and global metrics
+          <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+            The global cryptocurrency market cap today is <span className="font-semibold text-primary">{marketStats.totalMarketCap}</span>, a <span className="text-green-500 font-semibold">+2.9% change</span> in the last 24 hours. 
+            <Link to="/market" className="text-primary hover:underline ml-1">Read more</Link>
           </p>
         </div>
-        <Link 
-          to="/market"
-          className="flex items-center space-x-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
-        >
-          <span>View Full Market</span>
-          <ExternalLink size={18} />
-        </Link>
+        <div className="flex items-center space-x-2">
+          <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Highlights</span>
+          <div className="w-10 h-5 bg-green-500 rounded-full relative">
+            <div className="w-4 h-4 bg-white rounded-full absolute top-0.5 right-0.5"></div>
+          </div>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
-        {/* Enhanced Market Cap with Comprehensive Details */}
-        <div className={`p-6 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-card-hover ${
-          isDarkMode 
-            ? 'bg-gray-800/60 border-gray-700/50 hover:border-gray-600/70' 
-            : 'bg-white/80 border-gray-200/50 hover:border-gray-300/70'
-        }`}>
-          <div className="flex items-center justify-between mb-3">
-            <h3 className={`text-base font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              Total Market Cap
-            </h3>
-            <div className="text-green-500 text-xs font-medium">+2.4%</div>
-          </div>
-          <div className="text-2xl font-bold text-blue-500 mb-3">
-            {marketStats.totalMarketCap}
-          </div>
-          
-          <div className="space-y-1.5 mb-3">
-            <div className="flex items-center justify-between text-xs">
-              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>24h Change:</span>
-              <span className="text-green-500 font-semibold">+$58.2B</span>
+      {/* CoinGecko-style main content layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Main Market Stats - Left Column */}
+        <div className="lg:col-span-8 space-y-6">
+          {/* Market Cap Card */}
+          <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+            isDarkMode 
+              ? 'bg-gray-800/60 border-gray-700/50' 
+              : 'bg-white/80 border-gray-200/50'
+          }`}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                {marketStats.totalMarketCap}
+              </h3>
+              <div className="text-green-500 text-sm font-medium">+2.9%</div>
             </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>7d Change:</span>
-              <span className="text-green-500 font-semibold">+$127.8B</span>
+            <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-4`}>
+              Market Cap
             </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>BTC Dominance:</span>
-              <span className="text-orange-500 font-semibold">{marketStats.btcDominance}</span>
-            </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>ETH Dominance:</span>
-              <span className="text-blue-500 font-semibold">{marketStats.ethDominance}</span>
-            </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Open Interest:</span>
-              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$34.2B</span>
-            </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>ETH Gas Fee:</span>
-              <span className="text-blue-500 font-semibold">12 gwei</span>
-            </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Altcoin Season:</span>
-              <span className="text-green-500 font-semibold">78/100</span>
+            {/* Simple chart placeholder */}
+            <div className="h-16 bg-gradient-to-r from-green-500/20 via-green-500/10 to-transparent rounded-lg flex items-end">
+              <div className="w-full h-full bg-green-500/20 rounded-lg"></div>
             </div>
           </div>
-          
-          <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
-            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Market Health: <span className="text-green-500 font-medium">Strong</span> • ATH: $3.02T
-            </p>
-          </div>
-        </div>
 
-        {/* Enhanced Volume with Comprehensive Coin Details */}
-        <div className={`p-6 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-card-hover ${
-          isDarkMode 
-            ? 'bg-gray-800/60 border-gray-700/50 hover:border-gray-600/70' 
-            : 'bg-white/80 border-gray-200/50 hover:border-gray-300/70'
-        }`}>
-          <div className="flex items-center justify-between mb-3">
-            <h3 className={`text-base font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          {/* 24h Volume Card */}
+          <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+            isDarkMode 
+              ? 'bg-gray-800/60 border-gray-700/50' 
+              : 'bg-white/80 border-gray-200/50'
+          }`}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                {marketStats.totalVolume}
+              </h3>
+              <div className="text-red-500 text-sm font-medium">-1.5%</div>
+            </div>
+            <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-4`}>
               24h Trading Volume
-            </h3>
-            <div className="text-red-500 text-xs font-medium">-1.2%</div>
-          </div>
-          <div className="text-2xl font-bold text-purple-500 mb-3">
-            {marketStats.totalVolume}
-          </div>
-          
-          <div className="space-y-1.5 mb-3">
-            <div className="flex items-center justify-between text-xs">
-              <div className="flex items-center">
-                <div className="w-1.5 h-1.5 bg-orange-500 rounded-full mr-2"></div>
-                <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>BTC Volume:</span>
-              </div>
-              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$28.4B</span>
             </div>
-            <div className="flex items-center justify-between text-xs">
-              <div className="flex items-center">
-                <div className="w-1.5 h-1.5 bg-blue-500 rounded-full mr-2"></div>
-                <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>ETH Volume:</span>
-              </div>
-              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$16.8B</span>
-            </div>
-            <div className="flex items-center justify-between text-xs">
-              <div className="flex items-center">
-                <div className="w-1.5 h-1.5 bg-green-500 rounded-full mr-2"></div>
-                <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>SOL Volume:</span>
-              </div>
-              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$3.2B</span>
-            </div>
-            <div className="flex items-center justify-between text-xs">
-              <div className="flex items-center">
-                <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></div>
-                <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>USDT Volume:</span>
-              </div>
-              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$24.1B</span>
-            </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>DEX Volume:</span>
-              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$8.4B</span>
-            </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Derivatives:</span>
-              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$28.5B</span>
-            </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Avg Daily (7d):</span>
-              <span className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>$91.7B</span>
-            </div>
-          </div>
-          
-          <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
-            <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Spot: <span className="text-blue-500 font-medium">68%</span> • Futures: <span className="text-purple-500 font-medium">32%</span>
-            </p>
-          </div>
-        </div>
-
-        {/* Fear & Greed Index - Compact */}
-        <div className={`p-6 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-card-hover ${
-          isDarkMode 
-            ? 'bg-gray-800/60 border-gray-700/50 hover:border-gray-600/70' 
-            : 'bg-white/80 border-gray-200/50 hover:border-gray-300/70'
-        }`}>
-          <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Fear & Greed Index
-          </h3>
-          
-          <div className="mb-3">
-            <div className="flex items-center justify-between mb-2">
-              <div className={`text-2xl font-bold ${getFearGreedColor(fearGreedIndex)}`}>
-                {fearGreedIndex}
-              </div>
-              <div className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                {getFearGreedLabel(fearGreedIndex)}
-              </div>
-            </div>
-            
-            {/* Fear & Greed Bar */}
-            <div className={`w-full bg-gray-200 rounded-full h-3 ${isDarkMode ? 'bg-gray-700' : ''} mb-1`}>
-              <div 
-                className={`h-3 rounded-full transition-all duration-1000 ${
-                  fearGreedIndex >= 75 ? 'bg-green-500' : 
-                  fearGreedIndex >= 50 ? 'bg-yellow-500' : 
-                  fearGreedIndex >= 25 ? 'bg-orange-500' : 'bg-red-500'
-                }`}
-                style={{ width: `${fearGreedIndex}%` }}
-              ></div>
-            </div>
-            
-            {/* Scale indicators */}
-            <div className="flex justify-between text-xs mt-1">
-              <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>0</span>
-              <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>25</span>
-              <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>50</span>
-              <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>75</span>
-              <span className={`${isDarkMode ? 'text-gray-500' : 'text-gray-400'}`}>100</span>
-            </div>
-          </div>
-
-          <div className="space-y-1 mb-3">
-            <div className="flex items-center justify-between text-xs">
-              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Yesterday:</span>
-              <span className={`font-medium ${getFearGreedColor(historicalData.yesterday)}`}>
-                {historicalData.yesterday} ({historicalData.current > historicalData.yesterday ? '+' : ''}{historicalData.current - historicalData.yesterday})
-              </span>
-            </div>
-            <div className="flex items-center justify-between text-xs">
-              <span className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>Week ago:</span>
-              <span className={`font-medium ${getFearGreedColor(historicalData.weekAgo)}`}>
-                {historicalData.weekAgo} ({historicalData.current > historicalData.weekAgo ? '+' : ''}{historicalData.current - historicalData.weekAgo})
-              </span>
-            </div>
-          </div>
-
-          <div className={`p-2 rounded-lg ${isDarkMode ? 'bg-gray-700/30' : 'bg-gray-50'}`}>
-            <div className="grid grid-cols-2 gap-2 text-xs">
-              <div className="text-center">
-                <div className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  24h Change
-                </div>
-                <div className={`font-bold ${historicalData.current > historicalData.yesterday ? 'text-green-500' : 'text-red-500'}`}>
-                  {historicalData.current > historicalData.yesterday ? '+' : ''}{historicalData.current - historicalData.yesterday}
-                </div>
-              </div>
-              <div className="text-center">
-                <div className={`font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-                  7d Change
-                </div>
-                <div className={`font-bold ${historicalData.current > historicalData.weekAgo ? 'text-green-500' : 'text-red-500'}`}>
-                  {historicalData.current > historicalData.weekAgo ? '+' : ''}{historicalData.current - historicalData.weekAgo}
-                </div>
-              </div>
+            {/* Simple chart placeholder */}
+            <div className="h-16 bg-gradient-to-r from-red-500/20 via-red-500/10 to-transparent rounded-lg flex items-end">
+              <div className="w-full h-full bg-red-500/20 rounded-lg"></div>
             </div>
           </div>
         </div>
 
-        <div className={`p-6 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-card-hover ${
+        {/* Right Sidebar - Trending & Top Gainers */}
+        <div className="lg:col-span-4 space-y-6">
+          {/* Trending Section */}
+          <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+            isDarkMode 
+              ? 'bg-gray-800/60 border-gray-700/50' 
+              : 'bg-white/80 border-gray-200/50'
+          }`}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                🔥 Trending
+              </h3>
+              <Link to="/market" className="text-primary text-sm hover:underline">View more</Link>
+            </div>
+            <div className="space-y-3">
+              {marketData.coins.slice(0, 3).map((coin, index) => (
+                <div key={index} className="flex items-center space-x-3">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                    isDarkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-700'
+                  }`}>
+                    {coin.symbol.charAt(0)}
+                  </div>
+                  <div className="flex-1">
+                    <div className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {coin.symbol}
+                    </div>
+                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      ${coin.price.toFixed(coin.price > 1 ? 2 : 6)}
+                    </div>
+                  </div>
+                  <div className={`text-sm font-medium ${coin.change24h > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    {coin.change24h > 0 ? '+' : ''}{coin.change24h.toFixed(2)}%
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Top Gainers Section */}
+          <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+            isDarkMode 
+              ? 'bg-gray-800/60 border-gray-700/50' 
+              : 'bg-white/80 border-gray-200/50'
+          }`}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                🚀 Top Gainers
+              </h3>
+              <Link to="/market" className="text-primary text-sm hover:underline">View more</Link>
+            </div>
+            <div className="space-y-3">
+              {[...marketData.coins].sort((a, b) => b.change24h - a.change24h).slice(0, 3).map((coin, index) => (
+                <div key={index} className="flex items-center space-x-3">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
+                    isDarkMode ? 'bg-gray-700 text-gray-200' : 'bg-gray-100 text-gray-700'
+                  }`}>
+                    {coin.symbol.charAt(0)}
+                  </div>
+                  <div className="flex-1">
+                    <div className={`text-sm font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {coin.symbol}
+                    </div>
+                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      ${coin.price.toFixed(coin.price > 1 ? 2 : 6)}
+                    </div>
+                  </div>
+                  <div className="text-sm font-medium text-green-500">
+                    +{coin.change24h.toFixed(2)}%
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Additional Stats Row */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+        <div className={`p-6 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
-            ? 'bg-gray-800/60 border-gray-700/50 hover:border-gray-600/70' 
-            : 'bg-white/80 border-gray-200/50 hover:border-gray-300/70'
+            ? 'bg-gray-800/60 border-gray-700/50' 
+            : 'bg-white/80 border-gray-200/50'
         }`}>
           <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Market Dominance
@@ -350,50 +274,19 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Bitcoin</span>
-              <span className="text-orange-500 font-semibold text-sm">{marketStats.btcDominance}</span>
-            </div>
-            <div className={`w-full bg-gray-200 rounded-full h-1.5 ${isDarkMode ? 'bg-gray-700' : ''}`}>
-              <div className="bg-orange-500 h-1.5 rounded-full" style={{ width: marketStats.btcDominance }}></div>
+              <span className="text-orange-500 font-semibold">{marketStats.btcDominance}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Ethereum</span>
-              <span className="text-blue-500 font-semibold text-sm">{realEthDominance}</span>
-            </div>
-            <div className={`w-full bg-gray-200 rounded-full h-1.5 ${isDarkMode ? 'bg-gray-700' : ''}`}>
-              <div className="bg-blue-500 h-1.5 rounded-full" style={{ width: realEthDominance }}></div>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Tether (USDT)</span>
-              <span className="text-green-500 font-semibold text-sm">3.7%</span>
-            </div>
-            <div className={`w-full bg-gray-200 rounded-full h-1.5 ${isDarkMode ? 'bg-gray-700' : ''}`}>
-              <div className="bg-green-500 h-1.5 rounded-full" style={{ width: '3.7%' }}></div>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>BNB</span>
-              <span className="text-yellow-500 font-semibold text-sm">3.1%</span>
-            </div>
-            <div className={`w-full bg-gray-200 rounded-full h-1.5 ${isDarkMode ? 'bg-gray-700' : ''}`}>
-              <div className="bg-yellow-500 h-1.5 rounded-full" style={{ width: '3.1%' }}></div>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Solana</span>
-              <span className="text-purple-500 font-semibold text-sm">2.8%</span>
-            </div>
-            <div className={`w-full bg-gray-200 rounded-full h-1.5 ${isDarkMode ? 'bg-gray-700' : ''}`}>
-              <div className="bg-purple-500 h-1.5 rounded-full" style={{ width: '2.8%' }}></div>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Others</span>
-              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>19.9%</span>
+              <span className="text-blue-500 font-semibold">{marketStats.ethDominance}</span>
             </div>
           </div>
         </div>
 
-        <div className={`p-6 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-card-hover ${
+        <div className={`p-6 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
-            ? 'bg-gray-800/60 border-gray-700/50 hover:border-gray-600/70' 
-            : 'bg-white/80 border-gray-200/50 hover:border-gray-300/70'
+            ? 'bg-gray-800/60 border-gray-700/50' 
+            : 'bg-white/80 border-gray-200/50'
         }`}>
           <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Market Statistics
@@ -406,105 +299,55 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Trading Pairs</span>
-              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                45,832
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
               <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Exchanges</span>
               <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 {marketStats.exchanges}
               </span>
             </div>
+          </div>
+        </div>
+
+        <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+          isDarkMode 
+            ? 'bg-gray-800/60 border-gray-700/50' 
+            : 'bg-white/80 border-gray-200/50'
+        }`}>
+          <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            24h Trading Volume
+          </h3>
+          <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>DeFi Volume</span>
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Total Volume</span>
               <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                $12.4B
+                {marketStats.totalVolume}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>New Listings (24h)</span>
-              <span className="text-green-500 font-semibold text-sm">
-                24
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Layer 1 Protocols</span>
-              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                156
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Meme Coins</span>
-              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                2,847
-              </span>
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Change</span>
+              <span className="text-red-500 font-semibold text-sm">-1.5%</span>
             </div>
           </div>
         </div>
 
-        <div className={`p-6 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-card-hover ${
+        <div className={`p-6 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
-            ? 'bg-gray-800/60 border-gray-700/50 hover:border-gray-600/70' 
-            : 'bg-white/80 border-gray-200/50 hover:border-gray-300/70'
+            ? 'bg-gray-800/60 border-gray-700/50' 
+            : 'bg-white/80 border-gray-200/50'
         }`}>
           <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Advanced Market Metrics
+            Fear & Greed Index
           </h3>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Staking Volume</span>
-              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                $145.2B
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Current</span>
+              <span className={`font-semibold text-sm ${getFearGreedColor(fearGreedIndex)}`}>
+                {fearGreedIndex}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Derivatives Volume</span>
-              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                $89.7B
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Futures Open Interest</span>
-              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                $34.2B
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>NFT Volume (24h)</span>
-              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                $892.4M
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Cross-chain Volume</span>
-              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                $4.8B
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Institutional Holdings</span>
-              <span className="text-blue-500 font-semibold text-sm">
-                68.4%
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Liquidations (24h)</span>
-              <span className="text-red-500 font-semibold text-sm">
-                $142.7M
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Long/Short Ratio</span>
-              <span className="text-green-500 font-semibold text-sm">
-                2.1:1
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Market Cap Change</span>
-              <span className="text-green-500 font-semibold text-sm">
-                +2.4%
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Status</span>
+              <span className={`font-semibold text-sm ${getFearGreedColor(fearGreedIndex)}`}>
+                {getFearGreedLabel(fearGreedIndex)}
               </span>
             </div>
           </div>

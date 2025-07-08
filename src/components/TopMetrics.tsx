@@ -142,9 +142,32 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
 
   return (
     <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      {/* Section Header */}
+      <div className="flex items-center justify-between mb-8">
+        <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          Market Insights
+        </h2>
+        <div className="flex items-center space-x-4">
+          <button className={`px-4 py-2 rounded-lg border transition-colors ${
+            isDarkMode 
+              ? 'border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700' 
+              : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
+          }`}>
+            All
+          </button>
+          <button className={`px-4 py-2 rounded-lg border transition-colors ${
+            isDarkMode 
+              ? 'border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700' 
+              : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
+          }`}>
+            Highlights
+          </button>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard 
-          title="Top Gainers" 
+          title="🔥 Top Gainers" 
           icon={ArrowUp} 
           gradient="from-green-500 to-emerald-600"
         >
@@ -154,7 +177,7 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
         </MetricCard>
 
         <MetricCard 
-          title="Top Losers" 
+          title="📉 Top Losers" 
           icon={ArrowDown} 
           gradient="from-red-500 to-rose-600"
         >
@@ -164,7 +187,7 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
         </MetricCard>
 
         <MetricCard 
-          title="Top Volume" 
+          title="💰 Top Volume" 
           icon={TrendingUp} 
           gradient="from-blue-500 to-cyan-600"
         >
@@ -174,7 +197,7 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
         </MetricCard>
 
         <MetricCard 
-          title="Newly Launched" 
+          title="✨ Newly Launched" 
           icon={Sparkles} 
           gradient="from-purple-500 to-violet-600"
         >
