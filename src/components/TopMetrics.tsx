@@ -10,7 +10,40 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
   const { data: marketData, loading } = useCryptoData();
 
   if (!marketData) {
-    return null; // Don't show anything while loading
+    return (
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className={`rounded-xl border backdrop-blur-sm ${
+              isDarkMode 
+                ? 'bg-gray-800/50 border-gray-700/50' 
+                : 'bg-white/70 border-gray-200/50'
+            }`}>
+              <div className={`p-4 border-b ${isDarkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
+                <div className="flex items-center space-x-2">
+                  <div className="w-10 h-10 bg-muted rounded-lg animate-pulse"></div>
+                  <div className="h-5 w-24 bg-muted rounded animate-pulse"></div>
+                </div>
+              </div>
+              <div className="p-4 space-y-2">
+                {[1, 2, 3, 4, 5].map((j) => (
+                  <div key={j} className="flex items-center justify-between py-1">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-6 h-6 bg-muted rounded-full animate-pulse"></div>
+                      <div className="h-4 w-12 bg-muted rounded animate-pulse"></div>
+                    </div>
+                    <div className="text-right">
+                      <div className="h-4 w-16 bg-muted rounded animate-pulse mb-1"></div>
+                      <div className="h-3 w-12 bg-muted/60 rounded animate-pulse"></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
   }
 
   // Process real data
@@ -47,59 +80,59 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
     }));
 
   const MetricCard = ({ title, icon: Icon, children, gradient }: any) => (
-    <div className={`rounded-xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 ${
+    <div className={`rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-card-hover ${
       isDarkMode 
-        ? 'bg-gray-800/50 border-gray-700/50 hover:border-gray-600' 
-        : 'bg-white/70 border-gray-200/50 hover:border-gray-300'
+        ? 'bg-gray-800/60 border-gray-700/50 hover:border-gray-600/70' 
+        : 'bg-white/80 border-gray-200/50 hover:border-gray-300/70'
     }`}>
-      <div className={`p-4 border-b ${isDarkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
-        <div className="flex items-center space-x-2">
-          <div className={`p-2 rounded-lg bg-gradient-to-r ${gradient}`}>
-            <Icon size={20} className="text-white" />
+      <div className={`p-5 border-b ${isDarkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
+        <div className="flex items-center space-x-3">
+          <div className={`p-2.5 rounded-xl bg-gradient-to-r ${gradient} shadow-lg`}>
+            <Icon size={22} className="text-white" />
           </div>
-          <h3 className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+          <h3 className={`font-bold text-lg ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             {title}
           </h3>
         </div>
       </div>
-      <div className="p-4 space-y-2">
+      <div className="p-5 space-y-3">
         {children}
       </div>
     </div>
   );
 
   const CoinItem = ({ symbol, change, price, volume, launched }: any) => (
-    <div className="flex items-center justify-between py-1">
-      <div className="flex items-center space-x-2">
-        <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold ${
-          isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
+    <div className="flex items-center justify-between py-2 px-1 rounded-lg hover:bg-muted/30 transition-colors">
+      <div className="flex items-center space-x-3">
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-md ${
+          isDarkMode ? 'bg-gradient-to-br from-gray-700 to-gray-800 text-gray-200' : 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700'
         }`}>
           {symbol.charAt(0)}
         </div>
-        <span className={`font-medium ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+        <span className={`font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
           {symbol}
         </span>
       </div>
       <div className="text-right">
         {change && (
-          <div className={`text-sm font-medium ${
+          <div className={`text-sm font-bold ${
             change.startsWith('+') ? 'text-green-500' : 'text-red-500'
           }`}>
             {change}
           </div>
         )}
         {price && (
-          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+          <div className={`text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
             {price}
           </div>
         )}
         {volume && (
-          <div className={`text-sm font-medium ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+          <div className={`text-sm font-bold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
             {volume}
           </div>
         )}
         {launched && (
-          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+          <div className={`text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
             {launched}
           </div>
         )}
@@ -108,8 +141,8 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
   );
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         <MetricCard 
           title="Top Gainers" 
           icon={ArrowUp} 

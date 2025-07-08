@@ -16,11 +16,38 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
   if (loading) {
     return (
       <section id="market" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex items-center justify-center h-64">
-          <RefreshCw className="animate-spin text-primary" size={32} />
-          <span className={`ml-3 text-lg ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Loading market data...
-          </span>
+        {/* Header Skeleton */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <div className="h-8 w-48 bg-muted rounded-lg animate-pulse mb-2"></div>
+            <div className="h-5 w-64 bg-muted/60 rounded-lg animate-pulse"></div>
+          </div>
+          <div className="h-10 w-32 bg-muted rounded-lg animate-pulse"></div>
+        </div>
+
+        {/* Cards Skeleton */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <div key={i} className={`p-6 rounded-xl border backdrop-blur-sm ${
+              isDarkMode 
+                ? 'bg-gray-800/50 border-gray-700/50' 
+                : 'bg-white/70 border-gray-200/50'
+            }`}>
+              <div className="flex items-center justify-between mb-4">
+                <div className="h-5 w-32 bg-muted rounded animate-pulse"></div>
+                <div className="h-4 w-12 bg-muted rounded animate-pulse"></div>
+              </div>
+              <div className="h-8 w-24 bg-muted rounded animate-pulse mb-4"></div>
+              <div className="space-y-2">
+                {[1, 2, 3, 4].map((j) => (
+                  <div key={j} className="flex justify-between">
+                    <div className="h-3 w-20 bg-muted/60 rounded animate-pulse"></div>
+                    <div className="h-3 w-16 bg-muted/60 rounded animate-pulse"></div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
     );
@@ -94,30 +121,30 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
 
   return (
     <section id="market" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-10">
         <div>
-          <h2 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Market Overview
+          <h2 className={`text-3xl lg:text-4xl font-bold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            📊 Market Overview
           </h2>
           <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            Real-time cryptocurrency market statistics
+            Real-time cryptocurrency market statistics and global metrics
           </p>
         </div>
         <Link 
           to="/market"
-          className="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+          className="flex items-center space-x-2 px-6 py-3 bg-primary text-primary-foreground rounded-xl hover:bg-primary/90 transition-all duration-200 shadow-lg hover:shadow-xl font-medium"
         >
-          <span>View Details</span>
-          <ExternalLink size={16} />
+          <span>View Full Market</span>
+          <ExternalLink size={18} />
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-fr">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 auto-rows-fr">
         {/* Enhanced Market Cap with Comprehensive Details */}
-        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
+        <div className={`p-6 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-card-hover ${
           isDarkMode 
-            ? 'bg-gray-800/50 border-gray-700/50' 
-            : 'bg-white/70 border-gray-200/50'
+            ? 'bg-gray-800/60 border-gray-700/50 hover:border-gray-600/70' 
+            : 'bg-white/80 border-gray-200/50 hover:border-gray-300/70'
         }`}>
           <div className="flex items-center justify-between mb-3">
             <h3 className={`text-base font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -168,10 +195,10 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
         </div>
 
         {/* Enhanced Volume with Comprehensive Coin Details */}
-        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
+        <div className={`p-6 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-card-hover ${
           isDarkMode 
-            ? 'bg-gray-800/50 border-gray-700/50' 
-            : 'bg-white/70 border-gray-200/50'
+            ? 'bg-gray-800/60 border-gray-700/50 hover:border-gray-600/70' 
+            : 'bg-white/80 border-gray-200/50 hover:border-gray-300/70'
         }`}>
           <div className="flex items-center justify-between mb-3">
             <h3 className={`text-base font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
@@ -234,10 +261,10 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
         </div>
 
         {/* Fear & Greed Index - Compact */}
-        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
+        <div className={`p-6 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-card-hover ${
           isDarkMode 
-            ? 'bg-gray-800/50 border-gray-700/50' 
-            : 'bg-white/70 border-gray-200/50'
+            ? 'bg-gray-800/60 border-gray-700/50 hover:border-gray-600/70' 
+            : 'bg-white/80 border-gray-200/50 hover:border-gray-300/70'
         }`}>
           <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Fear & Greed Index
@@ -312,10 +339,10 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
           </div>
         </div>
 
-        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
+        <div className={`p-6 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-card-hover ${
           isDarkMode 
-            ? 'bg-gray-800/50 border-gray-700/50' 
-            : 'bg-white/70 border-gray-200/50'
+            ? 'bg-gray-800/60 border-gray-700/50 hover:border-gray-600/70' 
+            : 'bg-white/80 border-gray-200/50 hover:border-gray-300/70'
         }`}>
           <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Market Dominance
@@ -363,10 +390,10 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
           </div>
         </div>
 
-        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
+        <div className={`p-6 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-card-hover ${
           isDarkMode 
-            ? 'bg-gray-800/50 border-gray-700/50' 
-            : 'bg-white/70 border-gray-200/50'
+            ? 'bg-gray-800/60 border-gray-700/50 hover:border-gray-600/70' 
+            : 'bg-white/80 border-gray-200/50 hover:border-gray-300/70'
         }`}>
           <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Market Statistics
@@ -417,10 +444,10 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
           </div>
         </div>
 
-        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
+        <div className={`p-6 rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-card-hover ${
           isDarkMode 
-            ? 'bg-gray-800/50 border-gray-700/50' 
-            : 'bg-white/70 border-gray-200/50'
+            ? 'bg-gray-800/60 border-gray-700/50 hover:border-gray-600/70' 
+            : 'bg-white/80 border-gray-200/50 hover:border-gray-300/70'
         }`}>
           <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Advanced Market Metrics
