@@ -208,7 +208,7 @@ const Analytics = ({ isDarkMode = false, setIsDarkMode = () => {} }: AnalyticsPr
   });
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'dark' : ''}`}>
+    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'dark' : ''}`} style={{backgroundColor: isDarkMode ? '#121212' : '#f8f9fa'}}>
       <div className="relative">
         {/* Binance-style background */}
         <div className="absolute inset-0 bg-background" />
