@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, AreaChart, Area } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, AreaChart, Area, ComposedChart, Bar } from 'recharts';
 import { TrendingUp, TrendingDown, Calendar, Download } from 'lucide-react';
 
 interface MarketCapModalProps {
@@ -19,6 +19,7 @@ const MarketCapModal = ({ isOpen, onClose, isDarkMode, marketData }: MarketCapMo
   const generateChartData = (days: number) => {
     const data = [];
     const baseValue = marketData.totalMarketCap;
+    const baseVolume = marketData.totalVolume;
     
     for (let i = days; i >= 0; i--) {
       const date = new Date();
@@ -26,11 +27,14 @@ const MarketCapModal = ({ isOpen, onClose, isDarkMode, marketData }: MarketCapMo
       
       const variation = (Math.random() - 0.5) * 0.1; // ±5% variation
       const value = baseValue * (1 + variation);
+      const volume = baseVolume * (1 + (Math.random() - 0.5) * 0.2); // ±10% volume variation
       
       data.push({
         date: date.toISOString().split('T')[0],
         value: value,
-        volume: (Math.random() * 200 + 100) * 1e9, // Random volume
+        volume: volume,
+        btcDominance: marketData.btcDominance + (Math.random() - 0.5) * 5,
+        ethDominance: ((marketData.coins?.find((c: any) => c.symbol === 'ETH')?.marketCap / marketData.totalMarketCap * 100) || 18.2) + (Math.random() - 0.5) * 3,
         timestamp: date.getTime(),
       });
     }
@@ -109,6 +113,9 @@ const MarketCapModal = ({ isOpen, onClose, isDarkMode, marketData }: MarketCapMo
               <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 {marketData.activeCryptocurrencies?.toLocaleString() || '17,581'}
               </div>
+              <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Active cryptocurrencies
+              </div>
             </div>
             
             <div className={`p-4 rounded-lg border ${
@@ -119,6 +126,9 @@ const MarketCapModal = ({ isOpen, onClose, isDarkMode, marketData }: MarketCapMo
               </div>
               <div className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 {marketData.markets?.toLocaleString() || '1,308'}
+              </div>
+              <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Exchanges tracked
               </div>
             </div>
           </div>
@@ -156,12 +166,13 @@ const MarketCapModal = ({ isOpen, onClose, isDarkMode, marketData }: MarketCapMo
             <ChartContainer
               config={{
                 value: { label: "Market Cap", color: "#10b981" },
-                volume: { label: "Volume", color: "#3b82f6" }
+                volume: { label: "Volume", color: "#3b82f6" },
+                btcDominance: { label: "BTC Dominance", color: "#f59e0b" }
               }}
               className="h-96"
             >
               <ResponsiveContainer width="100%" height="100%">
-                <AreaChart data={chartData}>
+                <ComposedChart data={chartData}>
                   <defs>
                     <linearGradient id="marketCapGradient" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
@@ -177,53 +188,68 @@ const MarketCapModal = ({ isOpen, onClose, isDarkMode, marketData }: MarketCapMo
                     }}
                   />
                   <YAxis 
+                    yAxisId="left"
                     tickFormatter={formatValue}
                     domain={['dataMin * 0.95', 'dataMax * 1.05']}
+                  />
+                  <YAxis 
+                    yAxisId="right"
+                    orientation="right"
+                    tickFormatter={formatValue}
                   />
                   <ChartTooltip 
                     content={<ChartTooltipContent />}
                     labelFormatter={(date) => new Date(date).toLocaleDateString()}
-                    formatter={(value: any) => [formatValue(value), "Market Cap"]}
+                    formatter={(value: any, name: string) => [formatValue(value), name]}
                   />
                   <Area 
+                    yAxisId="left"
                     type="monotone" 
                     dataKey="value" 
                     stroke="#10b981" 
                     strokeWidth={2}
                     fill="url(#marketCapGradient)"
+                    name="Market Cap"
                   />
-                </AreaChart>
+                  <Bar 
+                    yAxisId="right"
+                    dataKey="volume" 
+                    fill="#3b82f6"
+                    name="Volume"
+                    opacity={0.3}
+                  />
+                </ComposedChart>
               </ResponsiveContainer>
             </ChartContainer>
           </div>
 
-          {/* Market Dominance */}
+          {/* Market Cap Breakdown */}
           <div className={`p-4 rounded-lg border ${
             isDarkMode ? 'bg-gray-800 border-gray-700' : 'bg-gray-50 border-gray-200'
           }`}>
             <h3 className={`text-lg font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-              Market Dominance
+              Market Cap by Category
             </h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div>
-                <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Bitcoin</div>
-                <div className="text-orange-500 font-bold">{marketData.btcDominance?.toFixed(1)}%</div>
+                <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Layer 1</div>
+                <div className="text-blue-500 font-bold">{formatValue(currentValue * 0.45)}</div>
+                <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>45%</div>
               </div>
               <div>
-                <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Ethereum</div>
-                <div className="text-blue-500 font-bold">
-                  {((marketData.coins?.find((c: any) => c.symbol === 'ETH')?.marketCap / marketData.totalMarketCap * 100) || 18.2).toFixed(1)}%
-                </div>
+                <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>DeFi</div>
+                <div className="text-green-500 font-bold">{formatValue(currentValue * 0.25)}</div>
+                <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>25%</div>
+              </div>
+              <div>
+                <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>NFT/Gaming</div>
+                <div className="text-purple-500 font-bold">{formatValue(currentValue * 0.15)}</div>
+                <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>15%</div>
               </div>
               <div>
                 <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Others</div>
-                <div className="text-gray-500 font-bold">
-                  {(100 - marketData.btcDominance - ((marketData.coins?.find((c: any) => c.symbol === 'ETH')?.marketCap / marketData.totalMarketCap * 100) || 18.2)).toFixed(1)}%
-                </div>
-              </div>
-              <div>
-                <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Stablecoins</div>
-                <div className="text-green-500 font-bold">7.3%</div>
+                <div className="text-gray-500 font-bold">{formatValue(currentValue * 0.15)}</div>
+                <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>15%</div>
               </div>
             </div>
           </div>
