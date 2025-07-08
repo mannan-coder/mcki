@@ -57,12 +57,6 @@ const Tools = () => {
   const [compoundFreq, setCompoundFreq] = useState('12');
   const [years, setYears] = useState('5');
   
-  // Pump and Dump Detector
-  const [tokenSymbol, setTokenSymbol] = useState('');
-  const [priceData, setPriceData] = useState('');
-  const [volumeData, setVolumeData] = useState('');
-  const [timeframe, setTimeframe] = useState('24');
-  
   // DCA Calculator
   const [dcaAmount, setDcaAmount] = useState('100');
   const [dcaFrequency, setDcaFrequency] = useState('weekly');
@@ -191,64 +185,6 @@ const Tools = () => {
   const compoundResult = calculateCompound();
 
   // Additional calculation functions
-  const calculatePumpDump = () => {
-    if (!priceData || !volumeData) return { riskScore: 0, alerts: [], analysis: 'No data' };
-    
-    const prices = priceData.split(',').map(p => parseFloat(p.trim())).filter(p => !isNaN(p));
-    const volumes = volumeData.split(',').map(v => parseFloat(v.trim())).filter(v => !isNaN(v));
-    
-    if (prices.length < 2 || volumes.length < 2) {
-      return { riskScore: 0, alerts: ['Insufficient data'], analysis: 'Need more data points' };
-    }
-    
-    const priceChange = ((prices[prices.length - 1] - prices[0]) / prices[0]) * 100;
-    const avgVolume = volumes.reduce((a, b) => a + b, 0) / volumes.length;
-    const maxVolume = Math.max(...volumes);
-    const volumeSpike = maxVolume / avgVolume;
-    
-    let riskScore = 0;
-    const alerts = [];
-    
-    // High price increase with volume spike
-    if (priceChange > 50 && volumeSpike > 3) {
-      riskScore += 40;
-      alerts.push('Significant price pump with volume spike detected');
-    }
-    
-    // Rapid price changes
-    if (Math.abs(priceChange) > 30) {
-      riskScore += 30;
-      alerts.push('Rapid price movement detected');
-    }
-    
-    // Volume anomalies
-    if (volumeSpike > 5) {
-      riskScore += 20;
-      alerts.push('Unusual volume activity detected');
-    }
-    
-    // Time-based risk
-    const hours = parseFloat(timeframe);
-    if (hours < 24 && Math.abs(priceChange) > 20) {
-      riskScore += 10;
-      alerts.push('Rapid movement in short timeframe');
-    }
-    
-    riskScore = Math.min(riskScore, 100);
-    
-    const analysis = riskScore > 70 ? 'HIGH RISK - Potential pump and dump' :
-                    riskScore > 40 ? 'MEDIUM RISK - Monitor closely' :
-                    'LOW RISK - Normal activity';
-    
-    return {
-      riskScore: riskScore.toFixed(0),
-      alerts: alerts.length > 0 ? alerts : ['No suspicious activity detected'],
-      analysis,
-      priceChange: priceChange.toFixed(2),
-      volumeSpike: volumeSpike.toFixed(2)
-    };
-  };
-  
   const calculateDCA = () => {
     const amount = parseFloat(dcaAmount) || 0;
     const periods = parseFloat(dcaPeriod) || 0;
@@ -286,7 +222,6 @@ const Tools = () => {
     };
   };
 
-  const pumpDumpResult = calculatePumpDump();
   const dcaResult = calculateDCA();
   const stakingResult = calculateStaking();
 
@@ -340,14 +275,6 @@ const Tools = () => {
       tabValue: 'compound'
     },
     {
-      id: 'pump-dump',
-      title: 'Pump & Dump Detector',
-      description: 'Analyze token patterns to detect potential pump and dump schemes',
-      icon: Shield,
-      category: 'security',
-      tabValue: 'pump-dump'
-    },
-    {
       id: 'dca',
       title: 'DCA Calculator',
       description: 'Calculate dollar-cost averaging strategy returns',
@@ -388,7 +315,7 @@ const Tools = () => {
               <Card className="bg-primary/5 border-primary/20">
                 <CardContent className="p-4 text-center">
                   <Calculator className="h-8 w-8 text-primary mx-auto mb-2" />
-                  <div className="text-2xl font-bold text-primary">9+</div>
+                  <div className="text-2xl font-bold text-primary">8+</div>
                   <div className="text-sm text-muted-foreground">Tools Available</div>
                 </CardContent>
               </Card>
@@ -916,97 +843,6 @@ const Tools = () => {
                               <Percent className="h-6 w-6 text-accent mx-auto mb-2" />
                               <div className="text-xl font-bold text-accent">{compoundResult.effectiveRate}%</div>
                               <div className="text-sm text-muted-foreground">Effective Rate</div>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </TabsContent>
-
-                  <TabsContent value="pump-dump">
-                    <Card>
-                      <CardHeader>
-                        <CardTitle className="flex items-center space-x-2">
-                          <Shield className="h-5 w-5" />
-                          <span>Pump & Dump Detector</span>
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                          <div>
-                            <label className="text-sm font-medium mb-2 block">Token Symbol</label>
-                            <Input
-                              type="text"
-                              value={tokenSymbol}
-                              onChange={(e) => setTokenSymbol(e.target.value)}
-                              placeholder="BTC"
-                            />
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium mb-2 block">Price Data (comma separated)</label>
-                            <Input
-                              type="text"
-                              value={priceData}
-                              onChange={(e) => setPriceData(e.target.value)}
-                              placeholder="42000,44000,50000,48000"
-                            />
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium mb-2 block">Volume Data (comma separated)</label>
-                            <Input
-                              type="text"
-                              value={volumeData}
-                              onChange={(e) => setVolumeData(e.target.value)}
-                              placeholder="1000,1500,5000,2000"
-                            />
-                          </div>
-                          <div>
-                            <label className="text-sm font-medium mb-2 block">Timeframe (hours)</label>
-                            <Input
-                              type="number"
-                              value={timeframe}
-                              onChange={(e) => setTimeframe(e.target.value)}
-                              placeholder="24"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                          <Card className={`border ${parseInt(pumpDumpResult.riskScore.toString()) > 70 ? 'bg-destructive/5 border-destructive/20' : parseInt(pumpDumpResult.riskScore.toString()) > 40 ? 'bg-warning/5 border-warning/20' : 'bg-success/5 border-success/20'}`}>
-                            <CardContent className="p-4 text-center">
-                              <AlertTriangle className={`h-6 w-6 mx-auto mb-2 ${parseInt(pumpDumpResult.riskScore.toString()) > 70 ? 'text-destructive' : parseInt(pumpDumpResult.riskScore.toString()) > 40 ? 'text-warning' : 'text-success'}`} />
-                              <div className={`text-xl font-bold ${parseInt(pumpDumpResult.riskScore.toString()) > 70 ? 'text-destructive' : parseInt(pumpDumpResult.riskScore.toString()) > 40 ? 'text-warning' : 'text-success'}`}>
-                                {pumpDumpResult.riskScore}/100
-                              </div>
-                              <div className="text-sm text-muted-foreground">Risk Score</div>
-                            </CardContent>
-                          </Card>
-                          
-                          <Card className="bg-primary/5 border-primary/20">
-                            <CardContent className="p-4 text-center">
-                              <TrendingUp className="h-6 w-6 text-primary mx-auto mb-2" />
-                              <div className="text-xl font-bold text-primary">{pumpDumpResult.priceChange}%</div>
-                              <div className="text-sm text-muted-foreground">Price Change</div>
-                            </CardContent>
-                          </Card>
-                          
-                          <Card className="bg-accent/5 border-accent/20">
-                            <CardContent className="p-4 text-center">
-                              <Activity className="h-6 w-6 text-accent mx-auto mb-2" />
-                              <div className="text-xl font-bold text-accent">{pumpDumpResult.volumeSpike}x</div>
-                              <div className="text-sm text-muted-foreground">Volume Spike</div>
-                            </CardContent>
-                          </Card>
-                          
-                          <Card className="bg-muted/5 border-muted/20">
-                            <CardContent className="p-4">
-                              <div className="text-sm font-medium mb-2">Analysis</div>
-                              <div className="text-xs text-muted-foreground">{pumpDumpResult.analysis}</div>
-                              <div className="mt-2 space-y-1">
-                                {pumpDumpResult.alerts.map((alert, index) => (
-                                  <div key={index} className="text-xs text-muted-foreground">• {alert}</div>
-                                ))}
-                              </div>
                             </CardContent>
                           </Card>
                         </div>
