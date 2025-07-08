@@ -3,6 +3,7 @@ import { TrendingUp, ArrowUp, ArrowDown, Activity, DollarSign, Users, BarChart3,
 import { Link } from 'react-router-dom';
 import { useCryptoData } from '@/hooks/useCryptoData';
 import { useSentimentData } from '@/hooks/useSentimentData';
+import { useArbitrageData } from '@/hooks/useArbitrageData';
 
 interface MarketOverviewProps {
   isDarkMode: boolean;

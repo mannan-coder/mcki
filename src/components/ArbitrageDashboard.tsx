@@ -27,11 +27,19 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
       <div className="flex items-center justify-between mb-8">
         <div>
           <h2 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Arbitrage Opportunities
+            💰 Live Arbitrage Opportunities
           </h2>
           <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            Real-time profit opportunities across top exchanges
+            Real-time profit opportunities across exchanges - Updated every 30 seconds
           </p>
+          <div className="mt-2 flex items-center space-x-4 text-sm">
+            <span className={`${isDarkMode ? 'text-green-400' : 'text-green-600'} font-medium`}>
+              {opportunities.length} Active Opportunities
+            </span>
+            <span className={`${isDarkMode ? 'text-blue-400' : 'text-blue-600'} font-medium`}>
+              Avg Spread: {stats.avgSpread?.toFixed(2)}%
+            </span>
+          </div>
         </div>
         <div className="flex items-center space-x-3">
           <Link 
