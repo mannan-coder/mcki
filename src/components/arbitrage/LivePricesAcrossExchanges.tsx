@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ExternalLink } from 'lucide-react';
 import { generateCoinPriceData, formatPrice, formatVolumeDisplay } from '@/utils/arbitrageUtils';
+import { getCoinLogoById, getExchangeLogo } from '@/utils/coinLogos';
 
 interface LivePricesAcrossExchangesProps {
   opportunities: any[];
@@ -127,11 +128,15 @@ const LivePricesAcrossExchanges = ({ opportunities, isDarkMode }: LivePricesAcro
                     {/* Cryptocurrency */}
                     <td className="px-3 py-3">
                       <div className="flex items-center space-x-2">
-                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shadow-sm transition-transform group-hover:scale-105 ${
-                          isDarkMode ? 'bg-gradient-to-br from-gray-700 to-gray-800 text-gray-200' : 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700'
-                        }`}>
-                          {coin.symbol.charAt(0)}
-                        </div>
+                        <img 
+                          src={getCoinLogoById(coin.symbol.toLowerCase())} 
+                          alt={coin.symbol}
+                          className="w-8 h-8 rounded-full"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = `https://via.placeholder.com/32x32/666666/ffffff?text=${coin.symbol.charAt(0)}`;
+                          }}
+                        />
                         <div>
                           <div className={`font-bold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                             {coin.symbol}
