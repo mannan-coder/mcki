@@ -298,10 +298,13 @@ const Tools = () => {
               {/* Active Calculators */}
               <div className="lg:col-span-2">
                 <Tabs defaultValue="roi" className="space-y-6">
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="roi">ROI Calculator</TabsTrigger>
-                    <TabsTrigger value="price">Price Analyzer</TabsTrigger>
-                    <TabsTrigger value="arbitrage">Arbitrage Finder</TabsTrigger>
+                  <TabsList className="grid w-full grid-cols-6 gap-1">
+                    <TabsTrigger value="roi" className="text-xs">ROI</TabsTrigger>
+                    <TabsTrigger value="price" className="text-xs">Price</TabsTrigger>
+                    <TabsTrigger value="arbitrage" className="text-xs">Arbitrage</TabsTrigger>
+                    <TabsTrigger value="portfolio" className="text-xs">Portfolio</TabsTrigger>
+                    <TabsTrigger value="risk" className="text-xs">Risk</TabsTrigger>
+                    <TabsTrigger value="compound" className="text-xs">Compound</TabsTrigger>
                   </TabsList>
 
                   <TabsContent value="roi">
@@ -505,191 +508,249 @@ const Tools = () => {
                       </CardContent>
                     </Card>
                   </TabsContent>
+
+                  <TabsContent value="portfolio">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center space-x-2">
+                          <PieChart className="h-5 w-5" />
+                          <span>Portfolio Performance Tracker</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Current Value ($)</label>
+                            <Input
+                              type="number"
+                              value={portfolioValue}
+                              onChange={(e) => setPortfolioValue(e.target.value)}
+                              placeholder="50000"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Initial Value ($)</label>
+                            <Input
+                              type="number"
+                              value={initialValue}
+                              onChange={(e) => setInitialValue(e.target.value)}
+                              placeholder="40000"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Number of Holdings</label>
+                            <Input
+                              type="number"
+                              value={holdings}
+                              onChange={(e) => setHoldings(e.target.value)}
+                              placeholder="5"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                          <Card className={`border ${parseFloat(portfolioResult.totalGain) >= 0 ? 'bg-success/5 border-success/20' : 'bg-destructive/5 border-destructive/20'}`}>
+                            <CardContent className="p-4 text-center">
+                              <DollarSign className={`h-6 w-6 mx-auto mb-2 ${parseFloat(portfolioResult.totalGain) >= 0 ? 'text-success' : 'text-destructive'}`} />
+                              <div className={`text-xl font-bold ${parseFloat(portfolioResult.totalGain) >= 0 ? 'text-success' : 'text-destructive'}`}>
+                                ${portfolioResult.totalGain}
+                              </div>
+                              <div className="text-sm text-muted-foreground">Total Gain</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className={`border ${parseFloat(portfolioResult.gainPercent) >= 0 ? 'bg-success/5 border-success/20' : 'bg-destructive/5 border-destructive/20'}`}>
+                            <CardContent className="p-4 text-center">
+                              <Percent className={`h-6 w-6 mx-auto mb-2 ${parseFloat(portfolioResult.gainPercent) >= 0 ? 'text-success' : 'text-destructive'}`} />
+                              <div className={`text-xl font-bold ${parseFloat(portfolioResult.gainPercent) >= 0 ? 'text-success' : 'text-destructive'}`}>
+                                {portfolioResult.gainPercent}%
+                              </div>
+                              <div className="text-sm text-muted-foreground">Gain Percentage</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-primary/5 border-primary/20">
+                            <CardContent className="p-4 text-center">
+                              <DollarSign className="h-6 w-6 text-primary mx-auto mb-2" />
+                              <div className="text-xl font-bold text-primary">${portfolioResult.avgHolding}</div>
+                              <div className="text-sm text-muted-foreground">Avg Holding</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-accent/5 border-accent/20">
+                            <CardContent className="p-4 text-center">
+                              <Target className="h-6 w-6 text-accent mx-auto mb-2" />
+                              <div className="text-xl font-bold text-accent">{portfolioResult.diversificationScore}/100</div>
+                              <div className="text-sm text-muted-foreground">Diversification</div>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+
+                  <TabsContent value="risk">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center space-x-2">
+                          <Target className="h-5 w-5" />
+                          <span>Risk Assessment Calculator</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Entry Price ($)</label>
+                            <Input
+                              type="number"
+                              value={entryPrice}
+                              onChange={(e) => setEntryPrice(e.target.value)}
+                              placeholder="42000"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Stop Loss ($)</label>
+                            <Input
+                              type="number"
+                              value={stopLoss}
+                              onChange={(e) => setStopLoss(e.target.value)}
+                              placeholder="40000"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Take Profit ($)</label>
+                            <Input
+                              type="number"
+                              value={takeProfit}
+                              onChange={(e) => setTakeProfit(e.target.value)}
+                              placeholder="46000"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Position Size ($)</label>
+                            <Input
+                              type="number"
+                              value={positionSize}
+                              onChange={(e) => setPositionSize(e.target.value)}
+                              placeholder="1000"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                          <Card className="bg-primary/5 border-primary/20">
+                            <CardContent className="p-4 text-center">
+                              <Target className="h-6 w-6 text-primary mx-auto mb-2" />
+                              <div className="text-xl font-bold text-primary">{riskResult.riskRewardRatio}</div>
+                              <div className="text-sm text-muted-foreground">Risk/Reward Ratio</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-destructive/5 border-destructive/20">
+                            <CardContent className="p-4 text-center">
+                              <DollarSign className="h-6 w-6 text-destructive mx-auto mb-2" />
+                              <div className="text-xl font-bold text-destructive">${riskResult.riskAmount}</div>
+                              <div className="text-sm text-muted-foreground">Risk Amount</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-success/5 border-success/20">
+                            <CardContent className="p-4 text-center">
+                              <DollarSign className="h-6 w-6 text-success mx-auto mb-2" />
+                              <div className="text-xl font-bold text-success">${riskResult.rewardAmount}</div>
+                              <div className="text-sm text-muted-foreground">Reward Amount</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-warning/5 border-warning/20">
+                            <CardContent className="p-4 text-center">
+                              <Percent className="h-6 w-6 text-warning mx-auto mb-2" />
+                              <div className="text-xl font-bold text-warning">{riskResult.riskPercent}%</div>
+                              <div className="text-sm text-muted-foreground">Risk Percentage</div>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
+
+                  <TabsContent value="compound">
+                    <Card>
+                      <CardHeader>
+                        <CardTitle className="flex items-center space-x-2">
+                          <BarChart3 className="h-5 w-5" />
+                          <span>Compound Interest Calculator</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Principal ($)</label>
+                            <Input
+                              type="number"
+                              value={principal}
+                              onChange={(e) => setPrincipal(e.target.value)}
+                              placeholder="10000"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Annual Rate (%)</label>
+                            <Input
+                              type="number"
+                              value={annualRate}
+                              onChange={(e) => setAnnualRate(e.target.value)}
+                              placeholder="8"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Compound Frequency</label>
+                            <Input
+                              type="number"
+                              value={compoundFreq}
+                              onChange={(e) => setCompoundFreq(e.target.value)}
+                              placeholder="12"
+                            />
+                          </div>
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Time (Years)</label>
+                            <Input
+                              type="number"
+                              value={years}
+                              onChange={(e) => setYears(e.target.value)}
+                              placeholder="5"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <Card className="bg-primary/5 border-primary/20">
+                            <CardContent className="p-4 text-center">
+                              <DollarSign className="h-6 w-6 text-primary mx-auto mb-2" />
+                              <div className="text-xl font-bold text-primary">${compoundResult.finalAmount}</div>
+                              <div className="text-sm text-muted-foreground">Final Amount</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-success/5 border-success/20">
+                            <CardContent className="p-4 text-center">
+                              <TrendingUp className="h-6 w-6 text-success mx-auto mb-2" />
+                              <div className="text-xl font-bold text-success">${compoundResult.totalInterest}</div>
+                              <div className="text-sm text-muted-foreground">Interest Earned</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-accent/5 border-accent/20">
+                            <CardContent className="p-4 text-center">
+                              <Percent className="h-6 w-6 text-accent mx-auto mb-2" />
+                              <div className="text-xl font-bold text-accent">{compoundResult.effectiveRate}%</div>
+                              <div className="text-sm text-muted-foreground">Effective Rate</div>
+                            </CardContent>
+                          </Card>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </TabsContent>
                 </Tabs>
-
-                {/* Additional Calculators Row */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-8">
-                  {/* Portfolio Tracker */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center space-x-2">
-                        <PieChart className="h-5 w-5" />
-                        <span>Portfolio Tracker</span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Current Value ($)</label>
-                        <Input
-                          type="number"
-                          value={portfolioValue}
-                          onChange={(e) => setPortfolioValue(e.target.value)}
-                          placeholder="50000"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Initial Value ($)</label>
-                        <Input
-                          type="number"
-                          value={initialValue}
-                          onChange={(e) => setInitialValue(e.target.value)}
-                          placeholder="40000"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Number of Holdings</label>
-                        <Input
-                          type="number"
-                          value={holdings}
-                          onChange={(e) => setHoldings(e.target.value)}
-                          placeholder="5"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-sm">Total Gain:</span>
-                          <span className={`font-bold ${parseFloat(portfolioResult.totalGain) >= 0 ? 'text-success' : 'text-destructive'}`}>
-                            ${portfolioResult.totalGain}
-                          </span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm">Gain %:</span>
-                          <span className={`font-bold ${parseFloat(portfolioResult.gainPercent) >= 0 ? 'text-success' : 'text-destructive'}`}>
-                            {portfolioResult.gainPercent}%
-                          </span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm">Diversification:</span>
-                          <span className="font-bold text-accent">{portfolioResult.diversificationScore}/100</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Risk Calculator */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center space-x-2">
-                        <Target className="h-5 w-5" />
-                        <span>Risk Calculator</span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Entry Price ($)</label>
-                        <Input
-                          type="number"
-                          value={entryPrice}
-                          onChange={(e) => setEntryPrice(e.target.value)}
-                          placeholder="42000"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Stop Loss ($)</label>
-                        <Input
-                          type="number"
-                          value={stopLoss}
-                          onChange={(e) => setStopLoss(e.target.value)}
-                          placeholder="40000"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Take Profit ($)</label>
-                        <Input
-                          type="number"
-                          value={takeProfit}
-                          onChange={(e) => setTakeProfit(e.target.value)}
-                          placeholder="46000"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Position Size ($)</label>
-                        <Input
-                          type="number"
-                          value={positionSize}
-                          onChange={(e) => setPositionSize(e.target.value)}
-                          placeholder="1000"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-sm">Risk/Reward:</span>
-                          <span className="font-bold text-primary">{riskResult.riskRewardRatio}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm">Risk Amount:</span>
-                          <span className="font-bold text-destructive">${riskResult.riskAmount}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm">Reward Amount:</span>
-                          <span className="font-bold text-success">${riskResult.rewardAmount}</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Compound Interest Calculator */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center space-x-2">
-                        <BarChart3 className="h-5 w-5" />
-                        <span>Compound Interest</span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Principal ($)</label>
-                        <Input
-                          type="number"
-                          value={principal}
-                          onChange={(e) => setPrincipal(e.target.value)}
-                          placeholder="10000"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Annual Rate (%)</label>
-                        <Input
-                          type="number"
-                          value={annualRate}
-                          onChange={(e) => setAnnualRate(e.target.value)}
-                          placeholder="8"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Compound Frequency</label>
-                        <Input
-                          type="number"
-                          value={compoundFreq}
-                          onChange={(e) => setCompoundFreq(e.target.value)}
-                          placeholder="12"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-sm font-medium mb-2 block">Time (Years)</label>
-                        <Input
-                          type="number"
-                          value={years}
-                          onChange={(e) => setYears(e.target.value)}
-                          placeholder="5"
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span className="text-sm">Final Amount:</span>
-                          <span className="font-bold text-primary">${compoundResult.finalAmount}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm">Interest Earned:</span>
-                          <span className="font-bold text-success">${compoundResult.totalInterest}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-sm">Effective Rate:</span>
-                          <span className="font-bold text-accent">{compoundResult.effectiveRate}%</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
               </div>
             </div>
 
