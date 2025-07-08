@@ -419,17 +419,17 @@ const Tools = () => {
             </div>
 
             {/* Main Tools Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 min-h-[600px]">
               {/* Tools List */}
               <div className="lg:col-span-1">
-                <Card>
+                <Card className="h-full">
                   <CardHeader>
                     <CardTitle className="flex items-center space-x-2">
                       <Search className="h-5 w-5" />
                       <span>Available Tools</span>
                     </CardTitle>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="h-full">
                     <div className="space-y-3">
                       {tools.map((tool) => (
                         <div 
@@ -466,7 +466,7 @@ const Tools = () => {
               </div>
 
               {/* Active Calculators */}
-              <div className="lg:col-span-2">
+              <div className="lg:col-span-2 h-full">
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
                   <div className="hidden">
                     <TabsList className="grid w-full grid-cols-6 gap-1">
