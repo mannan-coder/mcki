@@ -1,16 +1,19 @@
+import { useState } from 'react';
 import { TrendingUp, ArrowUp, ArrowDown, Activity, DollarSign, Users, BarChart3, ExternalLink, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCryptoData } from '@/hooks/useCryptoData';
 import { useSentimentData } from '@/hooks/useSentimentData';
 import { useArbitrageData } from '@/hooks/useArbitrageData';
-import { ChartContainer } from '@/components/ui/chart';
-import { LineChart, Line } from 'recharts';
+import MarketCapModal from './MarketCapModal';
+import VolumeModal from './VolumeModal';
 
 interface MarketOverviewProps {
   isDarkMode: boolean;
 }
 
 const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
+  const [showMarketCapModal, setShowMarketCapModal] = useState(false);
+  const [showVolumeModal, setShowVolumeModal] = useState(false);
   const { data: marketData, loading, error, refetch } = useCryptoData();
   const { data: sentimentData } = useSentimentData();
 
@@ -143,128 +146,78 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
       {/* CoinGecko-style main content layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Main Market Stats - Left Column */}
-        <div className="lg:col-span-8 space-y-6">
-          {/* Market Cap Card */}
-          <div className={`p-6 rounded-xl border backdrop-blur-sm cursor-pointer transition-all duration-200 hover:shadow-lg ${
-            isDarkMode 
-              ? 'bg-gray-800/60 border-gray-700/50 hover:bg-gray-800/80' 
-              : 'bg-white/80 border-gray-200/50 hover:bg-white/90'
-          }`}
-            onClick={() => window.open('/market', '_blank')}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  {marketStats.totalMarketCap}
-                </h3>
-                <div className="flex items-center space-x-2 mt-1">
-                  <span className="text-green-500 text-sm font-medium">+2.9%</span>
-                  <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    vs yesterday
-                  </span>
+        <div className="lg:col-span-8 space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* Compact Market Cap Card */}
+            <div className={`p-4 rounded-xl border backdrop-blur-sm cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 ${
+              isDarkMode 
+                ? 'bg-gray-800/60 border-gray-700/50 hover:bg-gray-800/80' 
+                : 'bg-white/80 border-gray-200/50 hover:bg-white/90'
+            }`}
+              onClick={() => setShowMarketCapModal(true)}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-2">
+                  <div className="p-2 bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg">
+                    <TrendingUp className="text-white" size={16} />
+                  </div>
+                  <div>
+                    <div className={`text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      Market Cap
+                    </div>
+                    <div className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {marketStats.totalMarketCap}
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-green-500 text-sm font-medium">+2.9%</div>
+                  <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    24h change
+                  </div>
                 </div>
               </div>
-              <div className="text-right">
-                <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  Market Cap
-                </div>
+              
+              {/* Mini Chart */}
+              <div className="h-12 bg-gradient-to-r from-green-500/10 to-green-500/5 rounded-lg flex items-end justify-center">
+                <div className="text-xs text-green-500 font-medium">📈 Click to view detailed chart</div>
               </div>
             </div>
-            
-            {/* Market Cap Chart */}
-            <div className="h-20 mb-4">
-              <ChartContainer config={{
-                marketCap: { label: "Market Cap", color: "#10b981" }
-              }} className="h-full">
-                <LineChart data={[
-                  { time: '00:00', value: marketData.totalMarketCap * 0.97 },
-                  { time: '04:00', value: marketData.totalMarketCap * 0.98 },
-                  { time: '08:00', value: marketData.totalMarketCap * 0.99 },
-                  { time: '12:00', value: marketData.totalMarketCap * 1.01 },
-                  { time: '16:00', value: marketData.totalMarketCap * 1.02 },
-                  { time: '20:00', value: marketData.totalMarketCap * 1.029 },
-                  { time: '24:00', value: marketData.totalMarketCap }
-                ]}>
-                  <Line 
-                    type="monotone" 
-                    dataKey="value" 
-                    stroke="#10b981" 
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                </LineChart>
-              </ChartContainer>
-            </div>
-            
-            <div className="flex items-center justify-between text-xs">
-              <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                24h Low: ${(marketData.totalMarketCap * 0.97 / 1e12).toFixed(2)}T
-              </span>
-              <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                24h High: ${(marketData.totalMarketCap * 1.03 / 1e12).toFixed(2)}T
-              </span>
-            </div>
-          </div>
 
-          {/* 24h Volume Card */}
-          <div className={`p-6 rounded-xl border backdrop-blur-sm cursor-pointer transition-all duration-200 hover:shadow-lg ${
-            isDarkMode 
-              ? 'bg-gray-800/60 border-gray-700/50 hover:bg-gray-800/80' 
-              : 'bg-white/80 border-gray-200/50 hover:bg-white/90'
-          }`}
-            onClick={() => window.open('/market', '_blank')}
-          >
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h3 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  {marketStats.totalVolume}
-                </h3>
-                <div className="flex items-center space-x-2 mt-1">
-                  <span className="text-red-500 text-sm font-medium">-1.5%</span>
-                  <span className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    vs yesterday
-                  </span>
+            {/* Compact Volume Card */}
+            <div className={`p-4 rounded-xl border backdrop-blur-sm cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 ${
+              isDarkMode 
+                ? 'bg-gray-800/60 border-gray-700/50 hover:bg-gray-800/80' 
+                : 'bg-white/80 border-gray-200/50 hover:bg-white/90'
+            }`}
+              onClick={() => setShowVolumeModal(true)}
+            >
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center space-x-2">
+                  <div className="p-2 bg-gradient-to-r from-blue-500 to-cyan-600 rounded-lg">
+                    <Activity className="text-white" size={16} />
+                  </div>
+                  <div>
+                    <div className={`text-sm font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      24h Volume
+                    </div>
+                    <div className={`text-xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {marketStats.totalVolume}
+                    </div>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="text-red-500 text-sm font-medium">-1.5%</div>
+                  <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                    24h change
+                  </div>
                 </div>
               </div>
-              <div className="text-right">
-                <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  24h Trading Volume
-                </div>
+              
+              {/* Mini Chart */}
+              <div className="h-12 bg-gradient-to-r from-blue-500/10 to-blue-500/5 rounded-lg flex items-end justify-center">
+                <div className="text-xs text-blue-500 font-medium">📊 Click to view detailed chart</div>
               </div>
-            </div>
-            
-            {/* Volume Chart */}
-            <div className="h-20 mb-4">
-              <ChartContainer config={{
-                volume: { label: "Volume", color: "#ef4444" }
-              }} className="h-full">
-                <LineChart data={[
-                  { time: '00:00', value: marketData.totalVolume * 1.05 },
-                  { time: '04:00', value: marketData.totalVolume * 1.02 },
-                  { time: '08:00', value: marketData.totalVolume * 1.08 },
-                  { time: '12:00', value: marketData.totalVolume * 0.95 },
-                  { time: '16:00', value: marketData.totalVolume * 0.98 },
-                  { time: '20:00', value: marketData.totalVolume * 0.99 },
-                  { time: '24:00', value: marketData.totalVolume }
-                ]}>
-                  <Line 
-                    type="monotone" 
-                    dataKey="value" 
-                    stroke="#ef4444" 
-                    strokeWidth={2}
-                    dot={false}
-                  />
-                </LineChart>
-              </ChartContainer>
-            </div>
-            
-            <div className="flex items-center justify-between text-xs">
-              <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                24h Low: ${(marketData.totalVolume * 0.95 / 1e9).toFixed(1)}B
-              </span>
-              <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                24h High: ${(marketData.totalVolume * 1.08 / 1e9).toFixed(1)}B
-              </span>
             </div>
           </div>
         </div>
@@ -437,6 +390,20 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
           </div>
         </div>
       </div>
+
+      {/* Modals */}
+      <MarketCapModal 
+        isOpen={showMarketCapModal} 
+        onClose={() => setShowMarketCapModal(false)} 
+        isDarkMode={isDarkMode} 
+        marketData={marketData}
+      />
+      <VolumeModal 
+        isOpen={showVolumeModal} 
+        onClose={() => setShowVolumeModal(false)} 
+        isDarkMode={isDarkMode} 
+        marketData={marketData}
+      />
     </section>
   );
 };
