@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { useCryptoData } from '@/hooks/useCryptoData';
 import { useSentimentData } from '@/hooks/useSentimentData';
 import { useArbitrageData } from '@/hooks/useArbitrageData';
+import { ChartContainer } from '@/components/ui/chart';
+import { LineChart, Line, BarChart, Bar, Area, AreaChart } from 'recharts';
 import MarketCapModal from './MarketCapModal';
 import VolumeModal from './VolumeModal';
 
@@ -178,25 +180,46 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
                 </div>
               </div>
               
-              {/* Mini Chart Preview */}
-              <div className="h-12 relative">
-                <svg width="100%" height="100%" className="overflow-visible">
-                  <defs>
-                    <linearGradient id="miniMarketCapGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#10b981" stopOpacity="0.3"/>
-                      <stop offset="100%" stopColor="#10b981" stopOpacity="0"/>
-                    </linearGradient>
-                  </defs>
-                  <path
-                    d="M0,40 Q25,35 50,30 T100,25 T150,20 T200,25 T250,30 L250,48 L0,48 Z"
-                    fill="url(#miniMarketCapGradient)"
-                    stroke="#10b981"
-                    strokeWidth="2"
-                  />
-                </svg>
-                <div className={`absolute bottom-0 right-0 text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  📈 Click for detailed view
-                </div>
+              {/* Live Chart with Recharts */}
+              <div className="h-16 -mx-2">
+                <ChartContainer
+                  config={{
+                    value: { label: "Market Cap", color: "#10b981" }
+                  }}
+                  className="h-full"
+                >
+                  <AreaChart
+                    data={[
+                      { time: 0, value: marketData.totalMarketCap * 0.97 },
+                      { time: 1, value: marketData.totalMarketCap * 0.98 },
+                      { time: 2, value: marketData.totalMarketCap * 0.99 },
+                      { time: 3, value: marketData.totalMarketCap * 1.01 },
+                      { time: 4, value: marketData.totalMarketCap * 1.02 },
+                      { time: 5, value: marketData.totalMarketCap * 1.029 },
+                      { time: 6, value: marketData.totalMarketCap }
+                    ]}
+                    margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+                  >
+                    <defs>
+                      <linearGradient id="marketCapMiniGradient" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <Area
+                      type="monotone"
+                      dataKey="value"
+                      stroke="#10b981"
+                      strokeWidth={2}
+                      fill="url(#marketCapMiniGradient)"
+                      dot={false}
+                    />
+                  </AreaChart>
+                </ChartContainer>
+              </div>
+              
+              <div className={`text-right text-xs mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                📈 Click for detailed view
               </div>
             </div>
 
@@ -230,34 +253,40 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
                 </div>
               </div>
               
-              {/* Mini Chart Preview */}
-              <div className="h-12 relative">
-                <svg width="100%" height="100%" className="overflow-visible">
-                  <defs>
-                    <linearGradient id="miniVolumeGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-                      <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.3"/>
-                      <stop offset="100%" stopColor="#3b82f6" stopOpacity="0"/>
-                    </linearGradient>
-                  </defs>
-                  {/* Volume bars */}
-                  <rect x="10" y="25" width="15" height="23" fill="#3b82f6" opacity="0.7"/>
-                  <rect x="30" y="15" width="15" height="33" fill="#3b82f6" opacity="0.7"/>
-                  <rect x="50" y="30" width="15" height="18" fill="#3b82f6" opacity="0.7"/>
-                  <rect x="70" y="20" width="15" height="28" fill="#3b82f6" opacity="0.7"/>
-                  <rect x="90" y="10" width="15" height="38" fill="#3b82f6" opacity="0.7"/>
-                  <rect x="110" y="35" width="15" height="13" fill="#3b82f6" opacity="0.7"/>
-                  <rect x="130" y="25" width="15" height="23" fill="#3b82f6" opacity="0.7"/>
-                  {/* Trend line */}
-                  <path
-                    d="M15,35 L40,25 L60,40 L80,30 L100,20 L120,45 L140,35"
-                    fill="none"
-                    stroke="#ef4444"
-                    strokeWidth="2"
-                  />
-                </svg>
-                <div className={`absolute bottom-0 right-0 text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                  📊 Click for detailed view
-                </div>
+              {/* Live Volume Chart with Recharts */}
+              <div className="h-16 -mx-2">
+                <ChartContainer
+                  config={{
+                    volume: { label: "Volume", color: "#3b82f6" }
+                  }}
+                  className="h-full"
+                >
+                  <BarChart
+                    data={[
+                      { time: 0, volume: marketData.totalVolume * 1.05 },
+                      { time: 1, volume: marketData.totalVolume * 1.12 },
+                      { time: 2, volume: marketData.totalVolume * 0.98 },
+                      { time: 3, volume: marketData.totalVolume * 1.08 },
+                      { time: 4, volume: marketData.totalVolume * 0.92 },
+                      { time: 5, volume: marketData.totalVolume * 1.15 },
+                      { time: 6, volume: marketData.totalVolume * 0.95 },
+                      { time: 7, volume: marketData.totalVolume * 1.03 },
+                      { time: 8, volume: marketData.totalVolume * 1.07 },
+                      { time: 9, volume: marketData.totalVolume }
+                    ]}
+                    margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+                  >
+                    <Bar
+                      dataKey="volume"
+                      fill="#3b82f6"
+                      radius={[1, 1, 0, 0]}
+                    />
+                  </BarChart>
+                </ChartContainer>
+              </div>
+              
+              <div className={`text-right text-xs mt-1 ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                📊 Click for detailed view
               </div>
             </div>
           </div>
