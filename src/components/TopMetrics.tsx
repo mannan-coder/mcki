@@ -1,5 +1,6 @@
 
 import { ArrowUp, ArrowDown, TrendingUp, Sparkles, RefreshCw } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useCryptoData } from '@/hooks/useCryptoData';
 
 interface TopMetricsProps {
@@ -80,54 +81,74 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
     }));
 
   const MetricCard = ({ title, icon: Icon, children, gradient }: any) => (
-    <div className={`rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-card-hover ${
-      isDarkMode 
-        ? 'bg-gray-800/60 border-gray-700/50 hover:border-gray-600/70' 
-        : 'bg-white/80 border-gray-200/50 hover:border-gray-300/70'
-    }`}>
-      <div className={`p-5 border-b ${isDarkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
-        <div className="flex items-center space-x-3">
-          <div className={`p-2.5 rounded-xl bg-gradient-to-r ${gradient} shadow-lg`}>
-            <Icon size={22} className="text-white" />
+    <motion.div 
+      className={`rounded-xl sm:rounded-2xl border backdrop-blur-sm transition-all duration-300 hover:shadow-lg ${
+        isDarkMode 
+          ? 'bg-gray-800/60 border-gray-700/50 hover:border-gray-600/70' 
+          : 'bg-white/80 border-gray-200/50 hover:border-gray-300/70'
+      }`}
+      whileHover={{ y: -2 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <div className={`p-4 sm:p-5 border-b ${isDarkMode ? 'border-gray-700/50' : 'border-gray-200/50'}`}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2 sm:space-x-3">
+            <div className={`p-2 sm:p-2.5 rounded-lg sm:rounded-xl bg-gradient-to-r ${gradient} shadow-lg`}>
+              <Icon size={18} className="text-white sm:hidden" />
+              <Icon size={22} className="text-white hidden sm:block" />
+            </div>
+            <h3 className={`font-bold text-sm sm:text-base lg:text-lg ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              {title}
+            </h3>
           </div>
-          <h3 className={`font-bold text-lg ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            {title}
-          </h3>
+          <div className={`text-xs px-2 py-1 rounded-full ${
+            isDarkMode ? 'bg-gray-700/50 text-gray-300' : 'bg-gray-100 text-gray-600'
+          }`}>
+            Top 5
+          </div>
         </div>
       </div>
-      <div className="p-5 space-y-3">
+      <div className="p-4 sm:p-5 space-y-2 sm:space-y-3 max-h-48 sm:max-h-60 overflow-y-auto">
         {children}
       </div>
-    </div>
+    </motion.div>
   );
 
   const CoinItem = ({ symbol, change, price, volume, launched }: any) => (
-    <div className="flex items-center justify-between py-2 px-1 rounded-lg hover:bg-muted/30 transition-colors">
-      <div className="flex items-center space-x-3">
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold shadow-md ${
+    <motion.div 
+      className="flex items-center justify-between py-2 px-2 sm:px-3 rounded-lg hover:bg-muted/30 transition-colors cursor-pointer"
+      whileHover={{ x: 4 }}
+      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+    >
+      <div className="flex items-center space-x-2 sm:space-x-3 flex-1 min-w-0">
+        <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs sm:text-sm font-bold shadow-md flex-shrink-0 ${
           isDarkMode ? 'bg-gradient-to-br from-gray-700 to-gray-800 text-gray-200' : 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700'
         }`}>
           {symbol.charAt(0)}
         </div>
-        <span className={`font-semibold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
-          {symbol}
-        </span>
+        <div className="flex-1 min-w-0">
+          <div className={`font-semibold text-sm sm:text-base truncate ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
+            {symbol}
+          </div>
+          {price && (
+            <div className={`text-xs font-medium truncate ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              {price}
+            </div>
+          )}
+        </div>
       </div>
-      <div className="text-right">
+      <div className="text-right flex-shrink-0">
         {change && (
-          <div className={`text-sm font-bold ${
+          <div className={`text-xs sm:text-sm font-bold ${
             change.startsWith('+') ? 'text-green-500' : 'text-red-500'
           }`}>
             {change}
           </div>
         )}
-        {price && (
-          <div className={`text-xs font-medium ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            {price}
-          </div>
-        )}
         {volume && (
-          <div className={`text-sm font-bold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+          <div className={`text-xs sm:text-sm font-bold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
             {volume}
           </div>
         )}
@@ -137,25 +158,25 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
           </div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 
   return (
-    <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Section Header */}
-      <div className="flex items-center justify-between mb-8">
-        <h2 className={`text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+    <div className="space-y-4">
+      {/* Header - Responsive */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+        <h2 className={`text-lg sm:text-xl lg:text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
           Market Insights
         </h2>
-        <div className="flex items-center space-x-4">
-          <button className={`px-4 py-2 rounded-lg border transition-colors ${
+        <div className="flex items-center space-x-2 sm:space-x-4">
+          <button className={`px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-lg border transition-colors ${
             isDarkMode 
               ? 'border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700' 
               : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
           }`}>
             All
           </button>
-          <button className={`px-4 py-2 rounded-lg border transition-colors ${
+          <button className={`px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm rounded-lg border transition-colors ${
             isDarkMode 
               ? 'border-gray-700 bg-gray-800 text-gray-300 hover:bg-gray-700' 
               : 'border-gray-200 bg-white text-gray-700 hover:bg-gray-50'
@@ -165,7 +186,8 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Responsive Grid - Stacked on mobile */}
+      <div className="space-y-4">
         <MetricCard 
           title="🔥 Top Gainers" 
           icon={ArrowUp} 
@@ -206,7 +228,7 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
           ))}
         </MetricCard>
       </div>
-    </section>
+    </div>
   );
 };
 

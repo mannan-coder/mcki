@@ -139,16 +139,16 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
     >
       <MarketHeader isDarkMode={isDarkMode} totalMarketCap={marketStats.totalMarketCap} />
 
-      {/* Responsive Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 xl:grid-cols-12 gap-4 lg:gap-6 xl:gap-8">
-        {/* Main Market Stats - Responsive Column Spans */}
+      {/* Optimized Responsive Layout */}
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 lg:gap-8">
+        {/* Main Market Stats - Responsive */}
         <motion.div 
-          className="lg:col-span-8 xl:col-span-9"
+          className="xl:col-span-8 order-1"
           initial={{ x: -50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
         >
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6 mb-6 lg:mb-8">
             <MarketCapCard 
               isDarkMode={isDarkMode}
               totalMarketCap={marketStats.totalMarketCap}
@@ -169,9 +169,9 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
           />
         </motion.div>
 
-        {/* Right Sidebar - Use TopMetrics component */}
+        {/* Market Insights Sidebar - Responsive */}
         <motion.div 
-          className="lg:col-span-4 xl:col-span-3"
+          className="xl:col-span-4 order-2"
           initial={{ x: 50, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
