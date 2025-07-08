@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { TrendingUp, ArrowUp, ArrowDown, Activity, DollarSign, Users, BarChart3, ExternalLink, RefreshCw } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useCryptoData } from '@/hooks/useCryptoData';
 import { useSentimentData } from '@/hooks/useSentimentData';
 import { useArbitrageData } from '@/hooks/useArbitrageData';
@@ -14,6 +14,7 @@ interface MarketOverviewProps {
 }
 
 const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
+  const navigate = useNavigate();
   const [showMarketCapModal, setShowMarketCapModal] = useState(false);
   const [showVolumeModal, setShowVolumeModal] = useState(false);
   const { data: marketData, loading, error, refetch } = useCryptoData();
@@ -147,16 +148,16 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
 
       {/* CoinGecko-style main content layout */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Main Market Stats - Left Column */}
-        <div className="lg:col-span-8 space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Main Market Stats - Takes 2 columns on xl screens */}
+        <div className="xl:col-span-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
             {/* Compact Market Cap Card */}
             <div className={`p-4 rounded-xl border backdrop-blur-sm cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 ${
               isDarkMode 
                 ? 'bg-gray-800/60 border-gray-700/50 hover:bg-gray-800/80' 
                 : 'bg-white/80 border-gray-200/50 hover:bg-white/90'
             }`}
-              onClick={() => setShowMarketCapModal(true)}
+              onClick={() => navigate('/market-cap-details')}
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center space-x-2">
@@ -229,7 +230,7 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
                 ? 'bg-gray-800/60 border-gray-700/50 hover:bg-gray-800/80' 
                 : 'bg-white/80 border-gray-200/50 hover:bg-white/90'
             }`}
-              onClick={() => setShowVolumeModal(true)}
+              onClick={() => navigate('/volume-details')}
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center space-x-2">
@@ -290,10 +291,72 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
               </div>
             </div>
           </div>
+
+          {/* Fear & Greed Index with Bar Chart */}
+          <div className={`p-4 rounded-xl border backdrop-blur-sm ${
+            isDarkMode 
+              ? 'bg-gray-800/60 border-gray-700/50' 
+              : 'bg-white/80 border-gray-200/50'
+          }`}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                Fear & Greed Index
+              </h3>
+              <div className={`text-2xl font-bold ${getFearGreedColor(fearGreedIndex)}`}>
+                {fearGreedIndex}
+              </div>
+            </div>
+            
+            {/* Bar Chart */}
+            <div className="h-16 mb-4">
+              <ChartContainer
+                config={{
+                  fearGreed: { label: "Fear & Greed Index", color: getFearGreedColor(fearGreedIndex).replace('text-', '') }
+                }}
+                className="h-full"
+              >
+                <BarChart
+                  data={[
+                    { period: '7d ago', value: historicalData.weekAgo },
+                    { period: '6d ago', value: historicalData.weekAgo + 3 },
+                    { period: '5d ago', value: historicalData.weekAgo - 2 },
+                    { period: '4d ago', value: historicalData.weekAgo + 5 },
+                    { period: '3d ago', value: historicalData.weekAgo - 1 },
+                    { period: '2d ago', value: historicalData.yesterday + 2 },
+                    { period: 'Yesterday', value: historicalData.yesterday },
+                    { period: 'Today', value: fearGreedIndex }
+                  ]}
+                  margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+                >
+                  <Bar
+                    dataKey="value"
+                    fill={getFearGreedColor(fearGreedIndex).includes('green') ? '#10b981' : 
+                         getFearGreedColor(fearGreedIndex).includes('yellow') ? '#f59e0b' :
+                         getFearGreedColor(fearGreedIndex).includes('orange') ? '#f97316' : '#ef4444'}
+                    radius={[2, 2, 0, 0]}
+                  />
+                </BarChart>
+              </ChartContainer>
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <span className={`text-sm font-medium ${getFearGreedColor(fearGreedIndex)}`}>
+                {getFearGreedLabel(fearGreedIndex)}
+              </span>
+              <div className="flex items-center space-x-4 text-xs">
+                <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  7d avg: {historicalData.weekAgo}
+                </span>
+                <span className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                  30d avg: {historicalData.monthAgo}
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
 
-        {/* Right Sidebar - Trending & Top Gainers */}
-        <div className="lg:col-span-4 space-y-6">
+        {/* Right Sidebar - Trending & Top Gainers - Takes 1 column on xl screens */}
+        <div className="xl:col-span-1 space-y-4">
           {/* Trending Section */}
           <div className={`p-6 rounded-xl border backdrop-blur-sm ${
             isDarkMode 
@@ -370,7 +433,7 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
 
       {/* Additional Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
-        <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
             ? 'bg-gray-800/60 border-gray-700/50' 
             : 'bg-white/80 border-gray-200/50'
@@ -390,7 +453,7 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
           </div>
         </div>
 
-        <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
             ? 'bg-gray-800/60 border-gray-700/50' 
             : 'bg-white/80 border-gray-200/50'
@@ -414,7 +477,7 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
           </div>
         </div>
 
-        <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
             ? 'bg-gray-800/60 border-gray-700/50' 
             : 'bg-white/80 border-gray-200/50'
@@ -436,44 +499,28 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
           </div>
         </div>
 
-        <div className={`p-6 rounded-xl border backdrop-blur-sm ${
+        <div className={`p-4 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
             ? 'bg-gray-800/60 border-gray-700/50' 
             : 'bg-white/80 border-gray-200/50'
         }`}>
           <h3 className={`text-base font-semibold mb-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Fear & Greed Index
+            Global Metrics
           </h3>
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Current</span>
-              <span className={`font-semibold text-sm ${getFearGreedColor(fearGreedIndex)}`}>
-                {fearGreedIndex}
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Market Cap</span>
+              <span className={`font-semibold text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                {marketStats.totalMarketCap}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Status</span>
-              <span className={`font-semibold text-sm ${getFearGreedColor(fearGreedIndex)}`}>
-                {getFearGreedLabel(fearGreedIndex)}
-              </span>
+              <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>24h Change</span>
+              <span className="text-green-500 font-semibold text-sm">+2.9%</span>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Modals */}
-      <MarketCapModal 
-        isOpen={showMarketCapModal} 
-        onClose={() => setShowMarketCapModal(false)} 
-        isDarkMode={isDarkMode} 
-        marketData={marketData}
-      />
-      <VolumeModal 
-        isOpen={showVolumeModal} 
-        onClose={() => setShowVolumeModal(false)} 
-        isDarkMode={isDarkMode} 
-        marketData={marketData}
-      />
     </section>
   );
 };

@@ -13,6 +13,8 @@ import ChainAnalytics from "./pages/ChainAnalytics";
 import Tools from "./pages/Tools";
 import About from "./pages/About";
 import NotFound from "./pages/NotFound";
+import MarketCapDetails from "./pages/MarketCapDetails";
+import VolumeDetails from "./pages/VolumeDetails";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +28,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/arbitrage" element={<Arbitrage />} />
           <Route path="/market" element={<Market />} />
+          <Route path="/market-cap-details" element={<MarketCapDetails />} />
+          <Route path="/volume-details" element={<VolumeDetails />} />
           <Route path="/news" element={<News />} />
           <Route path="/news/:id" element={<NewsDetail />} />
           <Route path="/analytics" element={<Analytics />} />
