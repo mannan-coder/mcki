@@ -64,55 +64,59 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
 
       <div className={`rounded-xl border backdrop-blur-sm overflow-hidden shadow-lg ${
         isDarkMode 
-          ? 'bg-gray-800/90 border-gray-700/60' 
-          : 'bg-white/95 border-gray-200/60'
+          ? 'bg-gray-800/95 border-gray-700/60' 
+          : 'bg-white/98 border-gray-200/60'
       }`}>
-        {/* Desktop Header */}
-        <div className={`hidden lg:block px-6 py-5 border-b ${isDarkMode ? 'border-gray-700/60 bg-gray-800/95' : 'border-gray-200/60 bg-gray-50/90'}`}>
-          <div className="grid grid-cols-12 gap-6 text-sm font-semibold items-center">
-            <div className={`col-span-3 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              <div className="flex items-center space-x-2">
-                <span>🪙</span>
-                <span>Asset & Risk</span>
-              </div>
-            </div>
-            <div className={`col-span-4 text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              <div className="flex items-center justify-center space-x-2">
-                <span>🔄</span>
-                <span>Exchange Flow</span>
-              </div>
-            </div>
-            <div className={`col-span-2 text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              <div className="flex items-center justify-center space-x-2">
-                <span>📈</span>
-                <span>Spread</span>
-              </div>
-            </div>
-            <div className={`col-span-3 text-right ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
-              <div className="flex items-center justify-end space-x-2">
-                <span>💰</span>
-                <span>Profit & Action</span>
-              </div>
-            </div>
+        {/* Table Header */}
+        <div className={`px-6 py-5 border-b ${isDarkMode ? 'border-gray-700/60 bg-gray-800/98' : 'border-gray-200/60 bg-gray-50/95'}`}>
+          <div className="text-lg font-bold flex items-center space-x-2">
+            <span>🏆</span>
+            <span className={isDarkMode ? 'text-white' : 'text-gray-900'}>Top Arbitrage Opportunities</span>
           </div>
         </div>
 
-        {/* Mobile Header */}
-        <div className={`lg:hidden px-6 py-4 border-b ${isDarkMode ? 'border-gray-700/60 bg-gray-800/95' : 'border-gray-200/60 bg-gray-50/90'}`}>
-          <div className="text-sm font-semibold">
-            <span className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>💰 Live Arbitrage Opportunities</span>
-          </div>
-        </div>
-
-        {/* Data Rows */}
-        <div className={`divide-y ${isDarkMode ? 'divide-gray-700/40' : 'divide-gray-200/40'}`}>
-          {opportunities.map((opportunity, index) => (
-            <ArbitrageOpportunityRow 
-              key={index} 
-              opportunity={opportunity} 
-              isDarkMode={isDarkMode} 
-            />
-          ))}
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className={`${isDarkMode ? 'bg-gray-800/90' : 'bg-gray-50/90'}`}>
+              <tr className={`border-b ${isDarkMode ? 'border-gray-700/40' : 'border-gray-200/40'}`}>
+                <th className={`px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Rank
+                </th>
+                <th className={`px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Asset
+                </th>
+                <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Buy From
+                </th>
+                <th className={`px-2 py-4 text-center text-xs font-semibold uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  →
+                </th>
+                <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Sell To
+                </th>
+                <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Spread
+                </th>
+                <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Profit
+                </th>
+                <th className={`px-6 py-4 text-center text-xs font-semibold uppercase tracking-wider ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Action
+                </th>
+              </tr>
+            </thead>
+            <tbody className={`${isDarkMode ? 'bg-gray-800/50' : 'bg-white/50'} divide-y ${isDarkMode ? 'divide-gray-700/40' : 'divide-gray-200/40'}`}>
+              {opportunities.map((opportunity, index) => (
+                <ArbitrageOpportunityRow 
+                  key={index} 
+                  opportunity={opportunity} 
+                  isDarkMode={isDarkMode}
+                  index={index}
+                />
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
