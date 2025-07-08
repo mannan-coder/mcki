@@ -288,21 +288,16 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
               🏪 Live Prices Across Exchanges
             </h2>
             <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Real-time cryptocurrency prices across major exchanges
+              Real-time cryptocurrency prices and volumes across major exchanges
             </p>
           </div>
-          <div className="flex items-center space-x-2">
-            <button className="px-3 py-1 text-sm rounded border border-border bg-background hover:bg-muted">
-              Previous
-            </button>
-            <span className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded">1</span>
-            <button className="px-3 py-1 text-sm rounded border border-border bg-background hover:bg-muted">
-              2
-            </button>
-            <button className="px-3 py-1 text-sm rounded border border-border bg-background hover:bg-muted">
-              Next
-            </button>
-          </div>
+          <Link 
+            to="/arbitrage"
+            className="flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+          >
+            <span>View Details</span>
+            <ExternalLink size={16} />
+          </Link>
         </div>
 
         <div className={`rounded-xl border backdrop-blur-sm overflow-hidden ${
@@ -327,7 +322,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
           {/* Price Data */}
           <div className={`divide-y ${isDarkMode ? 'divide-gray-700/40' : 'divide-gray-200/40'}`}>
             {(() => {
-              // Generate more comprehensive coin data from the arbitrage opportunities
+              // Generate more comprehensive coin data with volumes
               const enhancedCoins = [
                 {
                   symbol: 'BTC',
@@ -340,6 +335,15 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                     kraken: 67680,
                     bybit: 67845,
                     gateio: 67755
+                  },
+                  volumes: {
+                    binance: '847.2M',
+                    coinbase: '623.8M',
+                    kucoin: '412.5M',
+                    okx: '598.7M',
+                    kraken: '234.1M',
+                    bybit: '512.3M',
+                    gateio: '189.7M'
                   },
                   change24h: 2.4
                 },
@@ -355,6 +359,15 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                     bybit: 3851,
                     gateio: 3848
                   },
+                  volumes: {
+                    binance: '692.1M',
+                    coinbase: '534.9M',
+                    kucoin: '298.6M',
+                    okx: '445.3M',
+                    kraken: '187.2M',
+                    bybit: '378.4M',
+                    gateio: '156.8M'
+                  },
                   change24h: 1.8
                 },
                 {
@@ -368,6 +381,15 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                     kraken: 176.8,
                     bybit: 178.4,
                     gateio: 177.9
+                  },
+                  volumes: {
+                    binance: '156.4M',
+                    coinbase: '89.7M',
+                    kucoin: '67.2M',
+                    okx: '123.8M',
+                    kraken: '34.6M',
+                    bybit: '98.5M',
+                    gateio: '45.3M'
                   },
                   change24h: -0.7
                 },
@@ -383,6 +405,15 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                     bybit: 0.649,
                     gateio: 0.653
                   },
+                  volumes: {
+                    binance: '89.3M',
+                    coinbase: '45.7M',
+                    kucoin: '34.2M',
+                    okx: '67.8M',
+                    kraken: '23.1M',
+                    bybit: '56.4M',
+                    gateio: '28.9M'
+                  },
                   change24h: 3.2
                 },
                 {
@@ -396,6 +427,15 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                     kraken: 0.875,
                     bybit: 0.879,
                     gateio: 0.883
+                  },
+                  volumes: {
+                    binance: '78.9M',
+                    coinbase: '56.4M',
+                    kucoin: '23.7M',
+                    okx: '45.2M',
+                    kraken: '18.9M',
+                    bybit: '39.8M',
+                    gateio: '21.3M'
                   },
                   change24h: 5.1
                 },
@@ -411,91 +451,16 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                     bybit: 8.47,
                     gateio: 8.53
                   },
+                  volumes: {
+                    binance: '34.6M',
+                    coinbase: '23.8M',
+                    kucoin: '16.4M',
+                    okx: '28.7M',
+                    kraken: '12.3M',
+                    bybit: '25.1M',
+                    gateio: '14.2M'
+                  },
                   change24h: -1.2
-                },
-                {
-                  symbol: 'AVAX',
-                  name: 'Avalanche',
-                  prices: {
-                    binance: 42.15,
-                    coinbase: 42.08,
-                    kucoin: 41.95,
-                    okx: 42.22,
-                    kraken: 42.12,
-                    bybit: 42.18,
-                    gateio: 42.06
-                  },
-                  change24h: 1.5
-                },
-                {
-                  symbol: 'LINK',
-                  name: 'Chainlink',
-                  prices: {
-                    binance: 18.67,
-                    coinbase: 18.72,
-                    kucoin: 18.58,
-                    okx: 18.71,
-                    kraken: 18.75,
-                    bybit: 18.69,
-                    gateio: 18.64
-                  },
-                  change24h: 0.8
-                },
-                {
-                  symbol: 'UNI',
-                  name: 'Uniswap',
-                  prices: {
-                    binance: 12.34,
-                    coinbase: 12.41,
-                    kucoin: 12.28,
-                    okx: 12.37,
-                    kraken: 12.39,
-                    bybit: 12.35,
-                    gateio: 12.42
-                  },
-                  change24h: -2.1
-                },
-                {
-                  symbol: 'ATOM',
-                  name: 'Cosmos',
-                  prices: {
-                    binance: 9.85,
-                    coinbase: 9.92,
-                    kucoin: 9.78,
-                    okx: 9.88,
-                    kraken: 9.94,
-                    bybit: 9.86,
-                    gateio: 9.89
-                  },
-                  change24h: 4.2
-                },
-                {
-                  symbol: 'LTC',
-                  name: 'Litecoin',
-                  prices: {
-                    binance: 98.45,
-                    coinbase: 98.72,
-                    kucoin: 98.15,
-                    okx: 98.58,
-                    kraken: 98.89,
-                    bybit: 98.52,
-                    gateio: 98.37
-                  },
-                  change24h: -0.9
-                },
-                {
-                  symbol: 'ALGO',
-                  name: 'Algorand',
-                  prices: {
-                    binance: 0.365,
-                    coinbase: 0.368,
-                    kucoin: 0.362,
-                    okx: 0.366,
-                    kraken: 0.369,
-                    bybit: 0.364,
-                    gateio: 0.367
-                  },
-                  change24h: 2.8
                 }
               ];
               
@@ -530,7 +495,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                         ${coin.prices.binance.toLocaleString()}
                       </div>
                       <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Live Price
+                        Vol: {coin.volumes.binance}
                       </div>
                     </div>
 
@@ -540,7 +505,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                         ${coin.prices.coinbase.toLocaleString()}
                       </div>
                       <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Live Price
+                        Vol: {coin.volumes.coinbase}
                       </div>
                     </div>
 
@@ -550,7 +515,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                         ${coin.prices.kucoin.toLocaleString()}
                       </div>
                       <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Live Price
+                        Vol: {coin.volumes.kucoin}
                       </div>
                     </div>
 
@@ -560,7 +525,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                         ${coin.prices.okx.toLocaleString()}
                       </div>
                       <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Live Price
+                        Vol: {coin.volumes.okx}
                       </div>
                     </div>
 
@@ -570,7 +535,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                         ${coin.prices.kraken.toLocaleString()}
                       </div>
                       <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Live Price
+                        Vol: {coin.volumes.kraken}
                       </div>
                     </div>
 
@@ -580,7 +545,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                         ${coin.prices.bybit.toLocaleString()}
                       </div>
                       <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Live Price
+                        Vol: {coin.volumes.bybit}
                       </div>
                     </div>
 
@@ -590,7 +555,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                         ${coin.prices.gateio.toLocaleString()}
                       </div>
                       <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Live Price
+                        Vol: {coin.volumes.gateio}
                       </div>
                     </div>
                   </div>
