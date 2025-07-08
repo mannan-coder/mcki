@@ -1,7 +1,6 @@
 
 import { useState } from 'react';
 import Navbar from '@/components/Navbar';
-import TopMetrics from '@/components/TopMetrics';
 import TopMetricsBanner from '@/components/TopMetricsBanner';
 import ArbitrageDashboard from '@/components/ArbitrageDashboard';
 import MarketOverview from '@/components/MarketOverview';
@@ -43,7 +42,6 @@ const Index = () => {
           {/* Main Content Sections */}
           <div className="space-y-12">
             <MarketOverview isDarkMode={isDarkMode} />
-            <TopMetrics isDarkMode={isDarkMode} />
             <ArbitrageDashboard isDarkMode={isDarkMode} />
             <OnChainAnalysis isDarkMode={isDarkMode} />
             <NewsAlert isDarkMode={isDarkMode} />
