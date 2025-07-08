@@ -17,7 +17,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
     { name: 'Market', href: '/market' },
     { name: 'News', href: '/news' },
     { name: 'Analytics', href: '/analytics' },
-    { name: 'Tools', href: '#tools' },
+    { name: 'Tools', href: '/tools' },
     { name: 'About', href: '/about' },
   ];
 

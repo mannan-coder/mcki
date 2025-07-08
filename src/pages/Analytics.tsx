@@ -17,12 +17,9 @@ import {
   ArrowDownIcon
 } from 'lucide-react';
 
-interface AnalyticsProps {
-  isDarkMode?: boolean;
-  setIsDarkMode?: (value: boolean) => void;
-}
 
-const Analytics = ({ isDarkMode = false, setIsDarkMode = () => {} }: AnalyticsProps) => {
+const Analytics = () => {
+  const [isDarkMode, setIsDarkMode] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
