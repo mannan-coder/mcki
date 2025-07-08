@@ -11,16 +11,8 @@ serve(async (req) => {
   }
 
   try {
-    // Fetch crypto news from CryptoPanic API (free tier)
-    const response = await fetch(
-      'https://cryptopanic.com/api/free/v1/posts/?auth_token=free&filter=hot&public=true'
-    )
-
-    if (!response.ok) {
-      throw new Error(`CryptoPanic API error: ${response.status}`)
-    }
-
-    const data = await response.json()
+    // Enhanced mock news data with images - fallback first
+    const enhancedNews = [
 
     // Enhanced mock news data with images
     const enhancedNews = [
@@ -92,21 +84,8 @@ serve(async (req) => {
       }
     ];
 
-    // Transform and merge API data with enhanced news
-    const apiNews = data.results?.slice(0, 4).map((article: any, index: number) => ({
-      id: index + 100,
-      title: article.title,
-      summary: article.title.length > 100 ? article.title.substring(0, 100) + "..." : article.title,
-      category: article.kind === 'news' ? 'News' : 'General',
-      time: new Date(article.published_at).toLocaleString(),
-      impact: article.votes?.positive > article.votes?.negative ? 'bullish' : 
-              article.votes?.negative > article.votes?.positive ? 'bearish' : 'neutral',
-      source: article.source?.title || 'CryptoPanic',
-      url: article.url,
-      image: `https://images.unsplash.com/photo-${1518546305 + Math.floor(Math.random() * 1000000)}?w=400&h=300&fit=crop&auto=format`
-    })) || [];
-
-    const newsData = [...enhancedNews, ...apiNews];
+    // Always return enhanced news for now to avoid API issues
+    const newsData = enhancedNews;
 
     return new Response(
       JSON.stringify({ news: newsData }),
