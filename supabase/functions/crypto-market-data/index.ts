@@ -11,37 +11,71 @@ serve(async (req) => {
   }
 
   try {
-    // Fetch market data from CoinGecko (free API)
-    const response = await fetch(
-      'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=100&page=1&sparkline=false&price_change_percentage=1h%2C24h%2C7d'
-    )
+    const url = new URL(req.url);
+    const limit = url.searchParams.get('limit') || '250'; // Default to top 250 coins
+    const category = url.searchParams.get('category') || '';
+    
+    // Fetch comprehensive market data from CoinGecko
+    let apiUrl = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${limit}&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d%2C30d`;
+    
+    if (category) {
+      apiUrl += `&category=${category}`;
+    }
+
+    const response = await fetch(apiUrl);
 
     if (!response.ok) {
-      throw new Error(`CoinGecko API error: ${response.status}`)
+      throw new Error(`CoinGecko API error: ${response.status}`);
     }
 
-    const data = await response.json()
+    const coinData = await response.json();
 
-    // Transform data to match our app structure
+    // Fetch global market data
+    const globalResponse = await fetch('https://api.coingecko.com/api/v3/global');
+    const globalData = await globalResponse.json();
+
+    // Calculate additional metrics
+    const totalMarketCap = globalData.data?.total_market_cap?.usd || 0;
+    const totalVolume = globalData.data?.total_volume?.usd || 0;
+    const btcDominance = globalData.data?.market_cap_percentage?.btc || 0;
+    const ethDominance = globalData.data?.market_cap_percentage?.eth || 0;
+
+    // Transform and enrich coin data
+    const enrichedCoins = coinData.map((coin: any) => ({
+      id: coin.id,
+      symbol: coin.symbol.toUpperCase(),
+      name: coin.name,
+      price: coin.current_price,
+      change1h: coin.price_change_percentage_1h_in_currency || 0,
+      change24h: coin.price_change_percentage_24h || 0,
+      change7d: coin.price_change_percentage_7d_in_currency || 0,
+      change30d: coin.price_change_percentage_30d_in_currency || 0,
+      marketCap: coin.market_cap,
+      volume: coin.total_volume,
+      rank: coin.market_cap_rank,
+      circulatingSupply: coin.circulating_supply,
+      totalSupply: coin.total_supply,
+      maxSupply: coin.max_supply,
+      ath: coin.ath,
+      athDate: coin.ath_date,
+      atl: coin.atl,
+      atlDate: coin.atl_date,
+      image: coin.image,
+      sparkline: coin.sparkline_in_7d?.price || [],
+      lastUpdated: coin.last_updated
+    }));
+
     const marketData = {
-      totalMarketCap: data.reduce((sum: number, coin: any) => sum + (coin.market_cap || 0), 0),
-      totalVolume: data.reduce((sum: number, coin: any) => sum + (coin.total_volume || 0), 0),
-      btcDominance: data.find((coin: any) => coin.id === 'bitcoin')?.market_cap_rank === 1 ? 
-        ((data.find((coin: any) => coin.id === 'bitcoin')?.market_cap || 0) / 
-         data.reduce((sum: number, coin: any) => sum + (coin.market_cap || 0), 0)) * 100 : 0,
+      totalMarketCap,
+      totalVolume,
+      btcDominance,
+      ethDominance,
       fearGreedIndex: Math.floor(Math.random() * 100), // Placeholder - would need separate API
-      coins: data.slice(0, 50).map((coin: any) => ({
-        id: coin.id,
-        symbol: coin.symbol.toUpperCase(),
-        name: coin.name,
-        price: coin.current_price,
-        change24h: coin.price_change_percentage_24h,
-        change7d: coin.price_change_percentage_7d_in_currency,
-        marketCap: coin.market_cap,
-        volume: coin.total_volume,
-        rank: coin.market_cap_rank
-      }))
-    }
+      activeCryptocurrencies: globalData.data?.active_cryptocurrencies || 0,
+      markets: globalData.data?.markets || 0,
+      coins: enrichedCoins,
+      lastUpdated: new Date().toISOString()
+    };
 
     return new Response(
       JSON.stringify(marketData),

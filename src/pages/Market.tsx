@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { TrendingUp, TrendingDown, Search, Filter, Star, Volume2, Clock, BarChart3, Eye, Plus } from 'lucide-react';
+import { TrendingUp, TrendingDown, Search, Filter, Star, Volume2, Clock, BarChart3, Eye, Plus, RefreshCw } from 'lucide-react';
 import Layout from '@/components/Layout';
-import { LineChart, Line, ResponsiveContainer } from 'recharts';
+import CryptoTable from '@/components/CryptoTable';
+import { useCryptoData } from '@/hooks/useCryptoData';
 
 interface CoinData {
   id: string;
@@ -25,6 +26,8 @@ interface CoinData {
 }
 
 const MarketPage = () => {
+  const { data: cryptoData, loading, error, refetch } = useCryptoData();
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [sortBy, setSortBy] = useState('market_cap');
@@ -36,34 +39,6 @@ const MarketPage = () => {
     'All', 'DeFi', 'Layer 1', 'Layer 2', 'Gaming', 'NFT', 'Meme', 'AI', 'RWA', 'Privacy'
   ];
 
-  const generateSparklineData = () => {
-    return Array.from({ length: 24 }, () => Math.random() * 100 + 50);
-  };
-
-  const coinData: CoinData[] = [
-    {
-      id: 'bitcoin',
-      symbol: 'BTC',
-      name: 'Bitcoin',
-      price: 67890,
-      change24h: 2.4,
-      volume24h: '$28.5B',
-      marketCap: '$1.34T',
-      high24h: 68420,
-      low24h: 66180,
-      sparklineData: generateSparklineData(),
-      category: 'Layer 1',
-      rank: 1,
-      isFavorite: false,
-      ath: 73750,
-      athChangePercentage: -7.9,
-      circulatingSupply: '19.7M BTC',
-      totalSupply: '21M BTC',
-      lastUpdated: '2 minutes ago'
-    },
-    // Additional coin data would go here...
-  ];
-
   const toggleFavorite = (coinId: string) => {
     setFavorites(prev => 
       prev.includes(coinId) 
@@ -72,22 +47,44 @@ const MarketPage = () => {
     );
   };
 
-  const filteredCoins = coinData.filter(coin => {
+  const filteredCoins = cryptoData?.coins?.filter(coin => {
     const matchesSearch = coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          coin.symbol.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'All' || coin.category === selectedCategory;
+    const matchesCategory = selectedCategory === 'All'; // For now, show all as we don't have category data
     const matchesFavorites = !showOnlyFavorites || favorites.includes(coin.id);
     return matchesSearch && matchesCategory && matchesFavorites;
-  });
+  }) || [];
 
-  const marketStats = {
-    totalMarketCap: '$2.64T',
-    totalVolume: '$89.2B',
-    btcDominance: '50.8%',
-    activeCoins: '2.8M',
-    totalExchanges: '756',
-    defiTvl: '$68.4B'
-  };
+  if (loading) {
+    return (
+      <Layout>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="flex items-center justify-center h-64">
+            <RefreshCw className="animate-spin text-primary" size={32} />
+            <span className="ml-3 text-lg">Loading market data...</span>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center">
+            <p className="text-red-500 mb-4">Error loading market data: {error}</p>
+            <button 
+              onClick={refetch}
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </Layout>
+    );
+  }
 
   return (
     <Layout>
@@ -108,27 +105,39 @@ const MarketPage = () => {
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
           <div className="p-4 rounded-xl border border-border bg-card backdrop-blur-sm">
             <div className="text-xs text-muted-foreground mb-1">Market Cap</div>
-            <div className="text-lg font-bold text-foreground">{marketStats.totalMarketCap}</div>
+            <div className="text-lg font-bold text-foreground">
+              ${cryptoData ? (cryptoData.totalMarketCap / 1e12).toFixed(2) + 'T' : 'Loading...'}
+            </div>
           </div>
           <div className="p-4 rounded-xl border border-border bg-card backdrop-blur-sm">
             <div className="text-xs text-muted-foreground mb-1">24h Volume</div>
-            <div className="text-lg font-bold text-foreground">{marketStats.totalVolume}</div>
+            <div className="text-lg font-bold text-foreground">
+              ${cryptoData ? (cryptoData.totalVolume / 1e9).toFixed(1) + 'B' : 'Loading...'}
+            </div>
           </div>
           <div className="p-4 rounded-xl border border-border bg-card backdrop-blur-sm">
             <div className="text-xs text-muted-foreground mb-1">BTC Dominance</div>
-            <div className="text-lg font-bold text-primary">{marketStats.btcDominance}</div>
+            <div className="text-lg font-bold text-primary">
+              {cryptoData ? cryptoData.btcDominance.toFixed(1) + '%' : 'Loading...'}
+            </div>
           </div>
           <div className="p-4 rounded-xl border border-border bg-card backdrop-blur-sm">
             <div className="text-xs text-muted-foreground mb-1">Active Coins</div>
-            <div className="text-lg font-bold text-accent">{marketStats.activeCoins}</div>
+            <div className="text-lg font-bold text-accent">
+              {cryptoData ? cryptoData.activeCryptocurrencies.toLocaleString() : 'Loading...'}
+            </div>
           </div>
           <div className="p-4 rounded-xl border border-border bg-card backdrop-blur-sm">
             <div className="text-xs text-muted-foreground mb-1">Exchanges</div>
-            <div className="text-lg font-bold text-success">{marketStats.totalExchanges}</div>
+            <div className="text-lg font-bold text-success">
+              {cryptoData ? cryptoData.markets.toLocaleString() : 'Loading...'}
+            </div>
           </div>
           <div className="p-4 rounded-xl border border-border bg-card backdrop-blur-sm">
-            <div className="text-xs text-muted-foreground mb-1">DeFi TVL</div>
-            <div className="text-lg font-bold text-warning">{marketStats.defiTvl}</div>
+            <div className="text-xs text-muted-foreground mb-1">Last Updated</div>
+            <div className="text-lg font-bold text-warning">
+              {cryptoData ? new Date(cryptoData.lastUpdated).toLocaleTimeString() : 'Loading...'}
+            </div>
           </div>
         </div>
 
@@ -179,131 +188,38 @@ const MarketPage = () => {
           </div>
         </div>
 
-        {/* Market Table */}
-        <div className="rounded-xl border border-border bg-card overflow-hidden">
-          {/* Table Header */}
-          <div className="px-6 py-4 border-b border-border bg-muted/50">
-            <div className="grid grid-cols-12 gap-4 text-sm font-semibold items-center text-muted-foreground">
-              <div className="col-span-1">#</div>
-              <div className="col-span-3">Name</div>
-              <div className="col-span-2 text-right">Price</div>
-              <div className="col-span-1 text-right">24h %</div>
-              <div className="col-span-2 text-right">24h Volume</div>
-              <div className="col-span-2 text-right">Market Cap</div>
-              <div className="col-span-1 text-center">Chart</div>
-            </div>
-          </div>
-
-          {/* Table Body */}
-          <div className="divide-y divide-border">
-            {filteredCoins.map((coin) => (
-              <div key={coin.id} className="px-6 py-4 hover:bg-muted/30 transition-colors">
-                <div className="grid grid-cols-12 gap-4 items-center">
-                  {/* Rank */}
-                  <div className="col-span-1">
-                    <div className="flex items-center space-x-2">
-                      <button
-                        onClick={() => toggleFavorite(coin.id)}
-                        className={`${favorites.includes(coin.id) ? 'text-warning' : 'text-muted-foreground'} hover:text-warning transition-colors`}
-                      >
-                        <Star size={16} fill={favorites.includes(coin.id) ? 'currentColor' : 'none'} />
-                      </button>
-                      <span className="text-sm text-muted-foreground">
-                        {coin.rank}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Name */}
-                  <div className="col-span-3 flex items-center space-x-3">
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold bg-muted text-muted-foreground">
-                      {coin.symbol.charAt(0)}
-                    </div>
-                    <div>
-                      <div className="font-semibold text-foreground">
-                        {coin.name}
-                      </div>
-                      <div className="text-xs text-muted-foreground">
-                        {coin.symbol}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Price */}
-                  <div className="col-span-2 text-right">
-                    <div className="font-semibold text-foreground">
-                      ${coin.price < 1 ? coin.price.toFixed(6) : coin.price.toLocaleString()}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      H: ${coin.high24h.toLocaleString()} L: ${coin.low24h.toLocaleString()}
-                    </div>
-                  </div>
-
-                  {/* 24h Change */}
-                  <div className="col-span-1 text-right">
-                    <div className={`font-semibold flex items-center justify-end space-x-1 ${
-                      coin.change24h >= 0 ? 'text-success' : 'text-destructive'
-                    }`}>
-                      {coin.change24h >= 0 ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
-                      <span>{coin.change24h >= 0 ? '+' : ''}{coin.change24h.toFixed(2)}%</span>
-                    </div>
-                  </div>
-
-                  {/* Volume */}
-                  <div className="col-span-2 text-right">
-                    <div className="font-semibold text-foreground">
-                      {coin.volume24h}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {coin.lastUpdated}
-                    </div>
-                  </div>
-
-                  {/* Market Cap */}
-                  <div className="col-span-2 text-right">
-                    <div className="font-semibold text-foreground">
-                      {coin.marketCap}
-                    </div>
-                    <div className="text-xs text-muted-foreground">
-                      {coin.circulatingSupply}
-                    </div>
-                  </div>
-
-                  {/* Chart */}
-                  <div className="col-span-1 flex justify-center">
-                    <div className="w-20 h-12">
-                      <ResponsiveContainer width="100%" height="100%">
-                        <LineChart data={coin.sparklineData.map((value, index) => ({ value, index }))}>
-                          <Line 
-                            type="monotone" 
-                            dataKey="value" 
-                            stroke={coin.change24h >= 0 ? 'hsl(var(--success))' : 'hsl(var(--destructive))'} 
-                            strokeWidth={1.5}
-                            dot={false}
-                          />
-                        </LineChart>
-                      </ResponsiveContainer>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Live Crypto Table */}
+        <CryptoTable 
+          coins={filteredCoins} 
+          isDarkMode={false} // You can pass theme state here
+          onCoinClick={(coinId) => {
+            // Handle coin click - could navigate to coin detail page
+            console.log('Clicked coin:', coinId);
+          }}
+        />
 
         {/* Pagination */}
         <div className="flex items-center justify-between mt-6">
           <div className="text-sm text-muted-foreground">
-            Showing {filteredCoins.length} of {coinData.length} coins
+            Showing {filteredCoins.length} of {cryptoData?.coins?.length || 0} coins
           </div>
-          <div className="flex space-x-2">
-            <button className="px-3 py-1 rounded border border-border hover:bg-muted text-foreground transition-colors">
-              Previous
+          <div className="flex items-center space-x-4">
+            <button 
+              onClick={refetch}
+              className="flex items-center space-x-2 px-3 py-1 rounded border border-border hover:bg-muted text-foreground transition-colors"
+            >
+              <RefreshCw size={14} />
+              <span>Refresh</span>
             </button>
-            <button className="px-3 py-1 rounded bg-primary text-primary-foreground">1</button>
-            <button className="px-3 py-1 rounded border border-border hover:bg-muted text-foreground transition-colors">
-              Next
-            </button>
+            <div className="flex space-x-2">
+              <button className="px-3 py-1 rounded border border-border hover:bg-muted text-foreground transition-colors">
+                Previous
+              </button>
+              <button className="px-3 py-1 rounded bg-primary text-primary-foreground">1</button>
+              <button className="px-3 py-1 rounded border border-border hover:bg-muted text-foreground transition-colors">
+                Next
+              </button>
+            </div>
           </div>
         </div>
       </div>
