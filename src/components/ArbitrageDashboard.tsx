@@ -307,15 +307,22 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
         }`}>
           {/* Header */}
           <div className={`px-6 py-4 border-b ${isDarkMode ? 'border-gray-700/60 bg-gray-800/90' : 'border-gray-200/60 bg-gray-50/80'}`}>
-            <div className="grid grid-cols-9 gap-2 text-sm font-semibold items-center">
+            <div className="grid grid-cols-16 gap-2 text-sm font-semibold items-center">
               <div className={`col-span-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Cryptocurrency</div>
               <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Binance</div>
+              <div className={`text-center text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Vol</div>
               <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Coinbase</div>
+              <div className={`text-center text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Vol</div>
               <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>KuCoin</div>
+              <div className={`text-center text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Vol</div>
               <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>OKX</div>
+              <div className={`text-center text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Vol</div>
               <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Kraken</div>
+              <div className={`text-center text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Vol</div>
               <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Bybit</div>
+              <div className={`text-center text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Vol</div>
               <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Gate.io</div>
+              <div className={`text-center text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-500'}`}>Vol</div>
             </div>
           </div>
 
@@ -418,7 +425,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
             })().map((coin, index) => {
               return (
                 <div key={index} className={`px-6 py-5 hover:bg-gray-500/5 transition-colors`}>
-                  <div className="grid grid-cols-9 gap-2 items-center">
+                  <div className="grid grid-cols-16 gap-2 items-center">
                     {/* Cryptocurrency */}
                     <div className="col-span-2 flex items-center space-x-3">
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${
@@ -467,9 +474,17 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                         }).format(price);
                       };
                       
-                      const formatVolume = (volume: string) => {
-                        return `$${volume}`;
-                      };
+                       const formatVolumeDisplay = (volume: string) => {
+                         // Extract number from volume string (remove 'M' or 'B')
+                         const numValue = parseFloat(volume.replace(/[MB]/g, ''));
+                         const unit = volume.includes('B') ? 'B' : 'M';
+                         
+                         if (unit === 'B') {
+                           return `$${numValue.toFixed(1)}B`;
+                         } else {
+                           return `$${numValue.toFixed(0)}M`;
+                         }
+                       };
                       
                       const getPriceColor = (price: number) => {
                         if (price === highestPrice) return 'text-green-500';
@@ -477,36 +492,38 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                         return isDarkMode ? 'text-blue-400' : 'text-blue-600';
                       };
                       
-                      return allPrices.map((priceData, idx) => {
-                        const exchangeNames = ['Binance', 'Coinbase', 'KuCoin', 'OKX', 'Kraken', 'Bybit', 'Gate.io'];
-                        return (
-                          <div key={idx} className="text-center">
-                            <div className="space-y-1">
-                              <div className={`text-sm font-bold ${getPriceColor(priceData.price)}`}>
-                                {formatPrice(priceData.price)}
-                              </div>
-                              {priceData.price === highestPrice && (
-                                <div className="flex items-center justify-center">
-                                  <span className="text-xs text-green-500 bg-green-500/10 px-1.5 py-0.5 rounded-full font-medium">
-                                    HIGH
-                                  </span>
-                                </div>
-                              )}
-                              {priceData.price === lowestPrice && (
-                                <div className="flex items-center justify-center">
-                                  <span className="text-xs text-red-500 bg-red-500/10 px-1.5 py-0.5 rounded-full font-medium">
-                                    LOW
-                                  </span>
-                                </div>
-                              )}
-                              <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                                <div className="font-medium">{formatVolume(priceData.volume)}</div>
-                                <div className="text-xs opacity-75">24h Vol</div>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      });
+                       return allPrices.map((priceData, idx) => {
+                         return (
+                           <>
+                             {/* Price column */}
+                             <div key={`price-${idx}`} className="text-center">
+                               <div className={`text-sm font-bold ${getPriceColor(priceData.price)}`}>
+                                 {formatPrice(priceData.price)}
+                               </div>
+                               {priceData.price === highestPrice && (
+                                 <div className="flex items-center justify-center mt-1">
+                                   <span className="text-xs text-green-500 bg-green-500/10 px-1.5 py-0.5 rounded-full font-medium">
+                                     HIGH
+                                   </span>
+                                 </div>
+                               )}
+                               {priceData.price === lowestPrice && (
+                                 <div className="flex items-center justify-center mt-1">
+                                   <span className="text-xs text-red-500 bg-red-500/10 px-1.5 py-0.5 rounded-full font-medium">
+                                     LOW
+                                   </span>
+                                 </div>
+                               )}
+                             </div>
+                             {/* Volume column */}
+                             <div key={`volume-${idx}`} className="text-center">
+                               <div className={`text-xs font-semibold ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                                 {formatVolumeDisplay(priceData.volume)}
+                               </div>
+                             </div>
+                           </>
+                         );
+                       }).flat();
                     })()}
                   </div>
                 </div>
