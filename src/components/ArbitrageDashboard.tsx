@@ -439,75 +439,71 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                       </div>
                     </div>
 
-                    {/* Binance */}
-                    <div className="text-center">
-                      <div className={`text-sm font-semibold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
-                        ${coin.prices.binance.toLocaleString()}
-                      </div>
-                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Vol: {coin.volumes.binance}
-                      </div>
-                    </div>
-
-                    {/* Coinbase */}
-                    <div className="text-center">
-                      <div className={`text-sm font-semibold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
-                        ${coin.prices.coinbase.toLocaleString()}
-                      </div>
-                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Vol: {coin.volumes.coinbase}
-                      </div>
-                    </div>
-
-                    {/* KuCoin */}
-                    <div className="text-center">
-                      <div className={`text-sm font-semibold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
-                        ${coin.prices.kucoin.toLocaleString()}
-                      </div>
-                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Vol: {coin.volumes.kucoin}
-                      </div>
-                    </div>
-
-                    {/* OKX */}
-                    <div className="text-center">
-                      <div className={`text-sm font-semibold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
-                        ${coin.prices.okx.toLocaleString()}
-                      </div>
-                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Vol: {coin.volumes.okx}
-                      </div>
-                    </div>
-
-                    {/* Kraken */}
-                    <div className="text-center">
-                      <div className={`text-sm font-semibold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
-                        ${coin.prices.kraken.toLocaleString()}
-                      </div>
-                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Vol: {coin.volumes.kraken}
-                      </div>
-                    </div>
-
-                    {/* Bybit */}
-                    <div className="text-center">
-                      <div className={`text-sm font-semibold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
-                        ${coin.prices.bybit.toLocaleString()}
-                      </div>
-                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Vol: {coin.volumes.bybit}
-                      </div>
-                    </div>
-
-                    {/* Gate.io */}
-                    <div className="text-center">
-                      <div className={`text-sm font-semibold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
-                        ${coin.prices.gateio.toLocaleString()}
-                      </div>
-                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Vol: {coin.volumes.gateio}
-                      </div>
-                    </div>
+                    {(() => {
+                      // Find highest and lowest prices for this coin
+                      const allPrices = [
+                        { exchange: 'binance', price: coin.prices.binance, volume: coin.volumes.binance },
+                        { exchange: 'coinbase', price: coin.prices.coinbase, volume: coin.volumes.coinbase },
+                        { exchange: 'kucoin', price: coin.prices.kucoin, volume: coin.volumes.kucoin },
+                        { exchange: 'okx', price: coin.prices.okx, volume: coin.volumes.okx },
+                        { exchange: 'kraken', price: coin.prices.kraken, volume: coin.volumes.kraken },
+                        { exchange: 'bybit', price: coin.prices.bybit, volume: coin.volumes.bybit },
+                        { exchange: 'gateio', price: coin.prices.gateio, volume: coin.volumes.gateio }
+                      ];
+                      
+                      const highestPrice = Math.max(...allPrices.map(p => p.price));
+                      const lowestPrice = Math.min(...allPrices.map(p => p.price));
+                      
+                      const formatPrice = (price: number) => {
+                        return new Intl.NumberFormat('en-US', {
+                          style: 'currency',
+                          currency: 'USD',
+                          minimumFractionDigits: price < 1 ? 4 : 2,
+                          maximumFractionDigits: price < 1 ? 6 : 2
+                        }).format(price);
+                      };
+                      
+                      const formatVolume = (volume: string) => {
+                        return `$${volume}`;
+                      };
+                      
+                      const getPriceColor = (price: number) => {
+                        if (price === highestPrice) return 'text-green-500';
+                        if (price === lowestPrice) return 'text-red-500';
+                        return isDarkMode ? 'text-blue-400' : 'text-blue-600';
+                      };
+                      
+                      return allPrices.map((priceData, idx) => {
+                        const exchangeNames = ['Binance', 'Coinbase', 'KuCoin', 'OKX', 'Kraken', 'Bybit', 'Gate.io'];
+                        return (
+                          <div key={idx} className="text-center">
+                            <div className="space-y-1">
+                              <div className={`text-sm font-bold ${getPriceColor(priceData.price)}`}>
+                                {formatPrice(priceData.price)}
+                              </div>
+                              {priceData.price === highestPrice && (
+                                <div className="flex items-center justify-center">
+                                  <span className="text-xs text-green-500 bg-green-500/10 px-1.5 py-0.5 rounded-full font-medium">
+                                    HIGH
+                                  </span>
+                                </div>
+                              )}
+                              {priceData.price === lowestPrice && (
+                                <div className="flex items-center justify-center">
+                                  <span className="text-xs text-red-500 bg-red-500/10 px-1.5 py-0.5 rounded-full font-medium">
+                                    LOW
+                                  </span>
+                                </div>
+                              )}
+                              <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                                <div className="font-medium">{formatVolume(priceData.volume)}</div>
+                                <div className="text-xs opacity-75">24h Vol</div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      });
+                    })()}
                   </div>
                 </div>
               );
