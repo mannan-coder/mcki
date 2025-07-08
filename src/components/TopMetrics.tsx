@@ -1,41 +1,56 @@
 
-import { ArrowUp, ArrowDown, TrendingUp, Sparkles } from 'lucide-react';
+import { ArrowUp, ArrowDown, TrendingUp, Sparkles, RefreshCw } from 'lucide-react';
+import { useCryptoData } from '@/hooks/useCryptoData';
 
 interface TopMetricsProps {
   isDarkMode: boolean;
 }
 
 const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
-  const topGainers = [
-    { symbol: 'BTC', change: '+5.2%', price: '$67,234' },
-    { symbol: 'ETH', change: '+8.7%', price: '$3,845' },
-    { symbol: 'SOL', change: '+12.4%', price: '$178' },
-    { symbol: 'ADA', change: '+6.8%', price: '$0.65' },
-    { symbol: 'DOT', change: '+9.1%', price: '$7.42' },
-  ];
+  const { data: marketData, loading } = useCryptoData();
 
-  const topLosers = [
-    { symbol: 'AVAX', change: '-4.2%', price: '$42.15' },
-    { symbol: 'LINK', change: '-2.8%', price: '$18.67' },
-    { symbol: 'UNI', change: '-5.1%', price: '$12.34' },
-    { symbol: 'MATIC', change: '-3.9%', price: '$0.87' },
-    { symbol: 'LTC', change: '-1.7%', price: '$145.23' },
-  ];
+  if (loading || !marketData) {
+    return (
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex items-center justify-center h-32">
+          <RefreshCw className="animate-spin text-primary" size={24} />
+          <span className={`ml-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            Loading metrics...
+          </span>
+        </div>
+      </section>
+    );
+  }
 
-  const topVolume = [
-    { symbol: 'BTC', volume: '$28.5B' },
-    { symbol: 'ETH', volume: '$15.2B' },
-    { symbol: 'USDT', volume: '$12.8B' },
-    { symbol: 'BNB', volume: '$4.7B' },
-    { symbol: 'SOL', volume: '$3.9B' },
-  ];
+  // Process real data
+  const sortedCoins = [...marketData.coins].sort((a, b) => b.change24h - a.change24h);
+  const topGainers = sortedCoins.slice(0, 5).map(coin => ({
+    symbol: coin.symbol,
+    change: `${coin.change24h > 0 ? '+' : ''}${coin.change24h.toFixed(2)}%`,
+    price: `$${coin.price.toFixed(coin.price > 1 ? 2 : 6)}`
+  }));
 
+  const topLosers = sortedCoins.slice(-5).reverse().map(coin => ({
+    symbol: coin.symbol,
+    change: `${coin.change24h.toFixed(2)}%`,
+    price: `$${coin.price.toFixed(coin.price > 1 ? 2 : 6)}`
+  }));
+
+  const topVolume = [...marketData.coins]
+    .sort((a, b) => b.volume - a.volume)
+    .slice(0, 5)
+    .map(coin => ({
+      symbol: coin.symbol,
+      volume: `$${coin.volume > 1e9 ? (coin.volume / 1e9).toFixed(1) + 'B' : (coin.volume / 1e6).toFixed(1) + 'M'}`
+    }));
+
+  // Mock newly launched for now (would need specialized API)
   const newlyLaunched = [
-    { symbol: 'NEWT', price: '$0.0234', launched: '2h ago' },
-    { symbol: 'FLUX', price: '$1.45', launched: '4h ago' },
-    { symbol: 'ZERO', price: '$0.89', launched: '6h ago' },
-    { symbol: 'META', price: '$12.67', launched: '8h ago' },
-    { symbol: 'NOVA', price: '$0.345', launched: '12h ago' },
+    { symbol: 'NEW1', price: '$0.0234', launched: '2h ago' },
+    { symbol: 'NEW2', price: '$1.45', launched: '4h ago' },
+    { symbol: 'NEW3', price: '$0.89', launched: '6h ago' },
+    { symbol: 'NEW4', price: '$12.67', launched: '8h ago' },
+    { symbol: 'NEW5', price: '$0.345', launched: '12h ago' },
   ];
 
   const MetricCard = ({ title, icon: Icon, children, gradient }: any) => (

@@ -1,59 +1,14 @@
 
-import { Newspaper, TrendingUp, AlertCircle, Clock, ExternalLink, BarChart3, Users, Zap } from 'lucide-react';
+import { Newspaper, TrendingUp, AlertCircle, Clock, ExternalLink, BarChart3, Users, Zap, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useCryptoNews } from '@/hooks/useCryptoNews';
 
 interface NewsAlertProps {
   isDarkMode: boolean;
 }
 
 const NewsAlert = ({ isDarkMode }: NewsAlertProps) => {
-  const newsItems = [
-    {
-      id: 1,
-      title: "Bitcoin ETF Approval Drives Market Rally",
-      summary: "Major institutional investors are pouring billions into Bitcoin ETFs, pushing BTC to new monthly highs.",
-      category: "ETF",
-      time: "2 hours ago",
-      impact: "bullish",
-      source: "CoinDesk"
-    },
-    {
-      id: 2,
-      title: "Ethereum Shanghai Upgrade Completed Successfully",
-      summary: "The network upgrade has been implemented without issues, enabling staking withdrawals and improving scalability.",
-      category: "Technology",
-      time: "4 hours ago",
-      impact: "bullish",
-      source: "Ethereum Foundation"
-    },
-    {
-      id: 3,
-      title: "SEC Increases Crypto Regulation Enforcement",
-      summary: "New regulatory guidelines may impact several altcoins and DeFi protocols operating in the US market.",
-      category: "Regulation",
-      time: "6 hours ago",
-      impact: "bearish",
-      source: "Reuters"
-    },
-    {
-      id: 4,
-      title: "Major Exchange Hack Affects Market Sentiment",
-      summary: "A security breach at a smaller exchange has led to temporary market volatility across major cryptocurrencies.",
-      category: "Security",
-      time: "8 hours ago",
-      impact: "bearish",
-      source: "CryptoNews"
-    },
-    {
-      id: 5,
-      title: "Institutional Adoption Reaches New Heights",
-      summary: "Fortune 500 companies are increasingly adding cryptocurrency to their treasury reserves and payment systems.",
-      category: "Adoption",
-      time: "12 hours ago",
-      impact: "bullish",
-      source: "Bloomberg"
-    }
-  ];
+  const { news: newsItems, loading, error } = useCryptoNews();
 
   const trendingTopics = [
     { topic: "Bitcoin ETF", mentions: 12500, change: "+45%" },
@@ -126,8 +81,26 @@ const NewsAlert = ({ isDarkMode }: NewsAlertProps) => {
             </h3>
           </div>
 
-          <div className="space-y-4">
-            {newsItems.map((news) => (
+          {loading ? (
+            <div className="flex items-center justify-center py-8">
+              <RefreshCw className="animate-spin text-primary" size={24} />
+              <span className={`ml-3 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                Loading news...
+              </span>
+            </div>
+          ) : error ? (
+            <div className="text-center py-8">
+              <p className="text-red-500">Error loading news: {error}</p>
+            </div>
+          ) : newsItems.length === 0 ? (
+            <div className="text-center py-8">
+              <p className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                No news available at the moment
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {newsItems.map((news) => (
               <div key={news.id} className={`p-4 rounded-lg border ${
                 isDarkMode ? 'bg-gray-700/30 border-gray-600/30' : 'bg-gray-50 border-gray-200'
               }`}>
@@ -166,8 +139,9 @@ const NewsAlert = ({ isDarkMode }: NewsAlertProps) => {
                   </Link>
                 </div>
               </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Market Sentiment & Trending Topics */}

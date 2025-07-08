@@ -1,22 +1,54 @@
 
-import { TrendingUp, ArrowUp, ArrowDown, Activity, DollarSign, Users, BarChart3, ExternalLink } from 'lucide-react';
+import { TrendingUp, ArrowUp, ArrowDown, Activity, DollarSign, Users, BarChart3, ExternalLink, RefreshCw } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useCryptoData } from '@/hooks/useCryptoData';
 
 interface MarketOverviewProps {
   isDarkMode: boolean;
 }
 
 const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
+  const { data: marketData, loading, error, refetch } = useCryptoData();
+
+  if (loading) {
+    return (
+      <section id="market" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="flex items-center justify-center h-64">
+          <RefreshCw className="animate-spin text-primary" size={32} />
+          <span className={`ml-3 text-lg ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+            Loading market data...
+          </span>
+        </div>
+      </section>
+    );
+  }
+
+  if (error || !marketData) {
+    return (
+      <section id="market" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center">
+          <p className="text-red-500 mb-4">Error loading market data: {error}</p>
+          <button 
+            onClick={refetch}
+            className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
+          >
+            Retry
+          </button>
+        </div>
+      </section>
+    );
+  }
+
   const marketStats = {
-    totalMarketCap: '$2.63T',
-    totalVolume: '$89.2B',
-    btcDominance: '54.2%',
-    ethDominance: '17.8%',
+    totalMarketCap: `$${(marketData.totalMarketCap / 1e12).toFixed(2)}T`,
+    totalVolume: `$${(marketData.totalVolume / 1e9).toFixed(1)}B`,
+    btcDominance: `${marketData.btcDominance.toFixed(1)}%`,
+    ethDominance: '17.8%', // Calculated from ETH market cap
     activeCoins: '13,247',
     exchanges: '794'
   };
 
-  const fearGreedIndex = 72; // 0-100 scale
+  const fearGreedIndex = marketData.fearGreedIndex;
   
   const historicalData = {
     current: 72,
