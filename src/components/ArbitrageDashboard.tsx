@@ -231,8 +231,8 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                   <div className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     {opportunity.buyExchange}
                   </div>
-                  <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                    Liquidity: {opportunity.liquidityDepth}
+                  <div className={`text-xs font-semibold ${isDarkMode ? 'text-green-400' : 'text-green-600'}`}>
+                    ${opportunity.buyPrice.toLocaleString()}
                   </div>
                 </div>
 
@@ -241,8 +241,8 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                   <div className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                     {opportunity.sellExchange}
                   </div>
-                  <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                    Time: {opportunity.timeToExecute}
+                  <div className={`text-xs font-semibold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                    ${opportunity.sellPrice.toLocaleString()}
                   </div>
                 </div>
 
@@ -392,10 +392,10 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
       <section className="mt-12">
         <div className="mb-8">
           <h2 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Live Exchange Prices
+            Live Exchange Volumes
           </h2>
           <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            Real-time cryptocurrency prices across major exchanges
+            Real-time trading volumes across major exchanges
           </p>
         </div>
 
@@ -422,79 +422,81 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
               {
                 symbol: 'BTC',
                 name: 'Bitcoin',
-                prices: {
-                  binance: 67890,
-                  coinbase: 67825,
-                  kucoin: 67150,
-                  okx: 67945,
-                  kraken: 67780
+                volumes: {
+                  binance: '847.2M',
+                  coinbase: '623.8M',
+                  kucoin: '412.5M',
+                  okx: '598.7M',
+                  kraken: '234.1M'
                 },
                 change24h: 2.4
               },
               {
                 symbol: 'ETH',
                 name: 'Ethereum',
-                prices: {
-                  binance: 3845,
-                  coinbase: 3820,
-                  kucoin: 3856,
-                  okx: 3865,
-                  kraken: 3838
+                volumes: {
+                  binance: '692.1M',
+                  coinbase: '534.9M',
+                  kucoin: '298.6M',
+                  okx: '445.3M',
+                  kraken: '187.2M'
                 },
                 change24h: 1.8
               },
               {
                 symbol: 'SOL',
                 name: 'Solana',
-                prices: {
-                  binance: 178.9,
-                  coinbase: 179.2,
-                  kucoin: 177.8,
-                  okx: 178.4,
-                  kraken: 176.2
+                volumes: {
+                  binance: '156.4M',
+                  coinbase: '89.7M',
+                  kucoin: '67.2M',
+                  okx: '123.8M',
+                  kraken: '34.6M'
                 },
                 change24h: -0.7
               },
               {
                 symbol: 'ADA',
                 name: 'Cardano',
-                prices: {
-                  binance: 0.648,
-                  coinbase: 0.652,
-                  kucoin: 0.657,
-                  okx: 0.649,
-                  kraken: 0.645
+                volumes: {
+                  binance: '89.3M',
+                  coinbase: '45.7M',
+                  kucoin: '34.2M',
+                  okx: '67.8M',
+                  kraken: '23.1M'
                 },
                 change24h: 3.2
               },
               {
                 symbol: 'MATIC',
                 name: 'Polygon',
-                prices: {
-                  binance: 0.878,
-                  coinbase: 0.882,
-                  kucoin: 0.875,
-                  okx: 0.865,
-                  kraken: 0.881
+                volumes: {
+                  binance: '78.9M',
+                  coinbase: '56.4M',
+                  kucoin: '23.7M',
+                  okx: '45.2M',
+                  kraken: '18.9M'
                 },
                 change24h: 5.1
               },
               {
                 symbol: 'DOT',
                 name: 'Polkadot',
-                prices: {
-                  binance: 8.52,
-                  coinbase: 8.48,
-                  kucoin: 8.55,
-                  okx: 8.51,
-                  kraken: 8.58
+                volumes: {
+                  binance: '34.6M',
+                  coinbase: '23.8M',
+                  kucoin: '16.4M',
+                  okx: '28.7M',
+                  kraken: '12.3M'
                 },
                 change24h: -1.2
               }
             ].map((coin, index) => {
-              const allPrices = Object.values(coin.prices);
-              const minPrice = Math.min(...allPrices);
-              const maxPrice = Math.max(...allPrices);
+              const allVolumes = Object.values(coin.volumes);
+              const parseVolume = (vol: string) => parseFloat(vol.replace('M', ''));
+              const volumeNumbers = allVolumes.map(parseVolume);
+              const maxVolume = Math.max(...volumeNumbers);
+              const minVolume = Math.min(...volumeNumbers);
               
               return (
                 <div key={index} className={`px-6 py-5 hover:bg-gray-500/5 transition-colors`}>
@@ -522,85 +524,85 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                     {/* Binance */}
                     <div className="text-center">
                       <div className={`text-sm font-medium ${
-                        coin.prices.binance === minPrice ? 'text-green-500' : 
-                        coin.prices.binance === maxPrice ? 'text-red-500' : 
+                        parseVolume(coin.volumes.binance) === maxVolume ? 'text-green-500' : 
+                        parseVolume(coin.volumes.binance) === minVolume ? 'text-red-500' : 
                         isDarkMode ? 'text-gray-300' : 'text-gray-700'
                       }`}>
-                        ${coin.prices.binance.toLocaleString()}
+                        ${coin.volumes.binance}
                       </div>
-                      {coin.prices.binance === minPrice && (
-                        <div className="text-xs text-green-500 font-medium">Lowest</div>
+                      {parseVolume(coin.volumes.binance) === maxVolume && (
+                        <div className="text-xs text-green-500 font-medium">Highest</div>
                       )}
-                      {coin.prices.binance === maxPrice && (
-                        <div className="text-xs text-red-500 font-medium">Highest</div>
+                      {parseVolume(coin.volumes.binance) === minVolume && (
+                        <div className="text-xs text-red-500 font-medium">Lowest</div>
                       )}
                     </div>
 
                     {/* Coinbase */}
                     <div className="text-center">
                       <div className={`text-sm font-medium ${
-                        coin.prices.coinbase === minPrice ? 'text-green-500' : 
-                        coin.prices.coinbase === maxPrice ? 'text-red-500' : 
+                        parseVolume(coin.volumes.coinbase) === maxVolume ? 'text-green-500' : 
+                        parseVolume(coin.volumes.coinbase) === minVolume ? 'text-red-500' : 
                         isDarkMode ? 'text-gray-300' : 'text-gray-700'
                       }`}>
-                        ${coin.prices.coinbase.toLocaleString()}
+                        ${coin.volumes.coinbase}
                       </div>
-                      {coin.prices.coinbase === minPrice && (
-                        <div className="text-xs text-green-500 font-medium">Lowest</div>
+                      {parseVolume(coin.volumes.coinbase) === maxVolume && (
+                        <div className="text-xs text-green-500 font-medium">Highest</div>
                       )}
-                      {coin.prices.coinbase === maxPrice && (
-                        <div className="text-xs text-red-500 font-medium">Highest</div>
+                      {parseVolume(coin.volumes.coinbase) === minVolume && (
+                        <div className="text-xs text-red-500 font-medium">Lowest</div>
                       )}
                     </div>
 
                     {/* KuCoin */}
                     <div className="text-center">
                       <div className={`text-sm font-medium ${
-                        coin.prices.kucoin === minPrice ? 'text-green-500' : 
-                        coin.prices.kucoin === maxPrice ? 'text-red-500' : 
+                        parseVolume(coin.volumes.kucoin) === maxVolume ? 'text-green-500' : 
+                        parseVolume(coin.volumes.kucoin) === minVolume ? 'text-red-500' : 
                         isDarkMode ? 'text-gray-300' : 'text-gray-700'
                       }`}>
-                        ${coin.prices.kucoin.toLocaleString()}
+                        ${coin.volumes.kucoin}
                       </div>
-                      {coin.prices.kucoin === minPrice && (
-                        <div className="text-xs text-green-500 font-medium">Lowest</div>
+                      {parseVolume(coin.volumes.kucoin) === maxVolume && (
+                        <div className="text-xs text-green-500 font-medium">Highest</div>
                       )}
-                      {coin.prices.kucoin === maxPrice && (
-                        <div className="text-xs text-red-500 font-medium">Highest</div>
+                      {parseVolume(coin.volumes.kucoin) === minVolume && (
+                        <div className="text-xs text-red-500 font-medium">Lowest</div>
                       )}
                     </div>
 
                     {/* OKX */}
                     <div className="text-center">
                       <div className={`text-sm font-medium ${
-                        coin.prices.okx === minPrice ? 'text-green-500' : 
-                        coin.prices.okx === maxPrice ? 'text-red-500' : 
+                        parseVolume(coin.volumes.okx) === maxVolume ? 'text-green-500' : 
+                        parseVolume(coin.volumes.okx) === minVolume ? 'text-red-500' : 
                         isDarkMode ? 'text-gray-300' : 'text-gray-700'
                       }`}>
-                        ${coin.prices.okx.toLocaleString()}
+                        ${coin.volumes.okx}
                       </div>
-                      {coin.prices.okx === minPrice && (
-                        <div className="text-xs text-green-500 font-medium">Lowest</div>
+                      {parseVolume(coin.volumes.okx) === maxVolume && (
+                        <div className="text-xs text-green-500 font-medium">Highest</div>
                       )}
-                      {coin.prices.okx === maxPrice && (
-                        <div className="text-xs text-red-500 font-medium">Highest</div>
+                      {parseVolume(coin.volumes.okx) === minVolume && (
+                        <div className="text-xs text-red-500 font-medium">Lowest</div>
                       )}
                     </div>
 
                     {/* Kraken */}
                     <div className="text-center">
                       <div className={`text-sm font-medium ${
-                        coin.prices.kraken === minPrice ? 'text-green-500' : 
-                        coin.prices.kraken === maxPrice ? 'text-red-500' : 
+                        parseVolume(coin.volumes.kraken) === maxVolume ? 'text-green-500' : 
+                        parseVolume(coin.volumes.kraken) === minVolume ? 'text-red-500' : 
                         isDarkMode ? 'text-gray-300' : 'text-gray-700'
                       }`}>
-                        ${coin.prices.kraken.toLocaleString()}
+                        ${coin.volumes.kraken}
                       </div>
-                      {coin.prices.kraken === minPrice && (
-                        <div className="text-xs text-green-500 font-medium">Lowest</div>
+                      {parseVolume(coin.volumes.kraken) === maxVolume && (
+                        <div className="text-xs text-green-500 font-medium">Highest</div>
                       )}
-                      {coin.prices.kraken === maxPrice && (
-                        <div className="text-xs text-red-500 font-medium">Highest</div>
+                      {parseVolume(coin.volumes.kraken) === minVolume && (
+                        <div className="text-xs text-red-500 font-medium">Lowest</div>
                       )}
                     </div>
                   </div>
