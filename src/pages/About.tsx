@@ -90,7 +90,7 @@ const About = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {/* Hero Section */}
             <div className="text-center mb-16">
-              <h1 className="text-5xl font-bold mb-6">About MCKI</h1>
+              <h1 className="text-5xl font-bold mb-6 text-foreground">About MCKI</h1>
               <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
                 We're revolutionizing cryptocurrency trading with intelligent arbitrage detection, 
                 advanced analytics, and professional-grade tools for traders and investors worldwide.
@@ -146,17 +146,29 @@ const About = () => {
               </Card>
             </div>
 
-            {/* Achievements */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16">
-              {achievements.map((achievement, index) => (
-                <Card key={index} className="text-center bg-gradient-to-br from-accent/5 to-accent/10 border-accent/20">
-                  <CardContent className="p-6">
-                    <achievement.icon className="h-8 w-8 text-accent mx-auto mb-3" />
-                    <div className="text-2xl font-bold text-accent mb-1">{achievement.metric}</div>
-                    <div className="text-sm text-muted-foreground">{achievement.label}</div>
-                  </CardContent>
-                </Card>
-              ))}
+            {/* Company Values */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+              <Card className="text-center bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
+                <CardContent className="p-6">
+                  <Shield className="h-8 w-8 text-primary mx-auto mb-3" />
+                  <div className="text-xl font-bold text-primary mb-2">Security First</div>
+                  <div className="text-sm text-muted-foreground">Enterprise-grade security protocols</div>
+                </CardContent>
+              </Card>
+              <Card className="text-center bg-gradient-to-br from-success/5 to-success/10 border-success/20">
+                <CardContent className="p-6">
+                  <Target className="h-8 w-8 text-success mx-auto mb-3" />
+                  <div className="text-xl font-bold text-success mb-2">Precision & Accuracy</div>
+                  <div className="text-sm text-muted-foreground">Verified algorithms and data</div>
+                </CardContent>
+              </Card>
+              <Card className="text-center bg-gradient-to-br from-accent/5 to-accent/10 border-accent/20">
+                <CardContent className="p-6">
+                  <Zap className="h-8 w-8 text-accent mx-auto mb-3" />
+                  <div className="text-xl font-bold text-accent mb-2">Real-Time Performance</div>
+                  <div className="text-sm text-muted-foreground">Lightning-fast data processing</div>
+                </CardContent>
+              </Card>
             </div>
 
             {/* Core Values */}

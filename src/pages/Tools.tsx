@@ -33,14 +33,19 @@ const Tools = () => {
     const roiPercent = parseFloat(roi) || 0;
     const months = parseFloat(timePeriod) || 0;
     
-    const futureValue = amount * (1 + (roiPercent / 100));
+    // Calculate compound growth over time period
+    const annualRate = roiPercent / 100;
+    const monthlyRate = Math.pow(1 + annualRate, 1/12) - 1;
+    const futureValue = amount * Math.pow(1 + monthlyRate, months);
     const profit = futureValue - amount;
     const monthlyGain = profit / months;
+    const annualizedReturn = ((futureValue / amount) ** (12 / months) - 1) * 100;
     
     return {
       futureValue: futureValue.toFixed(2),
       profit: profit.toFixed(2),
-      monthlyGain: monthlyGain.toFixed(2)
+      monthlyGain: monthlyGain.toFixed(2),
+      annualizedReturn: annualizedReturn.toFixed(2)
     };
   };
 
@@ -116,7 +121,7 @@ const Tools = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {/* Header */}
             <div className="mb-8">
-              <h1 className="text-4xl font-bold mb-4">Cryptocurrency Tools & Calculators</h1>
+              <h1 className="text-4xl font-bold mb-4 text-foreground">Cryptocurrency Tools & Calculators</h1>
               <p className="text-lg text-muted-foreground">
                 Professional-grade tools for cryptocurrency trading, investment analysis, and portfolio management. 
                 Make informed decisions with our comprehensive suite of calculators and analyzers.
@@ -235,7 +240,7 @@ const Tools = () => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                           <Card className="bg-primary/5 border-primary/20">
                             <CardContent className="p-4 text-center">
                               <DollarSign className="h-6 w-6 text-primary mx-auto mb-2" />
@@ -257,6 +262,14 @@ const Tools = () => {
                               <Clock className="h-6 w-6 text-accent mx-auto mb-2" />
                               <div className="text-xl font-bold text-accent">${roiResult.monthlyGain}</div>
                               <div className="text-sm text-muted-foreground">Monthly Gain</div>
+                            </CardContent>
+                          </Card>
+                          
+                          <Card className="bg-warning/5 border-warning/20">
+                            <CardContent className="p-4 text-center">
+                              <Percent className="h-6 w-6 text-warning mx-auto mb-2" />
+                              <div className="text-xl font-bold text-warning">{roiResult.annualizedReturn}%</div>
+                              <div className="text-sm text-muted-foreground">Annual Return</div>
                             </CardContent>
                           </Card>
                         </div>

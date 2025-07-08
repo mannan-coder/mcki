@@ -216,7 +216,7 @@ const Analytics = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">Top Blockchains by Total Value Locked (TVL)</h1>
+          <h1 className="text-4xl font-bold mb-4 text-foreground">Top Blockchains by Total Value Locked (TVL)</h1>
           <p className="text-lg text-muted-foreground">
             With a Total Value Locked (TVL) of {formatCurrency(chainData[0].tvl)}, Ethereum has the largest market share across all blockchains today. 
             Collectively the TVL of all chains is worth {formatCurrency(overallStats.totalTVL)}, representing a {formatPercentage(overallStats.tvlChange)} movement in the last 24 hours.
