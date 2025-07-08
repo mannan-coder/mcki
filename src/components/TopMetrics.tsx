@@ -185,8 +185,8 @@ const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
         </div>
       </div>
 
-      {/* Responsive Grid - Stacked on mobile */}
-      <div className="space-y-4">
+      {/* Horizontal Grid - One Row Layout */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         <MetricCard 
           title="🔥 Top Gainers" 
           icon={ArrowUp} 
