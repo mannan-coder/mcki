@@ -433,8 +433,12 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                         <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                           {coin.name}
                         </div>
-                        <div className={`text-xs ${coin.change24h >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                          {coin.change24h >= 0 ? '+' : ''}{coin.change24h}% 24h
+                        <div className={`text-xs font-medium flex items-center ${coin.change24h >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                          <span className={`px-1.5 py-0.5 rounded text-xs font-bold ${
+                            coin.change24h >= 0 ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'
+                          }`}>
+                            {coin.change24h >= 0 ? '+' : ''}{coin.change24h.toFixed(2)}%
+                          </span>
                         </div>
                       </div>
                     </div>
