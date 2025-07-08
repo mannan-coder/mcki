@@ -30,29 +30,69 @@ const LivePricesAcrossExchanges = ({ opportunities, isDarkMode }: LivePricesAcro
         </Link>
       </div>
 
-      <div className={`rounded-xl border backdrop-blur-sm overflow-hidden ${
+      <div className={`rounded-xl border backdrop-blur-sm overflow-hidden shadow-lg ${
         isDarkMode 
-          ? 'bg-gray-800/80 border-gray-700/60' 
-          : 'bg-white/90 border-gray-200/60'
+          ? 'bg-gray-800/90 border-gray-700/60' 
+          : 'bg-white/95 border-gray-200/60'
       }`}>
         {/* Desktop Header */}
-        <div className={`hidden lg:block px-6 py-4 border-b ${isDarkMode ? 'border-gray-700/60 bg-gray-800/90' : 'border-gray-200/60 bg-gray-50/80'}`}>
+        <div className={`hidden lg:block px-6 py-5 border-b ${isDarkMode ? 'border-gray-700/60 bg-gray-800/95' : 'border-gray-200/60 bg-gray-50/90'}`}>
           <div className="grid grid-cols-8 gap-4 text-sm font-semibold items-center">
-            <div className={`col-span-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Coin</div>
-            <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Binance</div>
-            <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Coinbase</div>
-            <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>KuCoin</div>
-            <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>OKX</div>
-            <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Kraken</div>
-            <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Bybit</div>
-            <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Gate.io</div>
+            <div className={`col-span-1 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              <div className="flex items-center space-x-2">
+                <span>🪙</span>
+                <span>Cryptocurrency</span>
+              </div>
+            </div>
+            <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              <div className="flex flex-col items-center">
+                <span className="text-yellow-500 text-lg">🟡</span>
+                <span>Binance</span>
+              </div>
+            </div>
+            <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              <div className="flex flex-col items-center">
+                <span className="text-blue-500 text-lg">🔵</span>
+                <span>Coinbase</span>
+              </div>
+            </div>
+            <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              <div className="flex flex-col items-center">
+                <span className="text-green-500 text-lg">🟢</span>
+                <span>KuCoin</span>
+              </div>
+            </div>
+            <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              <div className="flex flex-col items-center">
+                <span className="text-gray-500 text-lg">⚫</span>
+                <span>OKX</span>
+              </div>
+            </div>
+            <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              <div className="flex flex-col items-center">
+                <span className="text-purple-500 text-lg">🟣</span>
+                <span>Kraken</span>
+              </div>
+            </div>
+            <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              <div className="flex flex-col items-center">
+                <span className="text-orange-500 text-lg">🟠</span>
+                <span>Bybit</span>
+              </div>
+            </div>
+            <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+              <div className="flex flex-col items-center">
+                <span className="text-red-500 text-lg">🔴</span>
+                <span>Gate.io</span>
+              </div>
+            </div>
           </div>
         </div>
 
         {/* Mobile Header */}
-        <div className={`lg:hidden px-6 py-4 border-b ${isDarkMode ? 'border-gray-700/60 bg-gray-800/90' : 'border-gray-200/60 bg-gray-50/80'}`}>
+        <div className={`lg:hidden px-6 py-4 border-b ${isDarkMode ? 'border-gray-700/60 bg-gray-800/95' : 'border-gray-200/60 bg-gray-50/90'}`}>
           <div className="text-sm font-semibold">
-            <span className={isDarkMode ? 'text-gray-300' : 'text-gray-700'}>Live Cryptocurrency Prices</span>
+            <span className={`${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>🏪 Live Exchange Prices</span>
           </div>
         </div>
 
@@ -82,24 +122,24 @@ const LivePricesAcrossExchanges = ({ opportunities, isDarkMode }: LivePricesAcro
             return (
               <div key={index}>
                 {/* Desktop Layout */}
-                <div className={`hidden lg:block px-6 py-6 hover:bg-gray-500/5 transition-colors`}>
+                <div className={`hidden lg:block px-6 py-8 hover:bg-gray-500/5 transition-all duration-200 group`}>
                   <div className="grid grid-cols-8 gap-4 items-center">
                     {/* Cryptocurrency */}
-                    <div className="col-span-1 flex items-center space-x-3">
-                      <div className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold ${
-                        isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
+                    <div className="col-span-1 flex items-center space-x-4">
+                      <div className={`w-16 h-16 rounded-full flex items-center justify-center text-lg font-bold shadow-lg transition-transform group-hover:scale-105 ${
+                        isDarkMode ? 'bg-gradient-to-br from-gray-700 to-gray-800 text-gray-200' : 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700'
                       }`}>
                         {coin.symbol.charAt(0)}
                       </div>
                       <div>
-                        <div className={`font-bold text-lg ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                        <div className={`font-bold text-xl ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                           {coin.symbol}
                         </div>
                         <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                           {coin.name}
                         </div>
-                        <div className={`text-xs font-medium flex items-center mt-1 ${coin.change24h >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                          <span className={`px-2 py-1 rounded-full text-xs font-bold ${
+                        <div className={`text-sm font-medium flex items-center mt-2 ${coin.change24h >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                          <span className={`px-3 py-1 rounded-full text-sm font-bold ${
                             coin.change24h >= 0 ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'
                           }`}>
                             {coin.change24h >= 0 ? '+' : ''}{coin.change24h.toFixed(2)}%
@@ -109,23 +149,25 @@ const LivePricesAcrossExchanges = ({ opportunities, isDarkMode }: LivePricesAcro
                     </div>
 
                     {allPrices.map((priceData, idx) => (
-                      <div key={idx} className="text-center">
-                        <div className={`text-lg font-bold mb-1 ${getPriceColor(priceData.price)}`}>
+                      <div key={idx} className="text-center space-y-2">
+                        <div className={`text-lg font-bold transition-colors ${getPriceColor(priceData.price)}`}>
                           {formatPrice(priceData.price)}
                         </div>
-                        <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>
+                        <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                           Vol: {formatVolumeDisplay(priceData.volume)}
                         </div>
-                        {priceData.price === highestPrice && (
-                          <span className="text-xs text-green-500 bg-green-500/10 px-2 py-1 rounded-full font-medium">
-                            HIGHEST
-                          </span>
-                        )}
-                        {priceData.price === lowestPrice && (
-                          <span className="text-xs text-red-500 bg-red-500/10 px-2 py-1 rounded-full font-medium">
-                            LOWEST
-                          </span>
-                        )}
+                        <div className="h-6 flex items-center justify-center">
+                          {priceData.price === highestPrice && (
+                            <span className="text-xs text-green-500 bg-green-500/10 px-2 py-1 rounded-full font-bold border border-green-500/20">
+                              🔝 HIGHEST
+                            </span>
+                          )}
+                          {priceData.price === lowestPrice && (
+                            <span className="text-xs text-red-500 bg-red-500/10 px-2 py-1 rounded-full font-bold border border-red-500/20">
+                              📉 LOWEST
+                            </span>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -134,22 +176,22 @@ const LivePricesAcrossExchanges = ({ opportunities, isDarkMode }: LivePricesAcro
                 {/* Mobile Layout */}
                 <div className={`lg:hidden px-6 py-6 hover:bg-gray-500/5 transition-colors`}>
                   {/* Coin Header */}
-                  <div className="flex items-center space-x-3 mb-6">
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center text-sm font-bold ${
-                      isDarkMode ? 'bg-gray-700 text-gray-300' : 'bg-gray-100 text-gray-700'
+                  <div className="flex items-center space-x-4 mb-6">
+                    <div className={`w-16 h-16 rounded-full flex items-center justify-center text-lg font-bold shadow-lg ${
+                      isDarkMode ? 'bg-gradient-to-br from-gray-700 to-gray-800 text-gray-200' : 'bg-gradient-to-br from-gray-100 to-gray-200 text-gray-700'
                     }`}>
                       {coin.symbol.charAt(0)}
                     </div>
                     <div className="flex-1">
-                      <div className={`font-bold text-xl ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      <div className={`font-bold text-2xl ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                         {coin.symbol}
                       </div>
-                      <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      <div className={`text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                         {coin.name}
                       </div>
                     </div>
                     <div className={`text-sm font-medium flex items-center ${coin.change24h >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                      <span className={`px-3 py-1 rounded-full text-sm font-bold ${
+                      <span className={`px-4 py-2 rounded-full text-base font-bold ${
                         coin.change24h >= 0 ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'
                       }`}>
                         {coin.change24h >= 0 ? '+' : ''}{coin.change24h.toFixed(2)}%
@@ -160,25 +202,25 @@ const LivePricesAcrossExchanges = ({ opportunities, isDarkMode }: LivePricesAcro
                   {/* Price Grid */}
                   <div className="grid grid-cols-2 gap-4">
                     {allPrices.map((priceData, idx) => (
-                      <div key={idx} className={`p-4 rounded-lg border ${
-                        isDarkMode ? 'bg-gray-800/50 border-gray-700/30' : 'bg-gray-50/50 border-gray-200/30'
+                      <div key={idx} className={`p-4 rounded-xl border transition-all duration-200 hover:scale-105 ${
+                        isDarkMode ? 'bg-gray-800/60 border-gray-700/40 hover:bg-gray-800/80' : 'bg-gray-50/60 border-gray-200/40 hover:bg-gray-50/80'
                       }`}>
-                        <div className="flex justify-between items-start mb-2">
-                          <span className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        <div className="flex justify-between items-start mb-3">
+                          <span className={`text-sm font-bold ${isDarkMode ? 'text-gray-200' : 'text-gray-800'}`}>
                             {priceData.exchange}
                           </span>
                           {priceData.price === highestPrice && (
-                            <span className="text-xs text-green-500 bg-green-500/10 px-2 py-0.5 rounded-full font-medium">
-                              HIGH
+                            <span className="text-xs text-green-500 bg-green-500/10 px-2 py-1 rounded-full font-bold border border-green-500/20">
+                              🔝 HIGH
                             </span>
                           )}
                           {priceData.price === lowestPrice && (
-                            <span className="text-xs text-red-500 bg-red-500/10 px-2 py-0.5 rounded-full font-medium">
-                              LOW
+                            <span className="text-xs text-red-500 bg-red-500/10 px-2 py-1 rounded-full font-bold border border-red-500/20">
+                              📉 LOW
                             </span>
                           )}
                         </div>
-                        <div className={`text-lg font-bold mb-1 ${getPriceColor(priceData.price)}`}>
+                        <div className={`text-lg font-bold mb-2 ${getPriceColor(priceData.price)}`}>
                           {formatPrice(priceData.price)}
                         </div>
                         <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
