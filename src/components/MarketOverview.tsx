@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { TrendingUp, ArrowUp, ArrowDown, Activity, DollarSign, Users, BarChart3, ExternalLink, RefreshCw } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useCryptoData } from '@/hooks/useCryptoData';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 import { useSentimentData } from '@/hooks/useSentimentData';
-import { useArbitrageData } from '@/hooks/useArbitrageData';
 import { ChartContainer } from '@/components/ui/chart';
 import { LineChart, Line, BarChart, Bar, Area, AreaChart } from 'recharts';
+import { SkeletonCard, SkeletonMetricCard, SkeletonSidebarCard } from '@/components/ui/skeleton-card';
 import MarketCapModal from './MarketCapModal';
 import VolumeModal from './VolumeModal';
 
@@ -17,43 +18,47 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
   const navigate = useNavigate();
   const [showMarketCapModal, setShowMarketCapModal] = useState(false);
   const [showVolumeModal, setShowVolumeModal] = useState(false);
-  const { data: marketData, loading, error, refetch } = useCryptoData();
+  const { data: marketData, isLoading, error, refetch } = useOptimizedCryptoData();
   const { data: sentimentData } = useSentimentData();
 
-  if (loading) {
+  // Show skeleton loaders only on initial load
+  if (isLoading && !marketData) {
     return (
-      <section id="market" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <section id="market" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
         {/* Header Skeleton */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <div className="h-8 w-48 bg-muted rounded-lg animate-pulse mb-2"></div>
-            <div className="h-5 w-64 bg-muted/60 rounded-lg animate-pulse"></div>
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex flex-col lg:flex-row lg:items-center justify-between mb-6 lg:mb-8"
+        >
+          <div className="mb-4 lg:mb-0">
+            <div className="h-6 lg:h-8 w-48 lg:w-64 bg-muted rounded-lg animate-pulse mb-2"></div>
+            <div className="h-4 lg:h-5 w-64 lg:w-80 bg-muted/60 rounded-lg animate-pulse"></div>
           </div>
-          <div className="h-10 w-32 bg-muted rounded-lg animate-pulse"></div>
+          <div className="h-8 lg:h-10 w-32 bg-muted rounded-lg animate-pulse"></div>
+        </motion.div>
+
+        {/* Cards Grid Skeleton */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8">
+          <div className="lg:col-span-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 mb-6">
+              <SkeletonCard isDarkMode={isDarkMode} />
+              <SkeletonCard isDarkMode={isDarkMode} />
+            </div>
+            <SkeletonMetricCard isDarkMode={isDarkMode} />
+          </div>
+          
+          <div className="lg:col-span-1 space-y-4">
+            <SkeletonSidebarCard isDarkMode={isDarkMode} />
+            <SkeletonSidebarCard isDarkMode={isDarkMode} />
+            <SkeletonSidebarCard isDarkMode={isDarkMode} />
+          </div>
         </div>
 
-        {/* Cards Skeleton */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3, 4, 5].map((i) => (
-            <div key={i} className={`p-6 rounded-xl border backdrop-blur-sm ${
-              isDarkMode 
-                ? 'bg-gray-800/50 border-gray-700/50' 
-                : 'bg-white/70 border-gray-200/50'
-            }`}>
-              <div className="flex items-center justify-between mb-4">
-                <div className="h-5 w-32 bg-muted rounded animate-pulse"></div>
-                <div className="h-4 w-12 bg-muted rounded animate-pulse"></div>
-              </div>
-              <div className="h-8 w-24 bg-muted rounded animate-pulse mb-4"></div>
-              <div className="space-y-2">
-                {[1, 2, 3, 4].map((j) => (
-                  <div key={j} className="flex justify-between">
-                    <div className="h-3 w-20 bg-muted/60 rounded animate-pulse"></div>
-                    <div className="h-3 w-16 bg-muted/60 rounded animate-pulse"></div>
-                  </div>
-                ))}
-              </div>
-            </div>
+        {/* Additional Stats Skeleton */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mt-6 lg:mt-8">
+          {[1, 2, 3, 4].map((i) => (
+            <SkeletonCard key={i} isDarkMode={isDarkMode} />
           ))}
         </div>
       </section>
@@ -64,9 +69,9 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
     return (
       <section id="market" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-center">
-          <p className="text-red-500 mb-4">Error loading market data: {error}</p>
+          <p className="text-red-500 mb-4">Error loading market data: {error?.message || 'Unknown error'}</p>
           <button 
-            onClick={refetch}
+            onClick={() => refetch()}
             className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90"
           >
             Retry
@@ -127,37 +132,58 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
   };
 
   return (
-    <section id="market" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h2 className={`text-2xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+    <motion.section 
+      id="market" 
+      className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
+      <motion.div 
+        className="flex flex-col lg:flex-row lg:items-start justify-between mb-6 lg:mb-8 gap-4"
+        initial={{ y: -20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.1 }}
+      >
+        <div className="flex-1">
+          <h2 className={`text-xl sm:text-2xl lg:text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
             Cryptocurrency Prices by Market Cap
           </h2>
-          <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            The global cryptocurrency market cap today is <span className="font-semibold text-primary">{marketStats.totalMarketCap}</span>, a <span className="text-green-500 font-semibold">+2.9% change</span> in the last 24 hours. 
-            <Link to="/market" className="text-primary hover:underline ml-1">Read more</Link>
+          <p className={`text-sm lg:text-base ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} leading-relaxed`}>
+            The global cryptocurrency market cap today is{' '}
+            <span className="font-semibold text-primary">{marketStats.totalMarketCap}</span>, a{' '}
+            <span className="text-green-500 font-semibold">+2.9% change</span> in the last 24 hours.{' '}
+            <Link to="/market" className="text-primary hover:underline">Read more</Link>
           </p>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 lg:mt-2">
           <span className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>Highlights</span>
-          <div className="w-10 h-5 bg-green-500 rounded-full relative">
-            <div className="w-4 h-4 bg-white rounded-full absolute top-0.5 right-0.5"></div>
+          <div className="w-10 h-5 bg-green-500 rounded-full relative transition-colors duration-300">
+            <div className="w-4 h-4 bg-white rounded-full absolute top-0.5 right-0.5 transition-transform duration-300"></div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* CoinGecko-style main content layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Main Market Stats - Takes 2 columns on xl screens */}
-        <div className="xl:col-span-2">
+      {/* Responsive Grid Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 xl:grid-cols-12 gap-4 lg:gap-6 xl:gap-8">
+        {/* Main Market Stats - Responsive Column Spans */}
+        <motion.div 
+          className="lg:col-span-8 xl:col-span-9"
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
-            {/* Compact Market Cap Card */}
-            <div className={`p-4 rounded-xl border backdrop-blur-sm cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 ${
-              isDarkMode 
-                ? 'bg-gray-800/60 border-gray-700/50 hover:bg-gray-800/80' 
-                : 'bg-white/80 border-gray-200/50 hover:bg-white/90'
-            }`}
+            {/* Compact Market Cap Card - Animated */}
+            <motion.div 
+              className={`p-4 rounded-xl border backdrop-blur-sm cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02] ${
+                isDarkMode 
+                  ? 'bg-gray-800/60 border-gray-700/50 hover:bg-gray-800/80' 
+                  : 'bg-white/80 border-gray-200/50 hover:bg-white/90'
+              }`}
               onClick={() => navigate('/market-cap-details')}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.98 }}
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center space-x-2">
@@ -223,15 +249,18 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
                 <ExternalLink size={12} />
                 <span>Click for detailed view</span>
               </div>
-            </div>
+            </motion.div>
 
-            {/* Compact Volume Card */}
-            <div className={`p-4 rounded-xl border backdrop-blur-sm cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-105 ${
-              isDarkMode 
-                ? 'bg-gray-800/60 border-gray-700/50 hover:bg-gray-800/80' 
-                : 'bg-white/80 border-gray-200/50 hover:bg-white/90'
-            }`}
+            {/* Compact Volume Card - Animated */}
+            <motion.div 
+              className={`p-4 rounded-xl border backdrop-blur-sm cursor-pointer transition-all duration-300 hover:shadow-lg hover:scale-[1.02] ${
+                isDarkMode 
+                  ? 'bg-gray-800/60 border-gray-700/50 hover:bg-gray-800/80' 
+                  : 'bg-white/80 border-gray-200/50 hover:bg-white/90'
+              }`}
               onClick={() => navigate('/volume-details')}
+              whileHover={{ y: -2 }}
+              whileTap={{ scale: 0.98 }}
             >
               <div className="flex items-center justify-between mb-3">
                 <div className="flex items-center space-x-2">
@@ -291,15 +320,20 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
                 <BarChart3 size={12} />
                 <span>Click for detailed view</span>
               </div>
-            </div>
+            </motion.div>
           </div>
 
           {/* Fear & Greed Index with Enhanced Visual Bar */}
-          <div className={`p-4 rounded-xl border backdrop-blur-sm ${
-            isDarkMode 
-              ? 'bg-gray-800/60 border-gray-700/50' 
-              : 'bg-white/80 border-gray-200/50'
-          }`}>
+          <motion.div 
+            className={`p-4 rounded-xl border backdrop-blur-sm ${
+              isDarkMode 
+                ? 'bg-gray-800/60 border-gray-700/50' 
+                : 'bg-white/80 border-gray-200/50'
+            }`}
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+          >
             <div className="flex items-center justify-between mb-4">
               <h3 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
                 Fear & Greed Index
@@ -372,11 +406,16 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
                 </span>
               </div>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        {/* Right Sidebar - Trending & Top Gainers - Takes 1 column on xl screens */}
-        <div className="xl:col-span-1 space-y-4">
+        {/* Right Sidebar - Responsive */}
+        <motion.div 
+          className="lg:col-span-4 xl:col-span-3 space-y-4"
+          initial={{ x: 50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
           {/* Trending Section */}
           <div className={`p-6 rounded-xl border backdrop-blur-sm ${
             isDarkMode 
@@ -483,11 +522,16 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
 
-      {/* Additional Stats Row */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8">
+      {/* Additional Stats Row - Animated */}
+      <motion.div 
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mt-6 lg:mt-8"
+        initial={{ y: 30, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.5 }}
+      >
         <div className={`p-4 rounded-xl border backdrop-blur-sm ${
           isDarkMode 
             ? 'bg-gray-800/60 border-gray-700/50' 
@@ -575,8 +619,8 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </motion.div>
+    </motion.section>
   );
 };
 
