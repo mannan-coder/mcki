@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Navbar from '@/components/Navbar';
+import Layout from '@/components/Layout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -16,7 +16,6 @@ import {
 } from 'lucide-react';
 
 const About = () => {
-  const [isDarkMode, setIsDarkMode] = useState(true);
 
   const team = [
     {
@@ -80,14 +79,8 @@ const About = () => {
   ];
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'dark' : ''}`} style={{backgroundColor: isDarkMode ? '#121212' : '#f8f9fa'}}>
-      <div className="relative">
-        <div className="absolute inset-0 bg-background" />
-        
-        <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
-        
-        <main className="relative z-10">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <Layout>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {/* Hero Section */}
             <div className="text-center mb-16">
               <h1 className="text-5xl font-bold mb-6 text-foreground">About MCKI</h1>
@@ -276,10 +269,8 @@ const About = () => {
               </CardContent>
             </Card>
           </div>
-        </main>
-      </div>
-    </div>
-  );
-};
+        </Layout>
+      );
+    };
 
 export default About;
