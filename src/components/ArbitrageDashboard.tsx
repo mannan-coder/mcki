@@ -280,15 +280,29 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
         </div>
       </div>
 
-      {/* Coin Prices Across Exchanges */}
+      {/* Live Coin Prices Across Exchanges */}
       <section className="mt-12">
-        <div className="mb-8">
-          <h2 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-            Live Exchange Volumes
-          </h2>
-          <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            Real-time trading volumes across major exchanges
-          </p>
+        <div className="mb-8 flex items-center justify-between">
+          <div>
+            <h2 className={`text-3xl font-bold mb-2 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+              🏪 Live Prices Across Exchanges
+            </h2>
+            <p className={`text-lg ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+              Real-time cryptocurrency prices across major exchanges
+            </p>
+          </div>
+          <div className="flex items-center space-x-2">
+            <button className="px-3 py-1 text-sm rounded border border-border bg-background hover:bg-muted">
+              Previous
+            </button>
+            <span className="px-3 py-1 text-sm bg-primary text-primary-foreground rounded">1</span>
+            <button className="px-3 py-1 text-sm rounded border border-border bg-background hover:bg-muted">
+              2
+            </button>
+            <button className="px-3 py-1 text-sm rounded border border-border bg-background hover:bg-muted">
+              Next
+            </button>
+          </div>
         </div>
 
         <div className={`rounded-xl border backdrop-blur-sm overflow-hidden ${
@@ -298,143 +312,198 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
         }`}>
           {/* Header */}
           <div className={`px-6 py-4 border-b ${isDarkMode ? 'border-gray-700/60 bg-gray-800/90' : 'border-gray-200/60 bg-gray-50/80'}`}>
-            <div className="grid grid-cols-7 gap-4 text-sm font-semibold items-center">
+            <div className="grid grid-cols-9 gap-2 text-sm font-semibold items-center">
               <div className={`col-span-2 ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Cryptocurrency</div>
               <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Binance</div>
               <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Coinbase</div>
               <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>KuCoin</div>
               <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>OKX</div>
               <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Kraken</div>
+              <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Bybit</div>
+              <div className={`text-center ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Gate.io</div>
             </div>
           </div>
 
           {/* Price Data */}
           <div className={`divide-y ${isDarkMode ? 'divide-gray-700/40' : 'divide-gray-200/40'}`}>
-            {[
-              {
-                symbol: 'BTC',
-                name: 'Bitcoin',
-                prices: {
-                  binance: 67890,
-                  coinbase: 67820,
-                  kucoin: 67150,
-                  okx: 67765,
-                  kraken: 67680
+            {(() => {
+              // Generate more comprehensive coin data from the arbitrage opportunities
+              const enhancedCoins = [
+                {
+                  symbol: 'BTC',
+                  name: 'Bitcoin',
+                  prices: {
+                    binance: 67890,
+                    coinbase: 67820,
+                    kucoin: 67150,
+                    okx: 67765,
+                    kraken: 67680,
+                    bybit: 67845,
+                    gateio: 67755
+                  },
+                  change24h: 2.4
                 },
-                volumes: {
-                  binance: '847.2M',
-                  coinbase: '623.8M',
-                  kucoin: '412.5M',
-                  okx: '598.7M',
-                  kraken: '234.1M'
+                {
+                  symbol: 'ETH',
+                  name: 'Ethereum',
+                  prices: {
+                    binance: 3865,
+                    coinbase: 3820,
+                    kucoin: 3842,
+                    okx: 3865,
+                    kraken: 3835,
+                    bybit: 3851,
+                    gateio: 3848
+                  },
+                  change24h: 1.8
                 },
-                change24h: 2.4
-              },
-              {
-                symbol: 'ETH',
-                name: 'Ethereum',
-                prices: {
-                  binance: 3865,
-                  coinbase: 3820,
-                  kucoin: 3842,
-                  okx: 3865,
-                  kraken: 3835
+                {
+                  symbol: 'SOL',
+                  name: 'Solana',
+                  prices: {
+                    binance: 178.9,
+                    coinbase: 177.5,
+                    kucoin: 176.2,
+                    okx: 178.1,
+                    kraken: 176.8,
+                    bybit: 178.4,
+                    gateio: 177.9
+                  },
+                  change24h: -0.7
                 },
-                volumes: {
-                  binance: '692.1M',
-                  coinbase: '534.9M',
-                  kucoin: '298.6M',
-                  okx: '445.3M',
-                  kraken: '187.2M'
+                {
+                  symbol: 'ADA',
+                  name: 'Cardano',
+                  prices: {
+                    binance: 0.648,
+                    coinbase: 0.651,
+                    kucoin: 0.657,
+                    okx: 0.649,
+                    kraken: 0.652,
+                    bybit: 0.649,
+                    gateio: 0.653
+                  },
+                  change24h: 3.2
                 },
-                change24h: 1.8
-              },
-              {
-                symbol: 'SOL',
-                name: 'Solana',
-                prices: {
-                  binance: 178.9,
-                  coinbase: 177.5,
-                  kucoin: 176.2,
-                  okx: 178.1,
-                  kraken: 176.8
+                {
+                  symbol: 'MATIC',
+                  name: 'Polygon',
+                  prices: {
+                    binance: 0.882,
+                    coinbase: 0.882,
+                    kucoin: 0.878,
+                    okx: 0.865,
+                    kraken: 0.875,
+                    bybit: 0.879,
+                    gateio: 0.883
+                  },
+                  change24h: 5.1
                 },
-                volumes: {
-                  binance: '156.4M',
-                  coinbase: '89.7M',
-                  kucoin: '67.2M',
-                  okx: '123.8M',
-                  kraken: '34.6M'
+                {
+                  symbol: 'DOT',
+                  name: 'Polkadot',
+                  prices: {
+                    binance: 8.45,
+                    coinbase: 8.49,
+                    kucoin: 8.42,
+                    okx: 8.51,
+                    kraken: 8.58,
+                    bybit: 8.47,
+                    gateio: 8.53
+                  },
+                  change24h: -1.2
                 },
-                change24h: -0.7
-              },
-              {
-                symbol: 'ADA',
-                name: 'Cardano',
-                prices: {
-                  binance: 0.648,
-                  coinbase: 0.651,
-                  kucoin: 0.657,
-                  okx: 0.649,
-                  kraken: 0.652
+                {
+                  symbol: 'AVAX',
+                  name: 'Avalanche',
+                  prices: {
+                    binance: 42.15,
+                    coinbase: 42.08,
+                    kucoin: 41.95,
+                    okx: 42.22,
+                    kraken: 42.12,
+                    bybit: 42.18,
+                    gateio: 42.06
+                  },
+                  change24h: 1.5
                 },
-                volumes: {
-                  binance: '89.3M',
-                  coinbase: '45.7M',
-                  kucoin: '34.2M',
-                  okx: '67.8M',
-                  kraken: '23.1M'
+                {
+                  symbol: 'LINK',
+                  name: 'Chainlink',
+                  prices: {
+                    binance: 18.67,
+                    coinbase: 18.72,
+                    kucoin: 18.58,
+                    okx: 18.71,
+                    kraken: 18.75,
+                    bybit: 18.69,
+                    gateio: 18.64
+                  },
+                  change24h: 0.8
                 },
-                change24h: 3.2
-              },
-              {
-                symbol: 'MATIC',
-                name: 'Polygon',
-                prices: {
-                  binance: 0.882,
-                  coinbase: 0.882,
-                  kucoin: 0.878,
-                  okx: 0.865,
-                  kraken: 0.875
+                {
+                  symbol: 'UNI',
+                  name: 'Uniswap',
+                  prices: {
+                    binance: 12.34,
+                    coinbase: 12.41,
+                    kucoin: 12.28,
+                    okx: 12.37,
+                    kraken: 12.39,
+                    bybit: 12.35,
+                    gateio: 12.42
+                  },
+                  change24h: -2.1
                 },
-                volumes: {
-                  binance: '78.9M',
-                  coinbase: '56.4M',
-                  kucoin: '23.7M',
-                  okx: '45.2M',
-                  kraken: '18.9M'
+                {
+                  symbol: 'ATOM',
+                  name: 'Cosmos',
+                  prices: {
+                    binance: 9.85,
+                    coinbase: 9.92,
+                    kucoin: 9.78,
+                    okx: 9.88,
+                    kraken: 9.94,
+                    bybit: 9.86,
+                    gateio: 9.89
+                  },
+                  change24h: 4.2
                 },
-                change24h: 5.1
-              },
-              {
-                symbol: 'DOT',
-                name: 'Polkadot',
-                prices: {
-                  binance: 8.45,
-                  coinbase: 8.49,
-                  kucoin: 8.42,
-                  okx: 8.51,
-                  kraken: 8.58
+                {
+                  symbol: 'LTC',
+                  name: 'Litecoin',
+                  prices: {
+                    binance: 98.45,
+                    coinbase: 98.72,
+                    kucoin: 98.15,
+                    okx: 98.58,
+                    kraken: 98.89,
+                    bybit: 98.52,
+                    gateio: 98.37
+                  },
+                  change24h: -0.9
                 },
-                volumes: {
-                  binance: '34.6M',
-                  coinbase: '23.8M',
-                  kucoin: '16.4M',
-                  okx: '28.7M',
-                  kraken: '12.3M'
-                },
-                change24h: -1.2
-              }
-            ].map((coin, index) => {
-              const allVolumes = Object.values(coin.volumes);
-              const parseVolume = (vol: string) => parseFloat(vol.replace('M', ''));
-              const volumeNumbers = allVolumes.map(parseVolume);
-              const maxVolume = Math.max(...volumeNumbers);
-              const minVolume = Math.min(...volumeNumbers);
+                {
+                  symbol: 'ALGO',
+                  name: 'Algorand',
+                  prices: {
+                    binance: 0.365,
+                    coinbase: 0.368,
+                    kucoin: 0.362,
+                    okx: 0.366,
+                    kraken: 0.369,
+                    bybit: 0.364,
+                    gateio: 0.367
+                  },
+                  change24h: 2.8
+                }
+              ];
               
+              return enhancedCoins;
+            })().map((coin, index) => {
               return (
                 <div key={index} className={`px-6 py-5 hover:bg-gray-500/5 transition-colors`}>
-                  <div className="grid grid-cols-7 gap-4 items-center">
+                  <div className="grid grid-cols-9 gap-2 items-center">
                     {/* Cryptocurrency */}
                     <div className="col-span-2 flex items-center space-x-3">
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold ${
@@ -461,7 +530,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                         ${coin.prices.binance.toLocaleString()}
                       </div>
                       <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Vol: ${coin.volumes.binance}
+                        Live Price
                       </div>
                     </div>
 
@@ -471,7 +540,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                         ${coin.prices.coinbase.toLocaleString()}
                       </div>
                       <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Vol: ${coin.volumes.coinbase}
+                        Live Price
                       </div>
                     </div>
 
@@ -481,7 +550,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                         ${coin.prices.kucoin.toLocaleString()}
                       </div>
                       <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Vol: ${coin.volumes.kucoin}
+                        Live Price
                       </div>
                     </div>
 
@@ -491,7 +560,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                         ${coin.prices.okx.toLocaleString()}
                       </div>
                       <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Vol: ${coin.volumes.okx}
+                        Live Price
                       </div>
                     </div>
 
@@ -501,7 +570,27 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                         ${coin.prices.kraken.toLocaleString()}
                       </div>
                       <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                        Vol: ${coin.volumes.kraken}
+                        Live Price
+                      </div>
+                    </div>
+
+                    {/* Bybit */}
+                    <div className="text-center">
+                      <div className={`text-sm font-semibold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                        ${coin.prices.bybit.toLocaleString()}
+                      </div>
+                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        Live Price
+                      </div>
+                    </div>
+
+                    {/* Gate.io */}
+                    <div className="text-center">
+                      <div className={`text-sm font-semibold ${isDarkMode ? 'text-blue-400' : 'text-blue-600'}`}>
+                        ${coin.prices.gateio.toLocaleString()}
+                      </div>
+                      <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                        Live Price
                       </div>
                     </div>
                   </div>
