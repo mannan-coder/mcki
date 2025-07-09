@@ -292,10 +292,10 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className={isFullscreen ? 'fixed inset-0 z-50 bg-background' : ''}
+      className={isFullscreen ? 'fixed inset-0 z-50 bg-background overflow-auto' : ''}
     >
       <Card className={`mb-6 lg:mb-8 hover:shadow-lg transition-all duration-300 ${isFullscreen ? 'h-full rounded-none border-0' : ''}`}>
-        <CardHeader className="pb-4 border-b border-border/50">
+        <CardHeader className={`pb-4 border-b border-border/50 ${isFullscreen ? 'sticky top-0 bg-background z-10' : ''}`}>
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             {/* Title and Price Info */}
             <div className="flex-1">
@@ -437,8 +437,8 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
               </div>
             </div>
           ) : chartData.length > 0 ? (
-            <div className={`${chartHeight} w-full p-4`}>
-              <ResponsiveContainer width="100%" height="100%">
+            <div className={`${isFullscreen ? 'min-h-[calc(100vh-200px)]' : chartHeight} w-full p-4 ${isFullscreen ? 'overflow-auto' : ''}`}>
+              <ResponsiveContainer width="100%" height={isFullscreen ? "100%" : "100%"}>
                 <ComposedChart
                   data={chartData}
                   margin={{ 
