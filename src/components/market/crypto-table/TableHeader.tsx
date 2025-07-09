@@ -5,15 +5,15 @@ import { TableHeaderProps } from './types';
 export const TableHeader = memo(({ sortConfig, onSort, startIndex, endIndex, totalItems }: TableHeaderProps) => (
   <>
     {/* Header */}
-    <div className="flex items-center justify-between p-4 border-b bg-muted/20">
-      <h3 className="text-lg font-semibold">Market Data</h3>
-      <div className="text-sm text-muted-foreground">
+    <div className="flex items-center justify-between p-6 border-b bg-card">
+      <h3 className="text-xl font-bold text-foreground">Market Data</h3>
+      <div className="text-sm text-muted-foreground font-medium">
         Showing {startIndex} to {endIndex} of {totalItems} coins
       </div>
     </div>
 
     {/* Table Header - Desktop only */}
-    <div className="hidden lg:grid lg:grid-cols-7 gap-4 p-4 border-b bg-muted/10">
+    <div className="hidden lg:grid lg:grid-cols-8 gap-4 p-4 border-b bg-muted/20 font-medium text-sm">
       <SortButton label="Coin" sortKey="name" sortConfig={sortConfig} onSort={onSort} />
       <div className="text-right">
         <SortButton label="Price" sortKey="price" sortConfig={sortConfig} onSort={onSort} />

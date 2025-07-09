@@ -284,20 +284,20 @@ export const EnhancedSignals = ({ coin }: EnhancedSignalsProps) => {
   };
 
   return (
-    <div className="flex flex-col gap-2 min-w-[140px] max-w-[160px]">
+    <div className="flex flex-col gap-2 min-w-[160px] w-full">
       {signals.map((signal, index) => (
         <div
           key={index}
-          className={`relative group inline-flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-xs font-medium transition-all duration-200 hover:scale-105 cursor-pointer ${signal.color} ${signal.bgColor} ${getStrengthColor(signal.strength)}`}
+          className={`relative group flex items-center justify-between gap-2 px-3 py-2 rounded-lg text-xs font-bold transition-all duration-200 hover:scale-105 cursor-pointer shadow-sm ${signal.color} ${signal.bgColor} ${getStrengthColor(signal.strength)}`}
           title={signal.description}
         >
           <div className="flex items-center gap-1.5">
             {signal.icon}
-            <span className="font-semibold">{signal.signal}</span>
+            <span className="font-bold tracking-wide">{signal.signal}</span>
           </div>
           <Badge 
             variant="outline" 
-            className="text-xs px-1 py-0 h-4 bg-white/80 border-current"
+            className="text-xs px-1.5 py-0.5 h-5 bg-white/90 border-current font-bold"
           >
             {signal.confidence}%
           </Badge>
@@ -305,9 +305,12 @@ export const EnhancedSignals = ({ coin }: EnhancedSignalsProps) => {
       ))}
       
       {signals.length === 0 && (
-        <div className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-gray-500 bg-gray-50 border border-gray-200">
+        <div className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium text-gray-500 bg-gray-50 border border-gray-200">
           <Minus className="h-3 w-3" />
           <span>NEUTRAL</span>
+          <Badge variant="outline" className="text-xs px-1 py-0 h-4 bg-white/80 border-current">
+            50%
+          </Badge>
         </div>
       )}
     </div>

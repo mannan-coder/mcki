@@ -7,23 +7,24 @@ import { MiniChart } from '../MiniChart';
 import { CoinRowProps } from './types';
 
 export const CoinRow = memo(({ coin, index, onToggleFavorite, favorites, lastUpdateTime }: CoinRowProps) => (
-  <div className="grid grid-cols-1 lg:grid-cols-7 gap-4 p-4 hover:bg-muted/30 transition-colors border-b border-border/30 last:border-b-0">
+  <div className="grid grid-cols-1 lg:grid-cols-8 gap-4 p-4 hover:bg-muted/50 transition-colors group">
+    
     {/* Mobile Layout */}
     <div className="lg:hidden space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <span className="text-xs text-muted-foreground font-mono">#{coin.rank}</span>
+          <span className="text-xs text-muted-foreground font-mono w-8">#{coin.rank}</span>
           <img 
             src={coin.image} 
             alt={coin.name}
-            className="w-8 h-8 rounded-full"
+            className="w-10 h-10 rounded-full ring-2 ring-border"
             onError={(e) => {
               (e.target as HTMLImageElement).src = '/placeholder.svg';
             }}
           />
           <div>
-            <div className="font-semibold text-foreground">{coin.symbol}</div>
-            <div className="text-sm text-muted-foreground">{coin.name}</div>
+            <div className="font-bold text-foreground text-sm">{coin.symbol}</div>
+            <div className="text-xs text-muted-foreground">{coin.name}</div>
           </div>
         </div>
         {onToggleFavorite && (
@@ -31,7 +32,7 @@ export const CoinRow = memo(({ coin, index, onToggleFavorite, favorites, lastUpd
             variant="ghost"
             size="sm"
             onClick={() => onToggleFavorite(coin.id)}
-            className="p-1"
+            className="p-2"
           >
             <Star className={`h-4 w-4 ${favorites?.includes(coin.id) ? 'text-yellow-500 fill-current' : 'text-muted-foreground'}`} />
           </Button>
@@ -39,38 +40,38 @@ export const CoinRow = memo(({ coin, index, onToggleFavorite, favorites, lastUpd
       </div>
       
       <div className="grid grid-cols-2 gap-4">
-        <div>
-          <div className="text-xs text-muted-foreground">Price</div>
-          <div className="font-semibold">{coin.price}</div>
+        <div className="space-y-1">
+          <div className="text-xs text-muted-foreground font-medium">Price</div>
+          <div className="font-bold text-sm">{coin.price}</div>
         </div>
-        <div>
-          <div className="text-xs text-muted-foreground">24h Change</div>
-          <div className={`font-semibold ${
-            coin.change24h.startsWith('+') ? 'text-success' : coin.change24h.startsWith('-') ? 'text-destructive' : 'text-muted-foreground'
+        <div className="space-y-1">
+          <div className="text-xs text-muted-foreground font-medium">24h Change</div>
+          <div className={`font-bold text-sm ${
+            coin.change24h.startsWith('+') ? 'text-green-600' : coin.change24h.startsWith('-') ? 'text-red-600' : 'text-muted-foreground'
           }`}>
             {coin.change24h}
           </div>
         </div>
-        <div>
-          <div className="text-xs text-muted-foreground">Market Cap</div>
-          <div className="text-sm">{coin.marketCap}</div>
+        <div className="space-y-1">
+          <div className="text-xs text-muted-foreground font-medium">Market Cap</div>
+          <div className="text-sm font-medium">{coin.marketCap}</div>
         </div>
-        <div>
-          <div className="text-xs text-muted-foreground">Volume</div>
-          <div className="text-sm">{coin.volume}</div>
+        <div className="space-y-1">
+          <div className="text-xs text-muted-foreground font-medium">Volume</div>
+          <div className="text-sm font-medium">{coin.volume}</div>
         </div>
       </div>
       
       <div className="space-y-2">
-        <div className="text-xs text-muted-foreground">7d Chart</div>
+        <div className="text-xs text-muted-foreground font-medium">7d Chart</div>
         <MiniChart 
           sparkline={coin.chart.sparkline} 
           priceChangePercentage24h={coin.chart.change24h}
         />
       </div>
       
-      <div className="space-y-2">
-        <div className="text-xs text-muted-foreground">Trading Signals</div>
+      <div className="space-y-3 p-3 bg-muted/30 rounded-lg">
+        <div className="text-xs text-muted-foreground font-medium">Trading Signals</div>
         <EnhancedSignals 
           coin={{
             priceChangePercentage24h: coin._change24h,
@@ -92,42 +93,40 @@ export const CoinRow = memo(({ coin, index, onToggleFavorite, favorites, lastUpd
     <div className="hidden lg:contents">
       {/* Rank & Name */}
       <div className="flex items-center space-x-3">
-        <div className="flex items-center space-x-2">
-          <span className="text-xs text-muted-foreground font-mono w-8">#{coin.rank}</span>
-          {onToggleFavorite && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => onToggleFavorite(coin.id)}
-              className="p-1 opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              <Star className={`h-3 w-3 ${favorites?.includes(coin.id) ? 'text-yellow-500 fill-current' : 'text-muted-foreground'}`} />
-            </Button>
-          )}
-        </div>
+        <span className="text-xs text-muted-foreground font-mono w-8">#{coin.rank}</span>
+        {onToggleFavorite && (
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => onToggleFavorite(coin.id)}
+            className="p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+          >
+            <Star className={`h-3 w-3 ${favorites?.includes(coin.id) ? 'text-yellow-500 fill-current' : 'text-muted-foreground'}`} />
+          </Button>
+        )}
         <img 
           src={coin.image} 
           alt={coin.name}
-          className="w-8 h-8 rounded-full"
+          className="w-8 h-8 rounded-full ring-2 ring-border"
           onError={(e) => {
             (e.target as HTMLImageElement).src = '/placeholder.svg';
           }}
         />
         <div className="min-w-0">
-          <div className="font-semibold text-foreground truncate">{coin.symbol}</div>
+          <div className="font-bold text-foreground truncate">{coin.symbol}</div>
           <div className="text-sm text-muted-foreground truncate">{coin.name}</div>
         </div>
       </div>
 
       {/* Price */}
       <div className="text-right">
-        <div className="font-semibold">{coin.price}</div>
+        <div className="font-bold">{coin.price}</div>
       </div>
 
       {/* 24h Change */}
       <div className="text-right">
-        <div className={`font-semibold ${
-          coin.change24h.startsWith('+') ? 'text-success' : coin.change24h.startsWith('-') ? 'text-destructive' : 'text-muted-foreground'
+        <div className={`font-bold ${
+          coin.change24h.startsWith('+') ? 'text-green-600' : coin.change24h.startsWith('-') ? 'text-red-600' : 'text-muted-foreground'
         }`}>
           {coin.change24h}
         </div>
@@ -152,7 +151,7 @@ export const CoinRow = memo(({ coin, index, onToggleFavorite, favorites, lastUpd
       </div>
 
       {/* Signals */}
-      <div>
+      <div className="flex justify-start">
         <EnhancedSignals 
           coin={{
             priceChangePercentage24h: coin._change24h,

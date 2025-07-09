@@ -173,28 +173,28 @@ const MarketPage = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+      <div className="min-h-screen bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
           
-          {/* Professional Header */}
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
+          {/* Clean Professional Header */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div className="space-y-3">
-              <h1 className="text-3xl lg:text-4xl font-bold text-foreground tracking-tight">
+              <h1 className="text-4xl font-bold text-foreground tracking-tight">
                 Cryptocurrency Market
               </h1>
-              <div className="flex items-center gap-6 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <span>Real-time data from {cryptoData?.coins?.length || 0} cryptocurrencies</span>
-                </div>
+              <div className="flex items-center gap-6 text-sm">
+                <span className="text-muted-foreground">
+                  Real-time data from <span className="font-semibold text-foreground">{cryptoData?.coins?.length || 0}</span> cryptocurrencies
+                </span>
                 <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
                   isRealTime 
-                    ? 'bg-success/10 text-success border-success/20' 
-                    : 'bg-muted/50 text-muted-foreground border-border'
+                    ? 'bg-green-50 text-green-700 border-green-200' 
+                    : 'bg-red-50 text-red-700 border-red-200'
                 }`}>
-                  <div className={`w-2 h-2 rounded-full transition-all ${
-                    isRealTime ? 'bg-success animate-pulse' : 'bg-muted-foreground'
+                  <div className={`w-2 h-2 rounded-full ${
+                    isRealTime ? 'bg-green-500 animate-pulse' : 'bg-red-500'
                   }`} />
-                  <span>{isRealTime ? 'Live' : 'Offline'}</span>
+                  <span>{isRealTime ? 'Live Data' : 'Offline'}</span>
                   {lastUpdateTime && (
                     <span className="ml-1 font-mono opacity-75">
                       {new Date(lastUpdateTime).toLocaleTimeString()}
@@ -205,14 +205,14 @@ const MarketPage = () => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              {/* Enhanced Search */}
+              {/* Clean Search */}
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                 <Input
                   placeholder="Search cryptocurrencies..."
                   value={searchTerm}
                   onChange={(e) => handleSearchChange(e.target.value)}
-                  className="pl-10 min-w-[280px] bg-background/60 backdrop-blur-sm border-border/50 focus:bg-background focus:border-primary/50 transition-all"
+                  className="pl-10 min-w-[300px] h-10 border-border focus:border-primary"
                 />
               </div>
 
@@ -220,7 +220,7 @@ const MarketPage = () => {
                 onClick={handleRefresh}
                 disabled={isLoading}
                 variant="outline"
-                className="whitespace-nowrap bg-background/60 backdrop-blur-sm hover:bg-background"
+                className="h-10 px-6 font-medium"
               >
                 <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
                 Refresh
@@ -240,8 +240,8 @@ const MarketPage = () => {
             loading={isLoading && !cryptoData}
           />
 
-          {/* Enhanced Filters */}
-          <Card className="border-0 bg-gradient-to-br from-card/50 to-card/30 backdrop-blur-sm">
+          {/* Clean Filters */}
+          <Card className="border shadow-sm">
             <CardContent className="p-4">
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div className="flex flex-wrap gap-2">
@@ -253,11 +253,11 @@ const MarketPage = () => {
                         variant={selectedCategory === category ? "default" : "outline"}
                         size="sm"
                         onClick={() => handleCategoryChange(category)}
-                        className="text-xs font-medium transition-all hover:scale-105"
+                        className="text-sm font-medium"
                       >
                         {category}
                         {category !== 'All' && categoryCount > 0 && (
-                          <span className="ml-1.5 text-xs opacity-70 font-normal">
+                          <span className="ml-2 text-xs opacity-70 bg-muted px-1.5 py-0.5 rounded-full">
                             {categoryCount}
                           </span>
                         )}
@@ -266,18 +266,18 @@ const MarketPage = () => {
                   })}
                 </div>
                 
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <SortAsc className="h-3 w-3" />
-                  <span>Sort by: {sortConfig.key}</span>
-                  <span className="px-2 py-1 bg-muted rounded-full">
-                    {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                  <SortAsc className="h-4 w-4" />
+                  <span>Sorted by: <span className="font-medium">{sortConfig.key}</span></span>
+                  <span className="px-2 py-1 bg-muted rounded-full text-xs">
+                    {sortConfig.direction === 'asc' ? '↑ ASC' : '↓ DESC'}
                   </span>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Enhanced Data Table */}
+          {/* Clean Data Table */}
           <CryptoTable
             data={formattedCoinData}
             loading={isLoading && !cryptoData}
