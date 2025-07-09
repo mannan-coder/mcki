@@ -156,7 +156,7 @@ export const CoinRow = memo(({ coin, index, onToggleFavorite, favorites, lastUpd
         </div>
 
         {/* Trading Signals */}
-        <div className="col-span-3">
+        <div className="col-span-3 flex items-center">
           <EnhancedSignals 
             coin={{
               priceChangePercentage24h: coin._change24h,

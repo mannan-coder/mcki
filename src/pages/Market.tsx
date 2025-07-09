@@ -9,6 +9,7 @@ import { getCoinsByCategory } from '@/utils/coinCategories';
 import { CryptoTable } from '@/components/market/crypto-table';
 import { MarketStats } from '@/components/market/MarketStats';
 import { TopMovers } from '@/components/market/TopMovers';
+import { SignalsOverview } from '@/components/market/SignalsOverview';
 import { toast } from "sonner";
 
 const MarketPage = () => {
@@ -236,6 +237,12 @@ const MarketPage = () => {
 
           {/* Top Movers Section */}
           <TopMovers 
+            coins={categoryFilteredCoins}
+            loading={isLoading && !cryptoData}
+          />
+
+          {/* Market Signals Overview */}
+          <SignalsOverview 
             coins={categoryFilteredCoins}
             loading={isLoading && !cryptoData}
           />

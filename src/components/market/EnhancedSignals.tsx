@@ -284,26 +284,41 @@ export const EnhancedSignals = ({ coin }: EnhancedSignalsProps) => {
   };
 
   return (
-    <div className="flex flex-wrap gap-2">
-      {signals.slice(0, 2).map((signal, index) => (
+    <div className="flex gap-1.5 flex-wrap max-w-[200px]">
+      {signals.slice(0, 3).map((signal, index) => (
         <div
           key={index}
-          className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold transition-all duration-200 hover:scale-105 cursor-pointer ${signal.color} ${signal.bgColor} ${getStrengthColor(signal.strength)}`}
-          title={signal.description}
+          className={`inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-bold transition-all duration-200 hover:scale-105 cursor-pointer ${signal.color} ${signal.bgColor} border ${getBorderColor(signal.strength)}`}
+          title={`${signal.description} (${signal.confidence}% confidence)`}
         >
-          {signal.icon}
-          <span>{signal.signal}</span>
-          <span className="text-xs opacity-75">{signal.confidence}%</span>
+          <span className="text-xs">{signal.icon}</span>
+          <span className="text-xs font-bold truncate">{signal.signal}</span>
+          <span className="text-xs font-bold opacity-75">{signal.confidence}%</span>
         </div>
       ))}
       
       {signals.length === 0 && (
-        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium text-gray-500 bg-gray-50 border border-gray-200">
+        <div className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium text-gray-500 bg-gray-50 border border-gray-200">
           <Minus className="h-3 w-3" />
-          <span>NEUTRAL</span>
+          <span className="text-xs">NEUTRAL</span>
           <span className="text-xs opacity-75">50%</span>
+        </div>
+      )}
+      
+      {signals.length > 3 && (
+        <div className="inline-flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium text-muted-foreground bg-muted/50 border border-muted">
+          <span className="text-xs">+{signals.length - 3}</span>
         </div>
       )}
     </div>
   );
+
+  function getBorderColor(strength: string) {
+    switch (strength) {
+      case 'extreme': return 'border-yellow-400';
+      case 'strong': return 'border-green-400';
+      case 'moderate': return 'border-blue-400';
+      default: return 'border-gray-300';
+    }
+  }
 };
