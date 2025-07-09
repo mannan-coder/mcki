@@ -139,6 +139,8 @@ export const useOptimizedCryptoData = (limit: number = 500, enableNotifications:
     },
     // Add background refetch for seamless updates
     refetchIntervalInBackground: true,
+    // Force updates to trigger re-renders
+    structuralSharing: false,
   });
 
   // Enable price change notifications

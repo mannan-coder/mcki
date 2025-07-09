@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { TrendingUp, TrendingDown, Minus, Activity, Zap, Target, AlertTriangle } from 'lucide-react';
 
 interface LiveSignalsProps {
@@ -271,9 +271,19 @@ export const LiveSignals = ({ coin }: LiveSignalsProps) => {
     };
   };
 
-  const trendSignal = getTrendSignal();
-  const volumeSignal = getVolumeSignal();
-  const riskSignal = getRiskSignal();
+  // Memoize signals to ensure they update when coin data changes
+  const signals = useMemo(() => {
+    const trendSignal = getTrendSignal();
+    const volumeSignal = getVolumeSignal();
+    const riskSignal = getRiskSignal();
+    
+    // Add a timestamp to force updates
+    // Force signal recalculation on data changes
+    
+    return { trendSignal, volumeSignal, riskSignal };
+  }, [coin.priceChangePercentage24h, coin.priceChangePercentage7d, coin.volume, coin.marketCap, coin.priceChangePercentage1h]);
+
+  const { trendSignal, volumeSignal, riskSignal } = signals;
 
   return (
     <div className="flex flex-col gap-1.5 min-w-[120px]">

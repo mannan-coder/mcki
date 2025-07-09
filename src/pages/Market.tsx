@@ -10,6 +10,7 @@ import { getCoinsByCategory } from '@/utils/coinCategories';
 import { LiveSignals } from '@/components/market/LiveSignals';
 import { MiniChart } from '@/components/market/MiniChart';
 import { MarketSignalCards } from '@/components/market/MarketSignalCards';
+import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
 const MarketPage = () => {
@@ -22,7 +23,7 @@ const MarketPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState<{key: string, direction: 'asc' | 'desc'}>({ key: 'rank', direction: 'asc' });
   
-  const ITEMS_PER_PAGE = 100;
+  const ITEMS_PER_PAGE = 250; // Show more coins per page
 
   const categories = [
     'All', 'DeFi', 'Layer 1', 'Layer 2', 'Gaming', 'NFT', 'Meme', 'AI', 'RWA', 'Privacy'
@@ -223,6 +224,7 @@ const MarketPage = () => {
       sortable: false,
       render: (coin: any) => (
         <LiveSignals 
+          key={`${coin.id}-${coin.change24h}-${Date.now()}`} // Force re-render on data change
           coin={{
             priceChangePercentage24h: coin.change24h,
             priceChangePercentage7d: coin.change7d,
@@ -280,21 +282,27 @@ const MarketPage = () => {
           subtitle={
             <div className="flex items-center gap-4">
               <span>Real-time cryptocurrency prices, market caps, and trading data</span>
-              <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium ${
+              <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium transition-all ${
                 isRealTime 
-                  ? 'bg-success/20 text-success border border-success/30' 
+                  ? 'bg-success/20 text-success border border-success/30 shadow-sm' 
                   : 'bg-muted/50 text-muted-foreground border border-border'
               }`}>
-                <div className={`w-2 h-2 rounded-full ${
-                  isRealTime ? 'bg-success animate-pulse' : 'bg-muted-foreground'
+                <div className={`w-2 h-2 rounded-full transition-all ${
+                  isRealTime ? 'bg-success animate-pulse shadow-lg shadow-success/50' : 'bg-muted-foreground'
                 }`} />
                 {isRealTime ? 'Live' : 'Offline'}
                 {lastUpdateTime && (
-                  <span className="ml-1">
+                  <span className="ml-1 font-mono text-xs">
                     • Updated {new Date(lastUpdateTime).toLocaleTimeString()}
                   </span>
                 )}
               </div>
+              {isLoading && (
+                <div className="flex items-center gap-2 px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium">
+                  <div className="w-2 h-2 bg-primary rounded-full animate-spin"></div>
+                  Updating...
+                </div>
+              )}
             </div>
           }
           icon={<span className="text-2xl">🏪</span>}
@@ -362,13 +370,32 @@ const MarketPage = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-foreground">Market Data</h3>
-                  <div className="text-sm text-muted-foreground">
-                    Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, sortedAndPaginatedData.totalItems)} of {sortedAndPaginatedData.totalItems} coins
-                    {selectedCategory !== 'All' && (
-                      <span className="ml-2 px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
-                        {selectedCategory}
-                      </span>
-                    )}
+                  <div className="flex items-center gap-4">
+                    <div className="text-sm text-muted-foreground">
+                      Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, sortedAndPaginatedData.totalItems)} of {sortedAndPaginatedData.totalItems} coins
+                      {selectedCategory !== 'All' && (
+                        <span className="ml-2 px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
+                          {selectedCategory}
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => refetch()}
+                        disabled={isLoading}
+                        className="h-8 px-3 text-xs"
+                      >
+                        <RefreshCw className={`h-3 w-3 mr-1 ${isLoading ? 'animate-spin' : ''}`} />
+                        Refresh
+                      </Button>
+                      {cryptoData?.lastUpdated && (
+                        <div className="text-xs text-muted-foreground">
+                          Data: {new Date(cryptoData.lastUpdated).toLocaleTimeString()}
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
                 
