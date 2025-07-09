@@ -9,6 +9,7 @@ import { DataTable } from '@/components/common/DataTable';
 import { getCoinsByCategory } from '@/utils/coinCategories';
 import { LiveSignals } from '@/components/market/LiveSignals';
 import { MiniChart } from '@/components/market/MiniChart';
+import { MarketSignalCards } from '@/components/market/MarketSignalCards';
 import { motion } from 'framer-motion';
 
 const MarketPage = () => {
@@ -198,6 +199,9 @@ const MarketPage = () => {
           <div className="space-y-6">
             {/* Market Stats */}
             <StatsGrid stats={marketStats} />
+
+            {/* Market Signal Cards */}
+            <MarketSignalCards coins={categoryFilteredCoins} />
 
             {/* Filters */}
             <ResponsiveCard>
