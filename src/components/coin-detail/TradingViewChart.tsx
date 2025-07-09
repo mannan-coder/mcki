@@ -286,7 +286,7 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
     );
   }
 
-  const chartHeight = 'h-96 lg:h-[32rem]';
+  const chartHeight = isFullscreen ? 'flex-1 min-h-[60vh]' : 'h-80 sm:h-96 lg:h-[32rem]';
 
   return (
     <motion.div
@@ -492,7 +492,7 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
           </div>
         </CardHeader>
 
-        <CardContent className={`p-0 ${isFullscreen ? 'flex-1 flex flex-col' : ''}`}>
+        <CardContent className={`${isFullscreen ? 'flex-1 overflow-auto p-4' : 'p-0'}`}>
           {historyLoading ? (
             <div className={`${chartHeight} flex items-center justify-center`}>
               <div className="flex items-center gap-3">
@@ -501,15 +501,15 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
               </div>
             </div>
           ) : chartData.length > 0 ? (
-            <div className={`${isFullscreen ? 'flex-1' : chartHeight} w-full p-6`}>
+            <div className={`${isFullscreen ? 'h-full min-h-[60vh]' : chartHeight} w-full p-4 sm:p-6`}>
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart
                   data={chartData}
                   margin={{ 
                     top: 20, 
-                    right: 20, 
-                    left: 20, 
-                    bottom: showVolume ? 80 : 20 
+                    right: isMobile ? 10 : 30, 
+                    left: isMobile ? 10 : 30, 
+                    bottom: showVolume ? (isMobile ? 60 : 80) : (isMobile ? 30 : 40)
                   }}
                 >
                   {showGrid && (
@@ -531,10 +531,10 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
                       const dataPoint = chartData.find(d => d.timestamp === value);
                       return dataPoint?.displayDate || '';
                     }}
-                    tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
+                    tick={{ fontSize: isMobile ? 10 : 11, fill: 'hsl(var(--muted-foreground))' }}
                     axisLine={{ stroke: 'hsl(var(--border))', strokeWidth: 1 }}
                     tickLine={{ stroke: 'hsl(var(--border))', strokeWidth: 1 }}
-                    tickCount={isMobile ? 4 : 8}
+                    tickCount={isMobile ? 3 : 6}
                     interval="preserveStartEnd"
                   />
                   
@@ -543,11 +543,11 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
                     orientation="right"
                     domain={['dataMin * 0.999', 'dataMax * 1.001']}
                     tickFormatter={(value) => formatPrice(value, true)}
-                    tick={{ fontSize: 11, fill: 'hsl(var(--muted-foreground))' }}
+                    tick={{ fontSize: isMobile ? 9 : 11, fill: 'hsl(var(--muted-foreground))' }}
                     axisLine={{ stroke: 'hsl(var(--border))', strokeWidth: 1 }}
                     tickLine={{ stroke: 'hsl(var(--border))', strokeWidth: 1 }}
-                    width={80}
-                    tickCount={8}
+                    width={isMobile ? 60 : 80}
+                    tickCount={isMobile ? 5 : 8}
                   />
                   
                   {showVolume && (
