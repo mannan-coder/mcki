@@ -1,5 +1,7 @@
 import { getCoinLogoById } from '@/utils/coinLogos';
 import { getTimeAgo } from '@/utils/timeUtils';
+import { ExternalLink } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
 
 // Helper function to map common symbols to coin IDs
 const getCoinIdFromSymbol = (symbol: string) => {
@@ -60,6 +62,88 @@ const getCoinIdFromSymbol = (symbol: string) => {
   };
   
   return symbolMap[symbol.toLowerCase()] || symbol.toLowerCase();
+};
+
+// Exchange URL mapping for trade links
+const getExchangeTradeUrl = (exchange: string, pair: string) => {
+  const exchangeUrls: { [key: string]: string } = {
+    'binance': `https://www.binance.com/en/trade/${pair.replace('-', '_')}`,
+    'okx': `https://www.okx.com/trade-spot/${pair.toLowerCase()}`,
+    'bybit': `https://www.bybit.com/trade/spot/${pair.replace('-', '')}`,
+    'kucoin': `https://www.kucoin.com/trade/${pair.replace('-', '-')}`,
+    'kraken': `https://pro.kraken.com/app/trade/${pair.replace('-', '-')}`,
+    'coinbase': `https://pro.coinbase.com/trade/${pair.replace('-', '-')}`,
+    'gate.io': `https://www.gate.io/trade/${pair.replace('-', '_')}`,
+    'huobi': `https://www.huobi.com/en-us/exchange/${pair.toLowerCase().replace('-', '_')}`,
+    'mexc': `https://www.mexc.com/exchange/${pair.replace('-', '_')}`,
+    'bitfinex': `https://trading.bitfinex.com/t/${pair.replace('-', '')}`,
+  };
+  
+  return exchangeUrls[exchange.toLowerCase()] || '#';
+};
+
+// Trade dropdown component
+const TradeDropdown = ({ buyExchange, sellExchange, pair }: { buyExchange: string, sellExchange: string, pair: string }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isOpen]);
+  
+  const handleExchangeClick = (exchange: string) => {
+    const url = getExchangeTradeUrl(exchange, pair);
+    if (url !== '#') {
+      window.open(url, '_blank');
+    }
+    setIsOpen(false);
+  };
+  
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <button 
+        onClick={() => setIsOpen(!isOpen)}
+        className="px-3 py-1.5 bg-primary text-primary-foreground rounded-md text-xs font-medium hover:bg-primary/90 transition-colors flex items-center gap-1 whitespace-nowrap"
+      >
+        Trade
+        <ExternalLink className="h-3 w-3" />
+      </button>
+      
+      {isOpen && (
+        <div className="absolute right-0 top-full mt-1 bg-popover border border-border rounded-md shadow-lg z-50 min-w-36">
+          <div className="p-2 space-y-1">
+            <button
+              onClick={() => handleExchangeClick(buyExchange)}
+              className="w-full text-left px-3 py-2 hover:bg-muted rounded text-xs text-success font-medium transition-colors flex items-center gap-2"
+            >
+              <span className="w-2 h-2 bg-success rounded-full"></span>
+              Buy on {buyExchange}
+            </button>
+            <button
+              onClick={() => handleExchangeClick(sellExchange)}
+              className="w-full text-left px-3 py-2 hover:bg-muted rounded text-xs text-destructive font-medium transition-colors flex items-center gap-2"
+            >
+              <span className="w-2 h-2 bg-destructive rounded-full"></span>
+              Sell on {sellExchange}
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 };
 
 export const getArbitrageTableColumns = () => [
@@ -182,10 +266,12 @@ export const getArbitrageTableColumns = () => [
     key: 'action',
     header: 'Action',
     className: 'text-center',
-    render: () => (
-      <button className="px-2 py-1 bg-primary/10 text-primary rounded text-xs hover:bg-primary/20 transition-colors">
-        Trade
-      </button>
+    render: (value: any, row: any) => (
+      <TradeDropdown 
+        buyExchange={row.buyExchange} 
+        sellExchange={row.sellExchange} 
+        pair={row.pair}
+      />
     )
   }
 ];

@@ -6,8 +6,8 @@ import { DataSection } from '@/components/common/DataSection';
 import { StatsGrid } from '@/components/common/StatsGrid';
 import { OpportunitiesSection } from '@/components/arbitrage/OpportunitiesSection';
 import { ExchangeStatusSection } from '@/components/arbitrage/ExchangeStatusSection';
-import { getArbitragePageColumns, getExchangeColumns } from '@/utils/arbitrageColumns';
-import { formatArbitrageOpportunityData } from '@/utils/arbitrageDataFormatters';
+import { getArbitrageTableColumns } from '@/components/arbitrage/ArbitrageTableColumns';
+import { getExchangeColumns } from '@/utils/arbitrageColumns';
 import { getExchangeData } from '@/data/exchangeData';
 
 const ArbitragePage = () => {
@@ -23,9 +23,11 @@ const ArbitragePage = () => {
 
   const statsData = useArbitrageStats(stats);
   const exchangeData = getExchangeData();
-  const opportunityColumns = getArbitragePageColumns();
+  const opportunityColumns = getArbitrageTableColumns();
   const exchangeColumns = getExchangeColumns();
-  const formattedOpportunityData = formatArbitrageOpportunityData(opportunities);
+  
+  // Format data for the table - use original opportunities data structure
+  const formattedOpportunityData = opportunities;
 
   if (loading && !arbitrageData) {
     return (
