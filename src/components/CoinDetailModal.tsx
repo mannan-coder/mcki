@@ -43,37 +43,35 @@ const CoinDetailModal: React.FC<CoinDetailModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-2 sm:p-4">
-      <div className={`w-full max-w-7xl h-[95vh] rounded-xl border backdrop-blur-sm flex flex-col ${
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-40 p-2 sm:p-4">
+      <div className={`w-full max-w-5xl h-[95vh] rounded-xl border backdrop-blur-sm flex flex-col ${
         isDarkMode 
-          ? 'bg-gray-800/95 border-gray-700/50' 
-          : 'bg-white/95 border-gray-200/50'
+          ? 'bg-card/95 border-border/50' 
+          : 'bg-card/95 border-border/50'
       }`}>
         {/* Header */}
-        <div className="flex-shrink-0 p-4 sm:p-6 border-b border-gray-200/50">
+        <div className="flex-shrink-0 p-4 sm:p-6 border-b border-border/50">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3 sm:space-x-4">
               {coinDetails?.image && (
                 <img 
                   src={coinDetails.image} 
                   alt={coinDetails.name}
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full"
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-border/20 shadow-sm"
                 />
               )}
               <div>
-                <h2 className={`text-xl sm:text-2xl font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                <h2 className="text-xl sm:text-2xl font-bold text-foreground">
                   {coinDetails?.name || 'Loading...'}
                 </h2>
-                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                <p className="text-sm text-muted-foreground">
                   {coinDetails?.symbol} • Rank #{coinDetails?.marketCapRank}
                 </p>
               </div>
             </div>
             <button
               onClick={onClose}
-              className={`p-2 rounded-lg hover:bg-opacity-50 transition-colors ${
-                isDarkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-200'
-              }`}
+              className="p-2 rounded-lg hover:bg-muted/50 transition-colors"
             >
               ✕
             </button>
@@ -111,23 +109,23 @@ const CoinDetailModal: React.FC<CoinDetailModalProps> = ({
               <div className="p-4 sm:p-6 space-y-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {/* Price Information */}
-                  <div className={`p-4 rounded-xl ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-50'}`}>
-                    <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <div className="p-4 rounded-xl bg-muted/30 border border-border/20">
+                    <h3 className="text-lg font-semibold mb-4 text-foreground">
                       Price Information
                     </h3>
                     
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Current Price</span>
+                        <span className="text-sm text-muted-foreground">Current Price</span>
                         <span className="text-xl sm:text-2xl font-bold text-primary">
                           {formatPrice(coinDetails.currentPrice)}
                         </span>
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>24h Change</span>
+                        <span className="text-sm text-muted-foreground">24h Change</span>
                         <div className={`flex items-center space-x-1 ${
-                          coinDetails.priceChangePercentage24h >= 0 ? 'text-green-500' : 'text-red-500'
+                          coinDetails.priceChangePercentage24h >= 0 ? 'text-success' : 'text-destructive'
                         }`}>
                           {coinDetails.priceChangePercentage24h >= 0 ? (
                             <ArrowUp size={16} />
@@ -141,9 +139,9 @@ const CoinDetailModal: React.FC<CoinDetailModalProps> = ({
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>7d Change</span>
+                        <span className="text-sm text-muted-foreground">7d Change</span>
                         <div className={`flex items-center space-x-1 ${
-                          coinDetails.priceChangePercentage7d >= 0 ? 'text-green-500' : 'text-red-500'
+                          coinDetails.priceChangePercentage7d >= 0 ? 'text-success' : 'text-destructive'
                         }`}>
                           {coinDetails.priceChangePercentage7d >= 0 ? (
                             <TrendingUp size={16} />
@@ -157,20 +155,20 @@ const CoinDetailModal: React.FC<CoinDetailModalProps> = ({
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>All Time High</span>
+                        <span className="text-sm text-muted-foreground">All Time High</span>
                         <div className="text-right">
-                          <div className="font-semibold">{formatPrice(coinDetails.ath)}</div>
-                          <div className="text-xs text-gray-500">
+                          <div className="font-semibold text-foreground">{formatPrice(coinDetails.ath)}</div>
+                          <div className="text-xs text-muted-foreground">
                             {new Date(coinDetails.athDate).toLocaleDateString()}
                           </div>
                         </div>
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>All Time Low</span>
+                        <span className="text-sm text-muted-foreground">All Time Low</span>
                         <div className="text-right">
-                          <div className="font-semibold">{formatPrice(coinDetails.atl)}</div>
-                          <div className="text-xs text-gray-500">
+                          <div className="font-semibold text-foreground">{formatPrice(coinDetails.atl)}</div>
+                          <div className="text-xs text-muted-foreground">
                             {new Date(coinDetails.atlDate).toLocaleDateString()}
                           </div>
                         </div>
@@ -179,37 +177,37 @@ const CoinDetailModal: React.FC<CoinDetailModalProps> = ({
                   </div>
 
                   {/* Market Data */}
-                  <div className={`p-4 rounded-xl ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-50'}`}>
-                    <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <div className="p-4 rounded-xl bg-muted/30 border border-border/20">
+                    <h3 className="text-lg font-semibold mb-4 text-foreground">
                       Market Data
                     </h3>
                     
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Market Cap</span>
-                        <span className="font-semibold">
+                        <span className="text-sm text-muted-foreground">Market Cap</span>
+                        <span className="font-semibold text-foreground">
                           {formatMarketCap(coinDetails.marketCap)}
                         </span>
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>24h Volume</span>
-                        <span className="font-semibold">
+                        <span className="text-sm text-muted-foreground">24h Volume</span>
+                        <span className="font-semibold text-foreground">
                           {formatMarketCap(coinDetails.totalVolume)}
                         </span>
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Circulating Supply</span>
-                        <span className="font-semibold text-sm">
+                        <span className="text-sm text-muted-foreground">Circulating Supply</span>
+                        <span className="font-semibold text-sm text-foreground">
                           {coinDetails.circulatingSupply.toLocaleString()}
                         </span>
                       </div>
 
                       {coinDetails.totalSupply && (
                         <div className="flex items-center justify-between">
-                          <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Total Supply</span>
-                          <span className="font-semibold text-sm">
+                          <span className="text-sm text-muted-foreground">Total Supply</span>
+                          <span className="font-semibold text-sm text-foreground">
                             {coinDetails.totalSupply.toLocaleString()}
                           </span>
                         </div>
@@ -217,8 +215,8 @@ const CoinDetailModal: React.FC<CoinDetailModalProps> = ({
 
                       {coinDetails.maxSupply && (
                         <div className="flex items-center justify-between">
-                          <span className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>Max Supply</span>
-                          <span className="font-semibold text-sm">
+                          <span className="text-sm text-muted-foreground">Max Supply</span>
+                          <span className="font-semibold text-sm text-foreground">
                             {coinDetails.maxSupply.toLocaleString()}
                           </span>
                         </div>
@@ -229,12 +227,12 @@ const CoinDetailModal: React.FC<CoinDetailModalProps> = ({
 
                 {/* Description */}
                 {coinDetails.description && (
-                  <div className={`p-4 rounded-xl ${isDarkMode ? 'bg-gray-700/50' : 'bg-gray-50'}`}>
-                    <h3 className={`text-lg font-semibold mb-4 ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                  <div className="p-4 rounded-xl bg-muted/30 border border-border/20">
+                    <h3 className="text-lg font-semibold mb-4 text-foreground">
                       About {coinDetails.name}
                     </h3>
                     <div 
-                      className={`text-sm leading-relaxed max-h-32 overflow-y-auto ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}
+                      className="text-sm leading-relaxed max-h-32 overflow-y-auto text-muted-foreground"
                       dangerouslySetInnerHTML={{ 
                         __html: coinDetails.description.slice(0, 800) + '...' 
                       }}

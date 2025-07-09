@@ -293,7 +293,7 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className={isFullscreen ? 'fixed inset-0 z-[9999] bg-background/95 backdrop-blur-md flex flex-col' : ''}
+      className={isFullscreen ? 'fixed inset-0 z-[45] bg-background/95 backdrop-blur-md flex flex-col' : ''}
     >
       {/* Fullscreen Header with Close Button */}
       {isFullscreen && (
@@ -319,12 +319,12 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
         </div>
       )}
 
-      <Card className={`shadow-lg border-0 bg-gradient-to-br from-card to-muted/30 ${
+      <Card className={`${
         isFullscreen 
           ? 'flex-1 rounded-none m-0 border-0 shadow-none bg-transparent overflow-auto' 
-          : 'mb-6 lg:mb-8'
+          : 'border border-border bg-card shadow-sm'
       }`}>
-        <CardHeader className={`pb-6 border-b border-border/50 bg-gradient-to-r from-card to-muted/20 ${isFullscreen ? 'flex-shrink-0' : ''}`}>
+        <CardHeader className={`pb-6 border-b border-border/50 bg-card/50 ${isFullscreen ? 'flex-shrink-0' : ''}`}>
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
             {/* Title and Price Info */}
             <div className="flex-1 space-y-4">

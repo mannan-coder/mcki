@@ -88,11 +88,11 @@ export const CoinStats = ({ coin, loading }: CoinStatsProps) => {
   ];
 
   return (
-    <div className="space-y-8 mb-8">
+    <div className="space-y-8">
       {/* Main Stats */}
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-4">Market Statistics</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <h2 className="text-xl font-bold text-foreground mb-4">Market Statistics</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.title}
@@ -100,20 +100,16 @@ export const CoinStats = ({ coin, loading }: CoinStatsProps) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="hover:shadow-lg transition-all duration-300">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm text-muted-foreground flex items-center gap-2">
-                    <span>{stat.icon}</span>
-                    {stat.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-                  {stat.subtitle && (
-                    <div className="text-sm text-muted-foreground mt-1">{stat.subtitle}</div>
-                  )}
-                </CardContent>
-              </Card>
+              <div className="bg-muted/30 rounded-lg p-4 hover:bg-muted/50 transition-colors">
+                <div className="text-sm text-muted-foreground flex items-center gap-2 mb-2">
+                  <span>{stat.icon}</span>
+                  {stat.title}
+                </div>
+                <div className="text-xl font-bold text-foreground">{stat.value}</div>
+                {stat.subtitle && (
+                  <div className="text-sm text-muted-foreground mt-1">{stat.subtitle}</div>
+                )}
+              </div>
             </motion.div>
           ))}
         </div>
@@ -121,8 +117,8 @@ export const CoinStats = ({ coin, loading }: CoinStatsProps) => {
 
       {/* Price Performance */}
       <div>
-        <h2 className="text-2xl font-bold text-foreground mb-4">Price Performance</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <h2 className="text-xl font-bold text-foreground mb-4">Price Performance</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {pricePerformance.map((perf, index) => (
             <motion.div
               key={perf.period || perf.title}
@@ -130,30 +126,26 @@ export const CoinStats = ({ coin, loading }: CoinStatsProps) => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <Card className="hover:shadow-lg transition-all duration-300">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-sm text-muted-foreground flex items-center gap-2">
-                    <span>{perf.icon}</span>
-                    {perf.period || perf.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {perf.change !== undefined ? (
-                    <div className={`text-2xl font-bold ${
-                      perf.change >= 0 ? 'text-success' : 'text-destructive'
-                    }`}>
-                      {perf.change >= 0 ? '+' : ''}{formatPercentage(perf.change)}
-                    </div>
-                  ) : (
-                    <>
-                      <div className="text-2xl font-bold text-foreground">{perf.value}</div>
-                      {perf.subtitle && (
-                        <div className="text-sm text-muted-foreground mt-1">{perf.subtitle}</div>
-                      )}
-                    </>
-                  )}
-                </CardContent>
-              </Card>
+              <div className="bg-muted/30 rounded-lg p-4 hover:bg-muted/50 transition-colors">
+                <div className="text-sm text-muted-foreground flex items-center gap-2 mb-2">
+                  <span>{perf.icon}</span>
+                  {perf.period || perf.title}
+                </div>
+                {perf.change !== undefined ? (
+                  <div className={`text-xl font-bold ${
+                    perf.change >= 0 ? 'text-success' : 'text-destructive'
+                  }`}>
+                    {perf.change >= 0 ? '+' : ''}{formatPercentage(perf.change)}
+                  </div>
+                ) : (
+                  <>
+                    <div className="text-xl font-bold text-foreground">{perf.value}</div>
+                    {perf.subtitle && (
+                      <div className="text-sm text-muted-foreground mt-1">{perf.subtitle}</div>
+                    )}
+                  </>
+                )}
+              </div>
             </motion.div>
           ))}
         </div>
