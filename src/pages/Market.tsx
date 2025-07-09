@@ -174,131 +174,173 @@ const MarketPage = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8">
-          
-          {/* Clean Professional Header */}
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            <div className="space-y-3">
-              <h1 className="text-4xl font-bold text-foreground tracking-tight">
-                Cryptocurrency Market
-              </h1>
-              <div className="flex items-center gap-6 text-sm">
-                <span className="text-muted-foreground">
-                  Real-time data from <span className="font-semibold text-foreground">{cryptoData?.coins?.length || 0}</span> cryptocurrencies
-                </span>
-                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
-                  isRealTime 
-                    ? 'bg-green-50 text-green-700 border-green-200' 
-                    : 'bg-red-50 text-red-700 border-red-200'
-                }`}>
-                  <div className={`w-2 h-2 rounded-full ${
-                    isRealTime ? 'bg-green-500 animate-pulse' : 'bg-red-500'
-                  }`} />
-                  <span>{isRealTime ? 'Live Data' : 'Offline'}</span>
-                  {lastUpdateTime && (
-                    <span className="ml-1 font-mono opacity-75">
-                      {new Date(lastUpdateTime).toLocaleTimeString()}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex flex-col sm:flex-row gap-4">
-              {/* Clean Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                <Input
-                  placeholder="Search cryptocurrencies..."
-                  value={searchTerm}
-                  onChange={(e) => handleSearchChange(e.target.value)}
-                  className="pl-10 min-w-[300px] h-10 border-border focus:border-primary"
-                />
-              </div>
-
-              <Button
-                onClick={handleRefresh}
-                disabled={isLoading}
-                variant="outline"
-                className="h-10 px-6 font-medium"
-              >
-                <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-                Refresh
-              </Button>
-            </div>
-          </div>
-
-          {/* Market Stats Overview */}
-          <MarketStats 
-            data={cryptoData}
-            loading={isLoading && !cryptoData}
-          />
-
-          {/* Top Movers Section */}
-          <TopMovers 
-            coins={categoryFilteredCoins}
-            loading={isLoading && !cryptoData}
-          />
-
-          {/* Market Signals Overview */}
-          <SignalsOverview 
-            coins={categoryFilteredCoins}
-            loading={isLoading && !cryptoData}
-          />
-
-          {/* Clean Filters */}
-          <Card className="border shadow-sm">
-            <CardContent className="p-4">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                <div className="flex flex-wrap gap-2">
-                  {categories.map((category) => {
-                    const categoryCount = getCoinsByCategory(filteredCoins, category).length;
-                    return (
-                      <Button
-                        key={category}
-                        variant={selectedCategory === category ? "default" : "outline"}
-                        size="sm"
-                        onClick={() => handleCategoryChange(category)}
-                        className="text-sm font-medium"
-                      >
-                        {category}
-                        {category !== 'All' && categoryCount > 0 && (
-                          <span className="ml-2 text-xs opacity-70 bg-muted px-1.5 py-0.5 rounded-full">
-                            {categoryCount}
-                          </span>
-                        )}
-                      </Button>
-                    );
-                  })}
+      {/* Professional Hero Background */}
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
+        
+        {/* Professional Header with Gradient */}
+        <div className="bg-gradient-to-r from-primary/5 via-background to-accent/5 border-b border-border/50 backdrop-blur-sm">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              <div className="space-y-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-2 h-12 bg-gradient-to-b from-primary to-accent rounded-full" />
+                  <div>
+                    <h1 className="text-5xl font-bold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent tracking-tight">
+                      Market Dashboard
+                    </h1>
+                    <p className="text-lg text-muted-foreground mt-1">Professional cryptocurrency analytics</p>
+                  </div>
                 </div>
                 
-                <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <SortAsc className="h-4 w-4" />
-                  <span>Sorted by: <span className="font-medium">{sortConfig.key}</span></span>
-                  <span className="px-2 py-1 bg-muted rounded-full text-xs">
+                <div className="flex items-center gap-6 text-sm">
+                  <div className="flex items-center gap-2 px-4 py-2 bg-card/50 rounded-lg border backdrop-blur-sm">
+                    <span className="text-muted-foreground">Tracking</span>
+                    <span className="font-bold text-primary text-lg">{cryptoData?.coins?.length || 0}</span>
+                    <span className="text-muted-foreground">assets</span>
+                  </div>
+                  
+                  <div className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-medium border backdrop-blur-sm transition-all ${
+                    isRealTime 
+                      ? 'bg-success/10 text-success border-success/20' 
+                      : 'bg-destructive/10 text-destructive border-destructive/20'
+                  }`}>
+                    <div className={`w-2 h-2 rounded-full ${
+                      isRealTime ? 'bg-success animate-pulse' : 'bg-destructive'
+                    }`} />
+                    <span>{isRealTime ? 'Live Feed' : 'Reconnecting'}</span>
+                    {lastUpdateTime && (
+                      <span className="ml-1 font-mono opacity-75">
+                        {new Date(lastUpdateTime).toLocaleTimeString()}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row gap-4">
+                <div className="relative group">
+                  <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 group-focus-within:text-primary transition-colors" />
+                  <Input
+                    placeholder="Search by name or symbol..."
+                    value={searchTerm}
+                    onChange={(e) => handleSearchChange(e.target.value)}
+                    className="pl-12 min-w-[320px] h-12 border-border/50 focus:border-primary bg-card/50 backdrop-blur-sm text-base"
+                  />
+                </div>
+
+                <Button
+                  onClick={handleRefresh}
+                  disabled={isLoading}
+                  variant="outline"
+                  className="h-12 px-8 font-medium bg-card/50 backdrop-blur-sm border-border/50 hover:bg-primary/5"
+                >
+                  <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+                  Refresh Data
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+          
+          {/* Market Overview Stats */}
+          <div className="space-y-6">
+            <MarketStats 
+              data={cryptoData}
+              loading={isLoading && !cryptoData}
+            />
+
+            {/* Enhanced Analytics Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <TopMovers 
+                coins={categoryFilteredCoins}
+                loading={isLoading && !cryptoData}
+              />
+            </div>
+
+            {/* Market Signals Dashboard */}
+            <SignalsOverview 
+              coins={categoryFilteredCoins}
+              loading={isLoading && !cryptoData}
+            />
+          </div>
+
+          {/* Professional Filters Panel */}
+          <Card className="border-0 bg-gradient-to-r from-card/80 via-card to-card/80 backdrop-blur-sm shadow-xl">
+            <CardContent className="p-6">
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                <div className="space-y-3 flex-1">
+                  <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">Filter Categories</h3>
+                  <div className="flex flex-wrap gap-3">
+                    {categories.map((category) => {
+                      const categoryCount = getCoinsByCategory(filteredCoins, category).length;
+                      const isSelected = selectedCategory === category;
+                      return (
+                        <Button
+                          key={category}
+                          variant={isSelected ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => handleCategoryChange(category)}
+                          className={`text-sm font-medium transition-all duration-200 ${
+                            isSelected 
+                              ? 'bg-primary shadow-lg scale-105' 
+                              : 'hover:bg-muted/50 hover:scale-105 border-border/50'
+                          }`}
+                        >
+                          {category}
+                          {category !== 'All' && categoryCount > 0 && (
+                            <span className={`ml-2 text-xs px-2 py-0.5 rounded-full font-bold ${
+                              isSelected 
+                                ? 'bg-primary-foreground/20 text-primary-foreground' 
+                                : 'bg-muted text-muted-foreground'
+                            }`}>
+                              {categoryCount}
+                            </span>
+                          )}
+                        </Button>
+                      );
+                    })}
+                  </div>
+                </div>
+                
+                <div className="flex items-center gap-4 px-4 py-2 bg-muted/30 rounded-lg border border-border/50">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <SortAsc className="h-4 w-4" />
+                    <span>Sort:</span>
+                  </div>
+                  <div className="text-sm font-semibold">
+                    {sortConfig.key}
+                  </div>
+                  <div className={`px-3 py-1 rounded-full text-xs font-bold ${
+                    sortConfig.direction === 'asc' 
+                      ? 'bg-success/20 text-success' 
+                      : 'bg-primary/20 text-primary'
+                  }`}>
                     {sortConfig.direction === 'asc' ? '↑ ASC' : '↓ DESC'}
-                  </span>
+                  </div>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Clean Data Table */}
-          <CryptoTable
-            data={formattedCoinData}
-            loading={isLoading && !cryptoData}
-            sortConfig={sortConfig}
-            onSort={handleSort}
-            onToggleFavorite={toggleFavorite}
-            favorites={favorites}
-            currentPage={currentPage}
-            totalPages={sortedAndPaginatedData.totalPages}
-            onPageChange={handlePageChange}
-            totalItems={sortedAndPaginatedData.totalItems}
-            startIndex={sortedAndPaginatedData.startIndex}
-            endIndex={sortedAndPaginatedData.endIndex}
-          />
+          {/* Professional Data Table */}
+          <div className="bg-gradient-to-b from-card/50 to-card rounded-xl border border-border/50 shadow-2xl backdrop-blur-sm">
+            <CryptoTable
+              data={formattedCoinData}
+              loading={isLoading && !cryptoData}
+              sortConfig={sortConfig}
+              onSort={handleSort}
+              onToggleFavorite={toggleFavorite}
+              favorites={favorites}
+              currentPage={currentPage}
+              totalPages={sortedAndPaginatedData.totalPages}
+              onPageChange={handlePageChange}
+              totalItems={sortedAndPaginatedData.totalItems}
+              startIndex={sortedAndPaginatedData.startIndex}
+              endIndex={sortedAndPaginatedData.endIndex}
+            />
+          </div>
 
         </div>
       </div>

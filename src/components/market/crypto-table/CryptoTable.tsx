@@ -1,4 +1,5 @@
 import React, { memo } from 'react';
+import { Search } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { CoinRowSkeleton, TableHeaderSkeleton } from '../SkeletonLoader';
 import { TableHeader } from './TableHeader';
@@ -22,17 +23,17 @@ export const CryptoTable = memo(({
 }: CryptoTableProps) => {
   if (loading) {
     return (
-      <Card className="overflow-hidden border-0 bg-gradient-to-br from-card to-muted/30">
+      <div className="overflow-hidden rounded-xl bg-gradient-to-b from-card/90 to-card border border-border/50 shadow-2xl backdrop-blur-sm">
         <TableHeaderSkeleton />
         {[...Array(10)].map((_, i) => (
           <CoinRowSkeleton key={i} />
         ))}
-      </Card>
+      </div>
     );
   }
 
   return (
-    <Card className="overflow-hidden border bg-card shadow-sm">
+    <div className="overflow-hidden rounded-xl bg-gradient-to-b from-card/90 to-card">
       <TableHeader
         sortConfig={sortConfig}
         onSort={onSort}
@@ -41,8 +42,8 @@ export const CryptoTable = memo(({
         totalItems={totalItems}
       />
 
-      {/* Table Body */}
-      <div className="overflow-x-auto">
+      {/* Professional Table Body */}
+      <div className="overflow-x-auto bg-card/50 backdrop-blur-sm">
         <div className="min-w-full">
           {data.length > 0 ? (
             data.map((coin, index) => (
@@ -55,18 +56,26 @@ export const CryptoTable = memo(({
               />
             ))
           ) : (
-            <div className="p-8 text-center text-muted-foreground">
-              No cryptocurrencies found
+            <div className="p-12 text-center">
+              <div className="max-w-md mx-auto space-y-3">
+                <div className="w-16 h-16 mx-auto bg-muted/30 rounded-full flex items-center justify-center">
+                  <Search className="h-8 w-8 text-muted-foreground" />
+                </div>
+                <h3 className="text-lg font-semibold text-foreground">No cryptocurrencies found</h3>
+                <p className="text-muted-foreground">Try adjusting your search or filter criteria</p>
+              </div>
             </div>
           )}
         </div>
       </div>
 
-      <TablePagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={onPageChange}
-      />
-    </Card>
+      <div className="bg-gradient-to-r from-card via-card/90 to-card border-t border-border/30">
+        <TablePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
+        />
+      </div>
+    </div>
   );
 });
