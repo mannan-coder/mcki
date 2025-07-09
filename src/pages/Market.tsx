@@ -6,6 +6,7 @@ import { ResponsiveCard } from '@/components/common/ResponsiveCard';
 import { DataSection } from '@/components/common/DataSection';
 import { StatsGrid } from '@/components/common/StatsGrid';
 import { DataTable } from '@/components/common/DataTable';
+import { getCoinsByCategory } from '@/utils/coinCategories';
 import { motion } from 'framer-motion';
 
 const MarketPage = () => {
@@ -31,10 +32,12 @@ const MarketPage = () => {
   const filteredCoins = cryptoData?.coins?.filter(coin => {
     const matchesSearch = coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          coin.symbol.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === 'All'; // For now, show all as we don't have category data
     const matchesFavorites = !showOnlyFavorites || favorites.includes(coin.id);
-    return matchesSearch && matchesCategory && matchesFavorites;
+    return matchesSearch && matchesFavorites;
   }) || [];
+
+  // Apply category filter after basic filtering
+  const categoryFilteredCoins = getCoinsByCategory(filteredCoins, selectedCategory);
 
   const marketStats = [
     {
@@ -68,7 +71,7 @@ const MarketPage = () => {
   ];
 
   const formatCoinData = () => {
-    return filteredCoins.map(coin => ({
+    return categoryFilteredCoins.map(coin => ({
       rank: coin.rank,
       name: coin.name,
       symbol: coin.symbol,
@@ -185,19 +188,24 @@ const MarketPage = () => {
 
                   {/* Category Filter */}
                   <div className="flex flex-wrap gap-2">
-                    {categories.map((category) => (
-                      <button
-                        key={category}
-                        onClick={() => setSelectedCategory(category)}
-                        className={`px-3 py-1 rounded-lg text-sm font-medium transition-colors ${
-                          selectedCategory === category
-                            ? 'bg-primary text-primary-foreground'
-                            : 'bg-secondary text-secondary-foreground hover:bg-muted'
-                        }`}
-                      >
-                        {category}
-                      </button>
-                    ))}
+                    {categories.map((category) => {
+                      const categoryCount = getCoinsByCategory(filteredCoins, category).length;
+                      return (
+                        <motion.button
+                          key={category}
+                          onClick={() => setSelectedCategory(category)}
+                          className={`px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 ${
+                            selectedCategory === category
+                              ? 'bg-primary text-primary-foreground shadow-md'
+                              : 'bg-secondary text-secondary-foreground hover:bg-muted border border-border'
+                          }`}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          {category} {category !== 'All' && `(${categoryCount})`}
+                        </motion.button>
+                      );
+                    })}
                   </div>
                 </div>
               </div>
@@ -209,7 +217,12 @@ const MarketPage = () => {
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-foreground">Market Data</h3>
                   <div className="text-sm text-muted-foreground">
-                    Showing {filteredCoins.length} of {cryptoData?.coins?.length || 0} coins
+                    Showing {categoryFilteredCoins.length} of {cryptoData?.coins?.length || 0} coins
+                    {selectedCategory !== 'All' && (
+                      <span className="ml-2 px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
+                        {selectedCategory}
+                      </span>
+                    )}
                   </div>
                 </div>
                 
