@@ -8,6 +8,7 @@ import { DataTable } from '@/components/common/DataTable';
 import ArbitrageOpportunityRow from './arbitrage/ArbitrageOpportunityRow';
 import ArbitrageStats from './arbitrage/ArbitrageStats';
 import LivePricesAcrossExchanges from './arbitrage/LivePricesAcrossExchanges';
+import { getCoinLogoById } from '@/utils/coinLogos';
 
 interface ArbitrageDashboardProps {
   isDarkMode: boolean;
@@ -84,7 +85,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
     }
   };
 
-  const opportunities = persistentOpportunities;
+  const opportunities = persistentOpportunities.slice(0, 10); // Limit to 10 for main page
   const stats = arbitrageData?.marketMaking || { totalOpportunities: 0, avgSpread: 0, estimatedDailyVolume: 0 };
 
   const handleRefresh = () => {
@@ -106,17 +107,26 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
     {
       key: 'asset',
       header: 'Asset',
-      render: (value: any, row: any) => (
-        <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">
-            {row.pair.split('-')[0].slice(0, 2)}
+      render: (value: any, row: any) => {
+        const coinSymbol = row.pair.split('-')[0].toLowerCase();
+        const coinLogo = getCoinLogoById(coinSymbol);
+        return (
+          <div className="flex items-center space-x-2">
+            <img 
+              src={coinLogo} 
+              alt={row.pair.split('-')[0]}
+              className="w-8 h-8 rounded-full"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/placeholder.svg';
+              }}
+            />
+            <div>
+              <div className="font-medium text-foreground">{row.pair.split('-')[0]}</div>
+              <div className="text-xs text-muted-foreground">{row.pair}</div>
+            </div>
           </div>
-          <div>
-            <div className="font-medium text-foreground">{row.pair.split('-')[0]}</div>
-            <div className="text-xs text-muted-foreground">{row.pair}</div>
-          </div>
-        </div>
-      )
+        );
+      }
     },
     {
       key: 'buyExchange',

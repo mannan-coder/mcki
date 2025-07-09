@@ -7,11 +7,12 @@ import { StatsGrid } from '@/components/common/StatsGrid';
 import { DataTable } from '@/components/common/DataTable';
 import { TrendingUp, DollarSign, Activity, RefreshCw, Building2, Target } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getCoinLogoById } from '@/utils/coinLogos';
 
 const ArbitragePage = () => {
   const { data: arbitrageData, loading, refetch } = useArbitrageData();
 
-  // Use live data from the API
+  // Use live data from the API - show all opportunities on arbitrage page
   const opportunities = arbitrageData?.arbitrageOpportunities || [];
   const stats = arbitrageData?.marketMaking || { totalOpportunities: 0, avgSpread: 0, estimatedDailyVolume: 0 };
 
@@ -59,7 +60,8 @@ const ArbitragePage = () => {
 
   const formatOpportunityData = () => {
     return opportunities.map((opp: any) => ({
-      coin: opp.coin,
+      coin: opp.coin || opp.pair?.split('-')[0] || 'Unknown',
+      pair: opp.pair,
       buyExchange: opp.buyExchange,
       sellExchange: opp.sellExchange,
       buyPrice: `$${opp.buyPrice?.toFixed(2) || '0.00'}`,
@@ -71,7 +73,31 @@ const ArbitragePage = () => {
   };
 
   const opportunityColumns = [
-    { key: 'coin', header: 'Coin', sortable: true },
+    { 
+      key: 'coin', 
+      header: 'Coin', 
+      sortable: true,
+      render: (value: string, row: any) => {
+        const coinSymbol = row.coin.toLowerCase();
+        const coinLogo = getCoinLogoById(coinSymbol);
+        return (
+          <div className="flex items-center space-x-3">
+            <img 
+              src={coinLogo} 
+              alt={row.coin}
+              className="w-8 h-8 rounded-full"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/placeholder.svg';
+              }}
+            />
+            <div>
+              <div className="font-semibold text-foreground">{row.coin}</div>
+              <div className="text-sm text-muted-foreground">{row.pair}</div>
+            </div>
+          </div>
+        );
+      }
+    },
     { key: 'buyExchange', header: 'Buy Exchange', sortable: true },
     { key: 'sellExchange', header: 'Sell Exchange', sortable: true },
     { key: 'buyPrice', header: 'Buy Price', sortable: true },

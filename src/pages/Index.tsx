@@ -51,11 +51,6 @@ const Index = () => {
             loading={isLoading && !marketData}
           />
           
-          {/* Live Prices Across Exchanges */}
-          <Suspense fallback={<div className="h-96 animate-pulse bg-muted/20 rounded-lg" />}>
-            <LivePricesAcrossExchanges loading={isLoading && !marketData} />
-          </Suspense>
-          
           {/* Arbitrage Opportunities Section */}
           <Suspense fallback={<div className="h-96 animate-pulse bg-muted/20 rounded-lg" />}>
             <ArbitrageDashboard isDarkMode={false} />
