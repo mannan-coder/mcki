@@ -68,9 +68,9 @@ interface CryptoData {
   lastUpdated: string;
 }
 
-const fetchCryptoData = async (limit: number = 500): Promise<CryptoData> => {
+const fetchCryptoData = async (limit: number = 250): Promise<CryptoData> => {
   const { data, error } = await supabase.functions.invoke('crypto-market-data', {
-    body: { limit: limit.toString() }
+    body: { limit: Math.min(limit, 250).toString() } // Respect CoinGecko API limit
   });
   
   if (error) throw error;
@@ -115,7 +115,7 @@ const usePriceChangeNotifications = (data: CryptoData | undefined, isEnabled: bo
   }, [data, isEnabled]);
 };
 
-export const useOptimizedCryptoData = (limit: number = 500, enableNotifications: boolean = true) => {
+export const useOptimizedCryptoData = (limit: number = 250, enableNotifications: boolean = true) => {
   const queryClient = useQueryClient();
   
   const query = useQuery({

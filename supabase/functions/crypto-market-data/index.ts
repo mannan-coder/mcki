@@ -14,8 +14,10 @@ serve(async (req) => {
     // Read limit from request body or URL params
     const body = await req.json().catch(() => ({}));
     const url = new URL(req.url);
-    const limit = body.limit || url.searchParams.get('limit') || '500'; // Default to top 500 coins
+    const limit = Math.min(parseInt(body.limit) || 250, 250); // CoinGecko free API limit is 250
     const category = url.searchParams.get('category') || '';
+    
+    console.log(`Fetching ${limit} coins from CoinGecko API`);
     
     // Fetch comprehensive market data from CoinGecko
     let apiUrl = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${limit}&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d%2C30d`;
@@ -97,6 +99,8 @@ serve(async (req) => {
       liquidityScore: coin.liquidity_score || 0,
       publicInterestScore: coin.public_interest_score || 0
     }));
+
+    console.log(`Successfully fetched ${enrichedCoins.length} coins from CoinGecko`);
 
     const marketData = {
       totalMarketCap,
