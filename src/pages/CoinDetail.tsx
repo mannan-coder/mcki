@@ -6,6 +6,7 @@ import { useCoinDetails } from '@/hooks/useCoinDetails';
 import { CoinHeader } from '@/components/coin-detail/CoinHeader';
 import { CoinStats } from '@/components/coin-detail/CoinStats';
 import { CoinDescription } from '@/components/coin-detail/CoinDescription';
+import { CoinChart } from '@/components/coin-detail/CoinChart';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -77,6 +78,9 @@ const CoinDetail = () => {
 
           {/* Stats */}
           <CoinStats coin={coin || { marketCap: 0, totalVolume: 0 }} loading={loading} />
+
+          {/* Price Chart */}
+          <CoinChart coin={coin || { name: '', symbol: '', currentPrice: 0, priceChangePercentage24h: 0 }} loading={loading} />
 
           {/* Description */}
           <CoinDescription coin={coin || { name: '' }} loading={loading} />
