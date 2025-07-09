@@ -6,7 +6,7 @@ import { useCoinDetails } from '@/hooks/useCoinDetails';
 import { CoinHeader } from '@/components/coin-detail/CoinHeader';
 import { CoinStats } from '@/components/coin-detail/CoinStats';
 import { CoinDescription } from '@/components/coin-detail/CoinDescription';
-import { EnhancedCoinChart } from '@/components/coin-detail/EnhancedCoinChart';
+import { TradingViewChart } from '@/components/coin-detail/TradingViewChart';
 import { CoinSignals } from '@/components/coin-detail/CoinSignals';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -84,7 +84,7 @@ const CoinDetail = () => {
           <CoinSignals coin={coin || { name: '', symbol: '', priceChangePercentage24h: 0, totalVolume: 0, marketCap: 0 }} loading={loading} />
 
           {/* Price Chart */}
-          <EnhancedCoinChart coin={coin || { id: '', name: '', symbol: '', currentPrice: 0, priceChangePercentage24h: 0 }} loading={loading} />
+          <TradingViewChart coin={coin || { id: '', name: '', symbol: '', currentPrice: 0, priceChangePercentage24h: 0 }} loading={loading} />
 
           {/* Description */}
           <CoinDescription coin={coin || { name: '' }} loading={loading} />
