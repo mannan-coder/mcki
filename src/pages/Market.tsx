@@ -7,6 +7,8 @@ import { DataSection } from '@/components/common/DataSection';
 import { StatsGrid } from '@/components/common/StatsGrid';
 import { DataTable } from '@/components/common/DataTable';
 import { getCoinsByCategory } from '@/utils/coinCategories';
+import { LiveSignals } from '@/components/market/LiveSignals';
+import { MiniChart } from '@/components/market/MiniChart';
 import { motion } from 'framer-motion';
 
 const MarketPage = () => {
@@ -79,6 +81,8 @@ const MarketPage = () => {
       change24h: `${coin.change24h > 0 ? '+' : ''}${coin.change24h.toFixed(2)}%`,
       marketCap: `$${(coin.marketCap / 1e9).toFixed(2)}B`,
       volume: `$${(coin.volume / 1e9).toFixed(2)}B`,
+      signals: coin, // Pass the full coin object for signals
+      chart: coin, // Pass the full coin object for chart
       image: coin.image,
       id: coin.id
     }));
@@ -119,6 +123,32 @@ const MarketPage = () => {
         }`}>
           {value}
         </span>
+      )
+    },
+    {
+      key: 'chart',
+      header: 'Chart (7d)',
+      sortable: false,
+      render: (coin: any) => (
+        <MiniChart 
+          sparkline={coin.sparkline} 
+          priceChangePercentage24h={coin.change24h}
+        />
+      )
+    },
+    {
+      key: 'signals',
+      header: 'Live Signals',
+      sortable: false,
+      render: (coin: any) => (
+        <LiveSignals 
+          coin={{
+            priceChangePercentage24h: coin.change24h,
+            priceChangePercentage7d: coin.change7d,
+            volume: coin.volume,
+            marketCap: coin.marketCap
+          }}
+        />
       )
     },
     { key: 'marketCap', header: 'Market Cap', sortable: true },
