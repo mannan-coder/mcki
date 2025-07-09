@@ -32,7 +32,7 @@ export const CryptoTable = memo(({
   }
 
   return (
-    <Card className="overflow-hidden border bg-card shadow-lg">
+    <Card className="overflow-hidden border bg-card shadow-sm">
       <TableHeader
         sortConfig={sortConfig}
         onSort={onSort}
@@ -42,22 +42,24 @@ export const CryptoTable = memo(({
       />
 
       {/* Table Body */}
-      <div className="divide-y divide-border">
-        {data.length > 0 ? (
-          data.map((coin, index) => (
-            <CoinRow
-              key={coin.id}
-              coin={coin}
-              index={index}
-              onToggleFavorite={onToggleFavorite}
-              favorites={favorites}
-            />
-          ))
-        ) : (
-          <div className="p-8 text-center text-muted-foreground">
-            No cryptocurrencies found
-          </div>
-        )}
+      <div className="overflow-x-auto">
+        <div className="min-w-full">
+          {data.length > 0 ? (
+            data.map((coin, index) => (
+              <CoinRow
+                key={coin.id}
+                coin={coin}
+                index={index}
+                onToggleFavorite={onToggleFavorite}
+                favorites={favorites}
+              />
+            ))
+          ) : (
+            <div className="p-8 text-center text-muted-foreground">
+              No cryptocurrencies found
+            </div>
+          )}
+        </div>
       </div>
 
       <TablePagination
