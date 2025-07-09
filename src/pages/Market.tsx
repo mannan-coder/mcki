@@ -44,6 +44,9 @@ const MarketPage = () => {
     return matchesSearch && matchesFavorites;
   }) || [];
 
+  // Debug: Log total coins available
+  console.log(`Total coins available: ${cryptoData?.coins?.length || 0}, Filtered: ${filteredCoins.length}`);
+
   // Apply category filter after basic filtering
   const categoryFilteredCoins = getCoinsByCategory(filteredCoins, selectedCategory);
 

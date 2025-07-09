@@ -11,8 +11,10 @@ serve(async (req) => {
   }
 
   try {
+    // Read limit from request body or URL params
+    const body = await req.json().catch(() => ({}));
     const url = new URL(req.url);
-    const limit = url.searchParams.get('limit') || '250'; // Default to top 250 coins
+    const limit = body.limit || url.searchParams.get('limit') || '500'; // Default to top 500 coins
     const category = url.searchParams.get('category') || '';
     
     // Fetch comprehensive market data from CoinGecko
