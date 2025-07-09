@@ -30,7 +30,8 @@ import {
   Target, 
   Activity,
   Volume2,
-  Grid3X3
+  Grid3X3,
+  BarChart2
 } from 'lucide-react';
 
 interface TradingViewChartProps {
@@ -253,7 +254,7 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
           {showVolume && (
             <div className="pt-1 border-t border-border/50">
               <div className="flex items-center gap-2 text-sm">
-                <Volume2 className="h-3 w-3 text-muted-foreground" />
+                <BarChart2 className="h-3 w-3 text-muted-foreground" />
                 <span className="text-muted-foreground">Volume:</span>
                 <span className="font-mono">{formatVolume(data.volume)}</span>
               </div>
@@ -292,10 +293,10 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className={isFullscreen ? 'fixed inset-0 z-50 bg-background' : ''}
+      className={isFullscreen ? 'fixed inset-0 z-50 bg-background flex flex-col' : ''}
     >
-      <Card className={`mb-6 lg:mb-8 shadow-lg border-0 bg-gradient-to-br from-card to-muted/30 ${isFullscreen ? 'h-full rounded-none' : ''}`}>
-        <CardHeader className={`pb-6 border-b border-border/50 bg-gradient-to-r from-card to-muted/20 ${isFullscreen ? 'sticky top-0 bg-background z-10' : ''}`}>
+      <Card className={`mb-6 lg:mb-8 shadow-lg border-0 bg-gradient-to-br from-card to-muted/30 ${isFullscreen ? 'flex-1 rounded-none m-0 mb-0' : ''}`}>
+        <CardHeader className={`pb-6 border-b border-border/50 bg-gradient-to-r from-card to-muted/20 ${isFullscreen ? 'flex-shrink-0' : ''}`}>
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
             {/* Title and Price Info */}
             <div className="flex-1 space-y-4">
@@ -419,7 +420,7 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
                       className="data-[state=checked]:bg-primary"
                     />
                     <Label htmlFor="volume" className="text-sm font-medium cursor-pointer">
-                      <Volume2 className="h-4 w-4 inline mr-1" />
+                      <BarChart2 className="h-4 w-4 inline mr-1" />
                       Volume
                     </Label>
                   </div>
@@ -463,7 +464,7 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
           </div>
         </CardHeader>
 
-        <CardContent className="p-0">
+        <CardContent className={`p-0 ${isFullscreen ? 'flex-1 flex flex-col' : ''}`}>
           {historyLoading ? (
             <div className={`${chartHeight} flex items-center justify-center`}>
               <div className="flex items-center gap-3">
@@ -472,7 +473,7 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
               </div>
             </div>
           ) : chartData.length > 0 ? (
-            <div className={`${chartHeight} w-full p-6`}>
+            <div className={`${isFullscreen ? 'flex-1' : chartHeight} w-full p-6`}>
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart
                   data={chartData}
