@@ -18,33 +18,6 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
   const [persistentOpportunities, setPersistentOpportunities] = useState<any[]>([]);
   const [lastUpdateTime, setLastUpdateTime] = useState<Date>(new Date());
 
-  if (!arbitrageData) {
-    return (
-      <DataSection
-        title="Live Arbitrage Opportunities"
-        subtitle="Real-time profit opportunities across exchanges - Updated every 15 seconds"
-        icon={<Target className="h-6 w-6 text-primary" />}
-        className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-6"
-      >
-        <DataTable
-          data={[]}
-          columns={[
-            { key: 'rank', header: '#' },
-            { key: 'asset', header: 'Asset' },
-            { key: 'buyFrom', header: 'Buy From' },
-            { key: 'arrow', header: '→' },
-            { key: 'sellTo', header: 'Sell To' },
-            { key: 'spread', header: 'Spread' },
-            { key: 'profit', header: 'Profit' },
-            { key: 'action', header: 'Action' }
-          ]}
-          loading={true}
-          skeletonRows={5}
-        />
-      </DataSection>
-    );
-  }
-
   // Manage persistent opportunities with 60-second visibility
   useEffect(() => {
     if (arbitrageData?.arbitrageOpportunities) {
@@ -238,13 +211,16 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
       <DataTable
         data={opportunities}
         columns={tableColumns}
-        loading={false}
+        loading={loading && !arbitrageData}
         emptyMessage="No arbitrage opportunities available at the moment"
       />
 
-      <ArbitrageStats stats={stats} isDarkMode={isDarkMode} />
-
-      <LivePricesAcrossExchanges opportunities={opportunities} isDarkMode={isDarkMode} />
+      {arbitrageData && (
+        <>
+          <ArbitrageStats stats={stats} isDarkMode={isDarkMode} />
+          <LivePricesAcrossExchanges opportunities={opportunities} isDarkMode={isDarkMode} />
+        </>
+      )}
     </DataSection>
   );
 };
