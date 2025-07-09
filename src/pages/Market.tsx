@@ -1,16 +1,12 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { Search, RefreshCw, Filter, TrendingUp, Activity, BarChart3 } from 'lucide-react';
+import { Search, RefreshCw } from 'lucide-react';
 import Layout from '@/components/Layout';
 import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
 import { getCoinsByCategory } from '@/utils/coinCategories';
-import { TopMoversSection } from '@/components/market/TopMoversSection';
 import { ModernCryptoTable } from '@/components/market/ModernCryptoTable';
-import { MarketStatsSkeleton } from '@/components/market/SkeletonLoader';
-import { motion } from 'framer-motion';
 import { toast } from "sonner";
 
 const MarketPage = () => {
@@ -25,10 +21,10 @@ const MarketPage = () => {
     direction: 'asc' 
   });
   
-  const ITEMS_PER_PAGE = 50; // Reduced for better mobile performance
+  const ITEMS_PER_PAGE = 100; // Optimized pagination
 
   const categories = [
-    'All', 'DeFi', 'Layer 1', 'Layer 2', 'Gaming', 'NFT', 'Meme', 'AI', 'RWA', 'Privacy'
+    'All', 'DeFi', 'Layer 1', 'Layer 2', 'Gaming', 'NFT', 'Meme', 'AI'
   ];
 
   // Memoized filtering and search
@@ -46,41 +42,6 @@ const MarketPage = () => {
     return getCoinsByCategory(filteredCoins, selectedCategory);
   }, [filteredCoins, selectedCategory]);
 
-  // Enhanced market statistics
-  const marketStats = useMemo(() => {
-    if (!cryptoData) return [];
-    
-    return [
-      {
-        label: 'Market Cap',
-        value: `$${(cryptoData.totalMarketCap / 1e12).toFixed(2)}T`,
-        change: '+2.4%',
-        trend: 'up' as const,
-        icon: <BarChart3 className="h-4 w-4" />
-      },
-      {
-        label: '24h Volume',
-        value: `$${(cryptoData.totalVolume / 1e9).toFixed(1)}B`,
-        change: '+8.1%',
-        trend: 'up' as const,
-        icon: <Activity className="h-4 w-4" />
-      },
-      {
-        label: 'BTC Dominance',
-        value: `${cryptoData.btcDominance.toFixed(1)}%`,
-        change: '-0.5%',
-        trend: 'down' as const,
-        icon: <span className="text-orange-500">₿</span>
-      },
-      {
-        label: 'Active Coins',
-        value: cryptoData.activeCryptocurrencies.toLocaleString(),
-        change: '+1.2%',
-        trend: 'up' as const,
-        icon: <TrendingUp className="h-4 w-4" />
-      }
-    ];
-  }, [cryptoData]);
 
   // Optimized sorting and pagination
   const sortedAndPaginatedData = useMemo(() => {
@@ -211,15 +172,10 @@ const MarketPage = () => {
   return (
     <Layout>
       <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8 space-y-6 lg:space-y-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
           
-          {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4"
-          >
+          {/* Header with Search */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div className="space-y-2">
               <h1 className="text-3xl lg:text-4xl font-bold text-foreground">
                 Cryptocurrency Market
@@ -244,128 +200,71 @@ const MarketPage = () => {
               </div>
             </div>
             
-            <Button
-              onClick={handleRefresh}
-              disabled={isLoading}
-              className="w-full lg:w-auto"
-            >
-              <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-              Refresh Data
-            </Button>
-          </motion.div>
-
-          {/* Market Stats */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.1 }}
-          >
-            {isLoading && !cryptoData ? (
-              <MarketStatsSkeleton />
-            ) : (
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                {marketStats.map((stat, index) => (
-                  <Card key={stat.label} className="border-0 bg-gradient-to-br from-card to-muted/30">
-                    <CardContent className="p-4 lg:p-6">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="text-primary">{stat.icon}</div>
-                        <div className={`flex items-center text-xs px-2 py-1 rounded-full ${
-                          stat.trend === 'up' ? 'bg-success/20 text-success' : 'bg-destructive/20 text-destructive'
-                        }`}>
-                          {stat.change}
-                        </div>
-                      </div>
-                      <div className="space-y-1">
-                        <p className="text-sm text-muted-foreground">{stat.label}</p>
-                        <p className="text-xl lg:text-2xl font-bold">{stat.value}</p>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
+            <div className="flex flex-col sm:flex-row gap-4">
+              {/* Search */}
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+                <Input
+                  placeholder="Search cryptocurrencies..."
+                  value={searchTerm}
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  className="pl-10 min-w-[250px] bg-background/50 border-border/50 focus:bg-background"
+                />
               </div>
-            )}
-          </motion.div>
 
-          {/* Top Movers Section */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            <TopMoversSection 
-              coins={categoryFilteredCoins.slice(0, 50)} 
-              loading={isLoading && !cryptoData}
-            />
-          </motion.div>
+              <Button
+                onClick={handleRefresh}
+                disabled={isLoading}
+                className="whitespace-nowrap"
+              >
+                <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
+                Refresh Data
+              </Button>
+            </div>
+          </div>
 
-          {/* Search and Filters */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3 }}
-          >
-            <Card className="border-0 bg-gradient-to-br from-card to-muted/30">
-              <CardContent className="p-6">
-                <div className="flex flex-col lg:flex-row gap-4">
-                  {/* Search */}
-                  <div className="relative flex-1 max-w-md">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-                    <Input
-                      placeholder="Search cryptocurrencies..."
-                      value={searchTerm}
-                      onChange={(e) => handleSearchChange(e.target.value)}
-                      className="pl-10 bg-background/50 border-border/50 focus:bg-background"
-                    />
-                  </div>
-
-                  {/* Category Filters */}
-                  <div className="flex flex-wrap gap-2">
-                    {categories.map((category) => {
-                      const categoryCount = getCoinsByCategory(filteredCoins, category).length;
-                      return (
-                        <Button
-                          key={category}
-                          variant={selectedCategory === category ? "default" : "outline"}
-                          size="sm"
-                          onClick={() => handleCategoryChange(category)}
-                          className="text-xs"
-                        >
-                          {category}
-                          {category !== 'All' && categoryCount > 0 && (
-                            <Badge variant="secondary" className="ml-2 text-xs">
-                              {categoryCount}
-                            </Badge>
-                          )}
-                        </Button>
-                      );
-                    })}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
+          {/* Category Filters */}
+          <Card className="border-0 bg-gradient-to-br from-card to-muted/30">
+            <CardContent className="p-4">
+              <div className="flex flex-wrap gap-2">
+                {categories.map((category) => {
+                  const categoryCount = getCoinsByCategory(filteredCoins, category).length;
+                  return (
+                    <Button
+                      key={category}
+                      variant={selectedCategory === category ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handleCategoryChange(category)}
+                      className="text-xs"
+                    >
+                      {category}
+                      {category !== 'All' && categoryCount > 0 && (
+                        <span className="ml-1 text-xs opacity-70">
+                          ({categoryCount})
+                        </span>
+                      )}
+                    </Button>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Main Data Table */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-          >
-            <ModernCryptoTable
-              data={formattedCoinData}
-              loading={isLoading && !cryptoData}
-              sortConfig={sortConfig}
-              onSort={handleSort}
-              onToggleFavorite={toggleFavorite}
-              favorites={favorites}
-              currentPage={currentPage}
-              totalPages={sortedAndPaginatedData.totalPages}
-              onPageChange={handlePageChange}
-              totalItems={sortedAndPaginatedData.totalItems}
-              startIndex={sortedAndPaginatedData.startIndex}
-              endIndex={sortedAndPaginatedData.endIndex}
-            />
-          </motion.div>
+          <ModernCryptoTable
+            data={formattedCoinData}
+            loading={isLoading && !cryptoData}
+            sortConfig={sortConfig}
+            onSort={handleSort}
+            onToggleFavorite={toggleFavorite}
+            favorites={favorites}
+            currentPage={currentPage}
+            totalPages={sortedAndPaginatedData.totalPages}
+            onPageChange={handlePageChange}
+            totalItems={sortedAndPaginatedData.totalItems}
+            startIndex={sortedAndPaginatedData.startIndex}
+            endIndex={sortedAndPaginatedData.endIndex}
+          />
 
         </div>
       </div>
