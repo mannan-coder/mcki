@@ -33,7 +33,7 @@ export const CryptoTable = memo(({
   }
 
   return (
-    <div className="overflow-hidden rounded-xl bg-gradient-to-b from-card/90 to-card">
+    <div className="overflow-hidden">
       <TableHeader
         sortConfig={sortConfig}
         onSort={onSort}
@@ -42,8 +42,8 @@ export const CryptoTable = memo(({
         totalItems={totalItems}
       />
 
-      {/* Professional Table Body */}
-      <div className="overflow-x-auto bg-card/50 backdrop-blur-sm">
+      {/* Optimized Table Body */}
+      <div className="overflow-x-auto">
         <div className="min-w-full">
           {data.length > 0 ? (
             data.map((coin, index) => (
@@ -56,20 +56,20 @@ export const CryptoTable = memo(({
               />
             ))
           ) : (
-            <div className="p-12 text-center">
-              <div className="max-w-md mx-auto space-y-3">
-                <div className="w-16 h-16 mx-auto bg-muted/30 rounded-full flex items-center justify-center">
-                  <Search className="h-8 w-8 text-muted-foreground" />
+            <div className="p-8 text-center">
+              <div className="max-w-sm mx-auto space-y-2">
+                <div className="w-12 h-12 mx-auto bg-muted/30 rounded-full flex items-center justify-center">
+                  <Search className="h-6 w-6 text-muted-foreground" />
                 </div>
-                <h3 className="text-lg font-semibold text-foreground">No cryptocurrencies found</h3>
-                <p className="text-muted-foreground">Try adjusting your search or filter criteria</p>
+                <h3 className="font-semibold">No cryptocurrencies found</h3>
+                <p className="text-sm text-muted-foreground">Try adjusting your search or filter</p>
               </div>
             </div>
           )}
         </div>
       </div>
 
-      <div className="bg-gradient-to-r from-card via-card/90 to-card border-t border-border/30">
+      <div className="border-t border-border/30 bg-muted/20">
         <TablePagination
           currentPage={currentPage}
           totalPages={totalPages}

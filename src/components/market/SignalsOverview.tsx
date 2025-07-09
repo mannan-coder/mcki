@@ -38,46 +38,35 @@ const SignalCard = memo(({
   bgColor: string;
   borderColor: string;
 }) => (
-  <Card className={`${bgColor} ${borderColor} border-2 hover:shadow-lg transition-all duration-300`}>
-    <CardHeader className="pb-3">
-      <CardTitle className={`text-sm font-bold flex items-center gap-2 ${color}`}>
-        {icon}
-        {title}
-        <Badge variant="outline" className="ml-auto font-bold">
-          {count}
-        </Badge>
-      </CardTitle>
-    </CardHeader>
-    <CardContent className="pt-0">
-      <div className="space-y-2">
-        {coins.slice(0, 3).map((coin) => (
-          <div key={coin.id} className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <img 
-                src={coin.image} 
-                alt={coin.name}
-                className="w-5 h-5 rounded-full"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = '/placeholder.svg';
-                }}
-              />
-              <span className="font-semibold text-sm">{coin.symbol}</span>
-            </div>
-            <span className={`text-sm font-bold ${
-              coin.change24h > 0 ? 'text-green-600' : 'text-red-600'
-            }`}>
-              {coin.change24h > 0 ? '+' : ''}{coin.change24h.toFixed(1)}%
+  <div className={`${bgColor} ${borderColor} border rounded-lg p-3 hover:shadow-md transition-all duration-200`}>
+    <div className={`flex items-center gap-2 ${color} mb-2`}>
+      {icon}
+      <span className="text-xs font-medium">{title}</span>
+    </div>
+    <div className="flex items-center justify-between">
+      <span className="text-lg font-bold">{count}</span>
+      {coins.length > 0 && (
+        <div className="flex items-center gap-1">
+          {coins.slice(0, 2).map((coin) => (
+            <img 
+              key={coin.id}
+              src={coin.image} 
+              alt={coin.name}
+              className="w-4 h-4 rounded-full"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/placeholder.svg';
+              }}
+            />
+          ))}
+          {coins.length > 2 && (
+            <span className="text-xs text-muted-foreground ml-1">
+              +{coins.length - 2}
             </span>
-          </div>
-        ))}
-        {count > 3 && (
-          <div className="text-xs text-muted-foreground text-center pt-1">
-            +{count - 3} more coins
-          </div>
-        )}
-      </div>
-    </CardContent>
-  </Card>
+          )}
+        </div>
+      )}
+    </div>
+  </div>
 ));
 
 const SignalSkeleton = memo(() => (
@@ -144,17 +133,21 @@ export const SignalsOverview = memo(({ coins, loading }: SignalsOverviewProps) =
 
   if (loading && !coins.length) {
     return (
-      <div className="mb-8">
-        <div className="mb-6">
-          <h2 className="text-2xl font-bold text-foreground mb-2">Market Signals Overview</h2>
-          <p className="text-muted-foreground">Real-time trading signals across all cryptocurrencies</p>
-        </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          {[...Array(6)].map((_, i) => (
-            <SignalSkeleton key={i} />
-          ))}
-        </div>
-      </div>
+      <Card className="border border-border/50 bg-card/50 backdrop-blur-sm">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="font-semibold text-sm">Market Signals</h3>
+              <p className="text-xs text-muted-foreground">Live trading indicators</p>
+            </div>
+          </div>
+          <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+            {[...Array(6)].map((_, i) => (
+              <SignalSkeleton key={i} />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -216,16 +209,20 @@ export const SignalsOverview = memo(({ coins, loading }: SignalsOverviewProps) =
   ];
 
   return (
-    <div className="mb-8">
-      <div className="mb-6">
-        <h2 className="text-2xl font-bold text-foreground mb-2">Market Signals Overview</h2>
-        <p className="text-muted-foreground">Real-time trading signals across all cryptocurrencies</p>
-      </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        {signalData.map((signal) => (
-          <SignalCard key={signal.title} {...signal} />
-        ))}
-      </div>
-    </div>
+    <Card className="border border-border/50 bg-card/50 backdrop-blur-sm">
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h3 className="font-semibold text-sm">Market Signals</h3>
+            <p className="text-xs text-muted-foreground">Live trading indicators</p>
+          </div>
+        </div>
+        <div className="grid grid-cols-3 md:grid-cols-6 gap-3">
+          {signalData.map((signal) => (
+            <SignalCard key={signal.title} {...signal} />
+          ))}
+        </div>
+      </CardContent>
+    </Card>
   );
 });
