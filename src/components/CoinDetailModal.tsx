@@ -17,7 +17,7 @@ const CoinDetailModal: React.FC<CoinDetailModalProps> = ({
   isDarkMode 
 }) => {
   const { data: coinDetails, loading: detailsLoading } = useCoinDetails(coinId);
-  const { data: priceHistory, loading: historyLoading } = usePriceHistory(coinId, 7);
+  const { data: priceHistory, loading: historyLoading } = usePriceHistory(coinId, '7d');
 
   if (!isOpen) return null;
 
