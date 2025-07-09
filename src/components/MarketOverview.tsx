@@ -2,12 +2,15 @@ import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 import { useSentimentData } from '@/hooks/useSentimentData';
-import { SkeletonCard, SkeletonMetricCard, SkeletonSidebarCard } from '@/components/ui/skeleton-card';
+import { DataSection } from '@/components/common/DataSection';
+import { StatsGrid } from '@/components/common/StatsGrid';
+import { ResponsiveCard } from '@/components/common/ResponsiveCard';
 import { MarketHeader } from './market/MarketHeader';
 import { MarketCapCard } from './market/MarketCapCard';
 import { VolumeCard } from './market/VolumeCard';
 import { FearGreedIndex } from './market/FearGreedIndex';
 import TopMetrics from './TopMetrics';
+import { TrendingUp, TrendingDown, Activity } from 'lucide-react';
 
 interface MarketOverviewProps {
   isDarkMode: boolean;
@@ -22,44 +25,29 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
   // Show skeleton loaders only on initial load
   if (isLoading && !marketData) {
     return (
-      <section id="market" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-        {/* Header Skeleton */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col lg:flex-row lg:items-center justify-between mb-6 lg:mb-8"
-        >
-          <div className="mb-4 lg:mb-0">
-            <div className="h-6 lg:h-8 w-48 lg:w-64 bg-muted rounded-lg animate-pulse mb-2"></div>
-            <div className="h-4 lg:h-5 w-64 lg:w-80 bg-muted/60 rounded-lg animate-pulse"></div>
-          </div>
-          <div className="h-8 lg:h-10 w-32 bg-muted rounded-lg animate-pulse"></div>
-        </motion.div>
-
-        {/* Cards Grid Skeleton */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-8">
-          <div className="lg:col-span-2">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 mb-6">
-              <SkeletonCard isDarkMode={isDarkMode} />
-              <SkeletonCard isDarkMode={isDarkMode} />
-            </div>
-            <SkeletonMetricCard isDarkMode={isDarkMode} />
-          </div>
-          
-          <div className="lg:col-span-1 space-y-4">
-            <SkeletonSidebarCard isDarkMode={isDarkMode} />
-            <SkeletonSidebarCard isDarkMode={isDarkMode} />
-            <SkeletonSidebarCard isDarkMode={isDarkMode} />
-          </div>
-        </div>
-
-        {/* Additional Stats Skeleton */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 mt-6 lg:mt-8">
-          {[1, 2, 3, 4].map((i) => (
-            <SkeletonCard key={i} isDarkMode={isDarkMode} />
+      <DataSection
+        title="Market Overview"
+        subtitle="Real-time cryptocurrency market data and statistics"
+        icon={<Activity className="h-6 w-6 text-primary" />}
+        className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 lg:py-6"
+      >
+        <StatsGrid
+          stats={[]}
+          columns={4}
+          loading={true}
+        />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mt-6">
+          {[1, 2, 3].map((i) => (
+            <ResponsiveCard key={i}>
+              <div className="space-y-3">
+                <div className="h-4 bg-muted rounded animate-pulse"></div>
+                <div className="h-8 bg-muted rounded animate-pulse"></div>
+                <div className="h-20 bg-muted/60 rounded animate-pulse"></div>
+              </div>
+            </ResponsiveCard>
           ))}
         </div>
-      </section>
+      </DataSection>
     );
   }
 
@@ -129,128 +117,78 @@ const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
     return 'Extreme Fear';
   };
 
+  // Prepare stats for the new StatsGrid component
+  const statsData = [
+    {
+      label: "Market Cap",
+      value: marketStats.totalMarketCap,
+      change: "+2.9%",
+      changeType: 'positive' as const,
+      icon: <TrendingUp className="h-4 w-4 text-success" />,
+      description: "Total cryptocurrency market"
+    },
+    {
+      label: "24h Volume",
+      value: marketStats.totalVolume,
+      change: "-1.5%",
+      changeType: 'negative' as const,
+      icon: <Activity className="h-4 w-4 text-primary" />,
+      description: "Trading volume"
+    },
+    {
+      label: "BTC Dominance",
+      value: marketStats.btcDominance,
+      changeType: 'neutral' as const,
+      description: "Bitcoin market share"
+    },
+    {
+      label: "Active Coins",
+      value: marketStats.activeCoins,
+      changeType: 'neutral' as const,
+      description: "Cryptocurrencies tracked"
+    }
+  ];
+
   return (
-    <motion.section 
-      id="market" 
+    <DataSection
+      title="Market Overview"
+      subtitle="Real-time cryptocurrency market data and comprehensive analytics"
+      icon={<Activity className="h-6 w-6 text-primary" />}
+      onRefresh={refetch}
+      isLoading={isLoading}
       className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 py-3 sm:py-4 lg:py-6"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.6 }}
     >
-      <MarketHeader isDarkMode={isDarkMode} totalMarketCap={marketStats.totalMarketCap} />
+      {/* Primary Market Stats */}
+      <StatsGrid stats={statsData} columns={4} />
 
-      {/* Ultra-Compact Layout */}
-      <div className="space-y-3 sm:space-y-4">
-        {/* Market Stats Cards - Compact Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3">
-          <MarketCapCard 
+      {/* Main Market Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mt-6">
+        <MarketCapCard 
+          isDarkMode={isDarkMode}
+          totalMarketCap={marketStats.totalMarketCap}
+          marketCapValue={marketData.totalMarketCap}
+        />
+        
+        <VolumeCard 
+          isDarkMode={isDarkMode}
+          totalVolume={marketStats.totalVolume}
+          volumeValue={marketData.totalVolume}
+        />
+        
+        <div className="sm:col-span-2 lg:col-span-1">
+          <FearGreedIndex 
             isDarkMode={isDarkMode}
-            totalMarketCap={marketStats.totalMarketCap}
-            marketCapValue={marketData.totalMarketCap}
+            fearGreedIndex={fearGreedIndex}
+            historicalData={historicalData}
           />
-          
-          <VolumeCard 
-            isDarkMode={isDarkMode}
-            totalVolume={marketStats.totalVolume}
-            volumeValue={marketData.totalVolume}
-          />
-          
-          {/* Fear & Greed - Compact */}
-          <div className="sm:col-span-2 lg:col-span-1">
-            <FearGreedIndex 
-              isDarkMode={isDarkMode}
-              fearGreedIndex={fearGreedIndex}
-              historicalData={historicalData}
-            />
-          </div>
-        </div>
-
-        {/* Market Insights - Compact */}
-        <div className="mt-2 sm:mt-3">
-          <TopMetrics isDarkMode={isDarkMode} />
         </div>
       </div>
 
-      {/* Compact Stats Row */}
-      <motion.div 
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 mt-3 sm:mt-4"
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ delay: 0.3 }}
-      >
-        <div className="p-3 rounded-lg border backdrop-blur-sm bg-card/80 border-border/50">
-          <h3 className="text-sm font-semibold mb-2 text-foreground">
-            Market Dominance
-          </h3>
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">Bitcoin</span>
-              <span className="text-warning font-semibold text-xs">{marketStats.btcDominance}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">Ethereum</span>
-              <span className="text-primary font-semibold text-xs">{marketStats.ethDominance}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="p-3 rounded-lg border backdrop-blur-sm bg-card/80 border-border/50">
-          <h3 className="text-sm font-semibold mb-2 text-foreground">
-            Market Statistics
-          </h3>
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">Active Coins</span>
-              <span className="font-semibold text-xs text-foreground">
-                {marketStats.activeCoins}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">Exchanges</span>
-              <span className="font-semibold text-xs text-foreground">
-                {marketStats.exchanges}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="p-3 rounded-lg border backdrop-blur-sm bg-card/80 border-border/50">
-          <h3 className="text-sm font-semibold mb-2 text-foreground">
-            24h Trading Volume
-          </h3>
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">Total Volume</span>
-              <span className="font-semibold text-xs text-foreground">
-                {marketStats.totalVolume}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">Change</span>
-              <span className="text-destructive font-semibold text-xs">-1.5%</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="p-3 rounded-lg border backdrop-blur-sm bg-card/80 border-border/50">
-          <h3 className="text-sm font-semibold mb-2 text-foreground">
-            Global Metrics
-          </h3>
-          <div className="space-y-1.5">
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">Market Cap</span>
-              <span className="font-semibold text-xs text-foreground">
-                {marketStats.totalMarketCap}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-xs text-muted-foreground">24h Change</span>
-              <span className="text-success font-semibold text-xs">+2.9%</span>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-    </motion.section>
+      {/* Top Metrics Section */}
+      <div className="mt-6">
+        <TopMetrics isDarkMode={isDarkMode} />
+      </div>
+    </DataSection>
   );
 };
 
