@@ -11,8 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const url = new URL(req.url);
-    const coinId = url.searchParams.get('id');
+    const { id: coinId } = await req.json();
     
     if (!coinId) {
       throw new Error('Coin ID is required');
