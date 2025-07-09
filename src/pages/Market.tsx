@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { Search, RefreshCw } from 'lucide-react';
 import Layout from '@/components/Layout';
 import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 import { ResponsiveCard } from '@/components/common/ResponsiveCard';
 import { DataSection } from '@/components/common/DataSection';
 import { StatsGrid } from '@/components/common/StatsGrid';
-import { DataTable } from '@/components/common/DataTable';
+import { DataTable } from '@/components/common/PaginatedDataTable';
 import { getCoinsByCategory } from '@/utils/coinCategories';
 import { LiveSignals } from '@/components/market/LiveSignals';
 import { MiniChart } from '@/components/market/MiniChart';
@@ -19,6 +19,10 @@ const MarketPage = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [showOnlyFavorites, setShowOnlyFavorites] = useState(false);
   const [favorites, setFavorites] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [sortConfig, setSortConfig] = useState<{key: string, direction: 'asc' | 'desc'}>({ key: 'rank', direction: 'asc' });
+  
+  const ITEMS_PER_PAGE = 100;
 
   const categories = [
     'All', 'DeFi', 'Layer 1', 'Layer 2', 'Gaming', 'NFT', 'Meme', 'AI', 'RWA', 'Privacy'
@@ -73,8 +77,79 @@ const MarketPage = () => {
     }
   ];
 
-  const formatCoinData = () => {
-    return categoryFilteredCoins.map(coin => ({
+  // Sorting and pagination logic
+  const sortedAndPaginatedData = useMemo(() => {
+    let sortedCoins = [...categoryFilteredCoins];
+    
+    // Sort data
+    if (sortConfig.key) {
+      sortedCoins.sort((a, b) => {
+        let aVal, bVal;
+        
+        switch (sortConfig.key) {
+          case 'rank':
+            aVal = a.rank;
+            bVal = b.rank;
+            break;
+          case 'name':
+            aVal = a.name.toLowerCase();
+            bVal = b.name.toLowerCase();
+            break;
+          case 'price':
+            aVal = a.price;
+            bVal = b.price;
+            break;
+          case 'change24h':
+            aVal = a.change24h;
+            bVal = b.change24h;
+            break;
+          case 'marketCap':
+            aVal = a.marketCap;
+            bVal = b.marketCap;
+            break;
+          case 'volume':
+            aVal = a.volume;
+            bVal = b.volume;
+            break;
+          default:
+            return 0;
+        }
+        
+        if (aVal < bVal) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (aVal > bVal) return sortConfig.direction === 'asc' ? 1 : -1;
+        return 0;
+      });
+    }
+    
+    // Calculate pagination
+    const totalItems = sortedCoins.length;
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const paginatedCoins = sortedCoins.slice(startIndex, endIndex);
+    
+    return {
+      coins: paginatedCoins,
+      totalItems,
+      totalPages
+    };
+  }, [categoryFilteredCoins, sortConfig, currentPage, ITEMS_PER_PAGE]);
+
+  const handleSort = (key: string) => {
+    setSortConfig(prev => ({
+      key,
+      direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc'
+    }));
+    setCurrentPage(1); // Reset to first page when sorting
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const formatCoinData = (coins: any[]) => {
+    return coins.map((coin, index) => ({
       rank: coin.rank,
       name: coin.name,
       symbol: coin.symbol,
@@ -85,7 +160,12 @@ const MarketPage = () => {
       signals: coin, // Pass the full coin object for signals
       chart: coin, // Pass the full coin object for chart
       image: coin.image,
-      id: coin.id
+      id: coin.id,
+      // Raw values for sorting
+      _price: coin.price,
+      _change24h: coin.change24h,
+      _marketCap: coin.marketCap,
+      _volume: coin.volume
     }));
   };
 
@@ -216,7 +296,10 @@ const MarketPage = () => {
                       type="text"
                       placeholder="Search coins..."
                       value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
+                      onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                        setCurrentPage(1); // Reset to first page when searching
+                      }}
                       className="w-full pl-10 pr-4 py-2 rounded-lg border border-input bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                     />
                   </div>
@@ -228,7 +311,10 @@ const MarketPage = () => {
                       return (
                         <motion.button
                           key={category}
-                          onClick={() => setSelectedCategory(category)}
+                          onClick={() => {
+                            setSelectedCategory(category);
+                            setCurrentPage(1); // Reset to first page when changing category
+                          }}
                           className={`px-3 py-1 rounded-lg text-sm font-medium transition-all duration-200 ${
                             selectedCategory === category
                               ? 'bg-primary text-primary-foreground shadow-md'
@@ -252,7 +338,7 @@ const MarketPage = () => {
                 <div className="flex items-center justify-between">
                   <h3 className="text-lg font-semibold text-foreground">Market Data</h3>
                   <div className="text-sm text-muted-foreground">
-                    Showing {categoryFilteredCoins.length} of {cryptoData?.coins?.length || 0} coins
+                    Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, sortedAndPaginatedData.totalItems)} of {sortedAndPaginatedData.totalItems} coins
                     {selectedCategory !== 'All' && (
                       <span className="ml-2 px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
                         {selectedCategory}
@@ -262,9 +348,21 @@ const MarketPage = () => {
                 </div>
                 
                 <DataTable
-                  data={formatCoinData()}
+                  data={formatCoinData(sortedAndPaginatedData.coins)}
                   columns={coinColumns}
                   emptyMessage="No cryptocurrencies found"
+                  pagination={{
+                    currentPage,
+                    totalPages: sortedAndPaginatedData.totalPages,
+                    pageSize: ITEMS_PER_PAGE,
+                    totalItems: sortedAndPaginatedData.totalItems,
+                    onPageChange: handlePageChange
+                  }}
+                  sorting={{
+                    key: sortConfig.key,
+                    direction: sortConfig.direction,
+                    onSort: handleSort
+                  }}
                 />
               </div>
             </ResponsiveCard>
