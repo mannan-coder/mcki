@@ -11,10 +11,20 @@ serve(async (req) => {
   }
 
   try {
-    const url = new URL(req.url);
-    const coinId = url.searchParams.get('id') || 'bitcoin';
-    const days = url.searchParams.get('days') || '7';
-    const interval = url.searchParams.get('interval') || 'daily';
+    // Handle both URL params and request body
+    let coinId, days, interval;
+    
+    if (req.method === 'POST') {
+      const body = await req.json();
+      coinId = body.id || 'bitcoin';
+      days = body.days || '7';
+      interval = body.interval || 'daily';
+    } else {
+      const url = new URL(req.url);
+      coinId = url.searchParams.get('id') || 'bitcoin';
+      days = url.searchParams.get('days') || '7';
+      interval = url.searchParams.get('interval') || 'daily';
+    }
     
     // Fetch price history data
     const response = await fetch(
@@ -28,23 +38,45 @@ serve(async (req) => {
     const chartData = await response.json();
 
     // Transform chart data for better frontend consumption
+    const prices = chartData.prices || [];
+    const volumes = chartData.total_volumes || [];
+    const marketCaps = chartData.market_caps || [];
+    
     const priceHistory = {
-      prices: chartData.prices?.map(([timestamp, price]: [number, number]) => ({
+      prices: prices.map(([timestamp, price]: [number, number]) => ({
         time: timestamp,
         price: price,
         date: new Date(timestamp).toISOString()
-      })) || [],
-      volumes: chartData.total_volumes?.map(([timestamp, volume]: [number, number]) => ({
+      })),
+      volumes: volumes.map(([timestamp, volume]: [number, number]) => ({
         time: timestamp,
         volume: volume,
         date: new Date(timestamp).toISOString()
-      })) || [],
-      marketCaps: chartData.market_caps?.map(([timestamp, marketCap]: [number, number]) => ({
+      })),
+      marketCaps: marketCaps.map(([timestamp, marketCap]: [number, number]) => ({
         time: timestamp,
         marketCap: marketCap,
         date: new Date(timestamp).toISOString()
-      })) || []
+      }))
     };
+    
+    // Calculate price range statistics
+    if (prices.length > 0) {
+      const priceValues = prices.map(([_, price]: [number, number]) => price);
+      const high = Math.max(...priceValues);
+      const low = Math.min(...priceValues);
+      const firstPrice = priceValues[0];
+      const lastPrice = priceValues[priceValues.length - 1];
+      const change = lastPrice - firstPrice;
+      const changePercent = (change / firstPrice) * 100;
+      
+      priceHistory.priceRange = {
+        high,
+        low,
+        change,
+        changePercent
+      };
+    }
 
     return new Response(
       JSON.stringify(priceHistory),
