@@ -4,12 +4,15 @@ import { ResponsiveCard } from '@/components/common/ResponsiveCard';
 import { DataSection } from '@/components/common/DataSection';
 import { StatsGrid } from '@/components/common/StatsGrid';
 import { motion } from 'framer-motion';
+import { useUpcomingEvents } from '@/hooks/useUpcomingEvents';
 
 interface InsightsAlertsSectionProps {
   loading?: boolean;
 }
 
 export const InsightsAlertsSection = ({ loading = false }: InsightsAlertsSectionProps) => {
+  const { events: upcomingEvents, loading: eventsLoading } = useUpcomingEvents();
+  
   const alertStats = [
     {
       label: 'Active Alerts',
@@ -39,13 +42,6 @@ export const InsightsAlertsSection = ({ loading = false }: InsightsAlertsSection
       trend: 'neutral' as const,
       icon: <Target className="h-5 w-5" />
     }
-  ];
-
-  const upcomingEvents = [
-    { time: '09:00 UTC', event: 'Federal Reserve Meeting', impact: 'high' },
-    { time: '14:30 UTC', event: 'Bitcoin ETF Decision', impact: 'high' },
-    { time: '16:00 UTC', event: 'Ethereum Shanghai Upgrade', impact: 'medium' },
-    { time: '20:00 UTC', event: 'Coinbase Earnings Call', impact: 'medium' },
   ];
 
   const recentAlerts = [
@@ -116,7 +112,7 @@ export const InsightsAlertsSection = ({ loading = false }: InsightsAlertsSection
     }
   };
 
-  if (loading) {
+  if (loading || eventsLoading) {
     return (
       <DataSection
         title="Insights & Alerts"
@@ -194,7 +190,7 @@ export const InsightsAlertsSection = ({ loading = false }: InsightsAlertsSection
               </div>
 
               <div className="space-y-3">
-                {upcomingEvents.map((event, index) => (
+                {upcomingEvents.slice(0, 4).map((event, index) => (
                   <motion.div
                     key={index}
                     className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:bg-muted/30 transition-colors"
@@ -206,9 +202,14 @@ export const InsightsAlertsSection = ({ loading = false }: InsightsAlertsSection
                       <div className="font-medium text-foreground text-sm">{event.event}</div>
                       <div className="text-xs text-muted-foreground">{event.time}</div>
                     </div>
-                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactColor(event.impact)}`}>
-                      {event.impact.toUpperCase()}
-                    </span>
+                    <div className="flex items-center space-x-2">
+                      <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactColor(event.impact)}`}>
+                        {event.impact.toUpperCase()}
+                      </span>
+                      {event.status === 'updated' && (
+                        <div className="w-2 h-2 bg-warning rounded-full animate-pulse" title="Recently updated" />
+                      )}
+                    </div>
                   </motion.div>
                 ))}
               </div>

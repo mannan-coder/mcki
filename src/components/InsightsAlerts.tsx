@@ -3,18 +3,14 @@ import { Calendar, AlertTriangle, TrendingUp, Eye, Target, ArrowUpRight, ArrowDo
 import { Link } from 'react-router-dom';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+import { useUpcomingEvents } from '@/hooks/useUpcomingEvents';
 
 interface InsightsAlertsProps {
   isDarkMode: boolean;
 }
 
 const InsightsAlerts = ({ isDarkMode }: InsightsAlertsProps) => {
-  const tomorrowEvents = [
-    { time: '09:00 UTC', event: 'Federal Reserve Meeting', impact: 'high' },
-    { time: '14:30 UTC', event: 'Bitcoin ETF Decision', impact: 'high' },
-    { time: '16:00 UTC', event: 'Ethereum Shanghai Upgrade', impact: 'medium' },
-    { time: '20:00 UTC', event: 'Coinbase Earnings Call', impact: 'medium' },
-  ];
+  const { events: tomorrowEvents, loading: eventsLoading } = useUpcomingEvents();
 
   // Liquidation Alerts Data
   const liquidationData = [
@@ -135,25 +131,46 @@ const InsightsAlerts = ({ isDarkMode }: InsightsAlertsProps) => {
           </div>
 
           <div className="space-y-2">
-            {tomorrowEvents.slice(0, 3).map((event, index) => (
-              <div key={index} className={`flex items-center justify-between p-2 rounded-md border ${
-                isDarkMode 
-                  ? 'bg-gray-700/30 border-gray-600/30' 
-                  : 'bg-gray-50 border-gray-200'
-              }`}>
-                <div className="flex-1">
-                  <div className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                    {event.event}
+            {eventsLoading ? (
+              [1, 2, 3].map((i) => (
+                <div key={i} className={`flex items-center justify-between p-2 rounded-md border ${
+                  isDarkMode 
+                    ? 'bg-gray-700/30 border-gray-600/30' 
+                    : 'bg-gray-50 border-gray-200'
+                }`}>
+                  <div className="flex-1">
+                    <div className="h-4 w-32 bg-muted rounded animate-pulse"></div>
+                    <div className="h-3 w-16 bg-muted rounded animate-pulse mt-1"></div>
                   </div>
-                  <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                    {event.time}
+                  <div className="h-6 w-12 bg-muted rounded animate-pulse"></div>
+                </div>
+              ))
+            ) : (
+              tomorrowEvents.slice(0, 3).map((event, index) => (
+                <div key={index} className={`flex items-center justify-between p-2 rounded-md border ${
+                  isDarkMode 
+                    ? 'bg-gray-700/30 border-gray-600/30' 
+                    : 'bg-gray-50 border-gray-200'
+                }`}>
+                  <div className="flex-1">
+                    <div className={`font-medium text-sm ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                      {event.event}
+                    </div>
+                    <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                      {event.time}
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <div className={`px-2 py-1 rounded text-xs font-medium ${getImpactColor(event.impact)}`}>
+                      {event.impact.toUpperCase()}
+                    </div>
+                    {event.status === 'updated' && (
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full animate-pulse" title="Recently updated" />
+                    )}
                   </div>
                 </div>
-                <div className={`px-2 py-1 rounded text-xs font-medium ${getImpactColor(event.impact)}`}>
-                  {event.impact.toUpperCase()}
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
 
