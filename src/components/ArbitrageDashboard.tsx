@@ -108,8 +108,9 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
   // Manage persistent opportunities with 60-second visibility
   useEffect(() => {
     if (arbitrageData?.arbitrageOpportunities) {
+      const opportunities = arbitrageData.arbitrageOpportunities;
       const now = new Date();
-      const newOpportunities = arbitrageData.arbitrageOpportunities.map(opp => ({
+      const newOpportunities = opportunities.map(opp => ({
         ...opp,
         addedAt: now.toISOString(),
         expiresAt: new Date(now.getTime() + 60000).toISOString() // 60 seconds from now
@@ -137,7 +138,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
       
       setLastUpdateTime(now);
     }
-  }, [arbitrageData]);
+  }, [arbitrageData?.arbitrageOpportunities]);
 
   // Clean up expired opportunities every second
   useEffect(() => {
