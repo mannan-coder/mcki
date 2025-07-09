@@ -3,6 +3,7 @@ import { Suspense, lazy } from 'react';
 import Layout from '@/components/Layout';
 import { MarketOverviewSection } from '@/components/sections/MarketOverviewSection';
 import { TopGainersLosers } from '@/components/sections/TopGainersLosers';
+import { LiveMarketSignalsSection } from '@/components/sections/LiveMarketSignalsSection';
 import { TopVolumeSection } from '@/components/sections/TopVolumeSection';
 import { NewsAlertsSection } from '@/components/sections/NewsAlertsSection';
 import { InsightsAlertsSection } from '@/components/sections/InsightsAlertsSection';
@@ -41,6 +42,12 @@ const Index = () => {
           
           {/* Top Gainers & Losers Section */}
           <TopGainersLosers 
+            coins={marketData?.coins || []} 
+            loading={isLoading && !marketData}
+          />
+          
+          {/* Live Market Signals Section */}
+          <LiveMarketSignalsSection 
             coins={marketData?.coins || []} 
             loading={isLoading && !marketData}
           />
