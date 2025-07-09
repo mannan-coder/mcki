@@ -1,6 +1,30 @@
 import { getCoinLogoById } from '@/utils/coinLogos';
 import { getTimeAgo } from '@/utils/timeUtils';
 
+// Helper function to map common symbols to coin IDs
+const getCoinIdFromSymbol = (symbol: string) => {
+  const symbolMap: { [key: string]: string } = {
+    'btc': 'bitcoin',
+    'eth': 'ethereum',
+    'bnb': 'binancecoin',
+    'sol': 'solana',
+    'ada': 'cardano',
+    'avax': 'avalanche-2',
+    'matic': 'polygon',
+    'link': 'chainlink',
+    'ltc': 'litecoin',
+    'uni': 'uniswap',
+    'xlm': 'stellar',
+    'vet': 'vechain',
+    'fil': 'filecoin',
+    'doge': 'dogecoin',
+    'shib': 'shiba-inu',
+    'pepe': 'pepe'
+  };
+  
+  return symbolMap[symbol.toLowerCase()] || symbol.toLowerCase();
+};
+
 export const getArbitrageTableColumns = () => [
   {
     key: 'rank',
@@ -16,21 +40,28 @@ export const getArbitrageTableColumns = () => [
     key: 'asset',
     header: 'Asset',
     render: (value: any, row: any) => {
-      const coinSymbol = row.pair.split('-')[0].toLowerCase();
-      const coinLogo = getCoinLogoById(coinSymbol);
+      // Extract coin symbol from pair (e.g., "BTC-USDT" -> "bitcoin")
+      const coinSymbol = row.pair ? row.pair.split('-')[0].toLowerCase() : 'bitcoin';
+      const coinId = getCoinIdFromSymbol(coinSymbol);
+      const coinLogo = getCoinLogoById(coinId);
+      
       return (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3">
           <img 
             src={coinLogo} 
-            alt={row.pair.split('-')[0]}
-            className="w-8 h-8 rounded-full"
+            alt={row.pair ? row.pair.split('-')[0] : 'Coin'}
+            className="w-10 h-10 rounded-full border border-border/20 bg-background"
             onError={(e) => {
               (e.target as HTMLImageElement).src = '/placeholder.svg';
             }}
           />
           <div>
-            <div className="font-medium text-foreground">{row.pair.split('-')[0]}</div>
-            <div className="text-xs text-muted-foreground">{row.pair}</div>
+            <div className="font-semibold text-foreground text-sm">
+              {row.pair ? row.pair.split('-')[0] : 'Unknown'}
+            </div>
+            <div className="text-xs text-muted-foreground">
+              {row.pair || 'N/A'}
+            </div>
           </div>
         </div>
       );
