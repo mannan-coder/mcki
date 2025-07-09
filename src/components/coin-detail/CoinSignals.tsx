@@ -8,8 +8,13 @@ interface CoinSignalsProps {
     symbol: string;
     priceChangePercentage24h: number;
     priceChangePercentage7d?: number;
+    priceChangePercentage1y?: number;
     totalVolume: number;
     marketCap: number;
+    currentPrice?: number;
+    ath?: number;
+    atl?: number;
+    sparkline?: number[];
   };
   loading?: boolean;
 }
@@ -52,8 +57,14 @@ export const CoinSignals = ({ coin, loading }: CoinSignalsProps) => {
               coin={{
                 priceChangePercentage24h: coin.priceChangePercentage24h,
                 priceChangePercentage7d: coin.priceChangePercentage7d,
+                priceChangePercentage1h: coin.priceChangePercentage1y || 0,
                 volume: coin.totalVolume,
-                marketCap: coin.marketCap
+                marketCap: coin.marketCap,
+                high24h: coin.ath || coin.currentPrice || 0,
+                low24h: coin.atl || coin.currentPrice || 0,  
+                price: coin.currentPrice || 0,
+                athChangePercentage: coin.ath && coin.currentPrice ? ((coin.currentPrice - coin.ath) / coin.ath * 100) : -50,
+                sparkline: coin.sparkline || []
               }}
             />
             <div className="flex-1 grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">

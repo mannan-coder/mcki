@@ -54,8 +54,8 @@ export const useCoinDetails = (coinId: string) => {
     if (coinId) {
       fetchCoinDetails(coinId);
       
-      // Refresh coin details every minute
-      const interval = setInterval(() => fetchCoinDetails(coinId), 60000);
+      // Refresh coin details every 30 seconds for real-time updates
+      const interval = setInterval(() => fetchCoinDetails(coinId), 30000);
       
       return () => clearInterval(interval);
     }

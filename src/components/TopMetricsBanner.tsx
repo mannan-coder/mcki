@@ -1,12 +1,12 @@
 import { TrendingUp, Activity, Globe, Zap } from 'lucide-react';
-import { useCryptoData } from '@/hooks/useCryptoData';
+import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 
 interface TopMetricsBannerProps {
   isDarkMode: boolean;
 }
 
 const TopMetricsBanner = ({ isDarkMode }: TopMetricsBannerProps) => {
-  const { data: marketData, loading } = useCryptoData();
+  const { data: marketData, isLoading: loading, isRealTime } = useOptimizedCryptoData(50, false);
 
   if (loading || !marketData) {
     return (

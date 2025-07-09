@@ -1,14 +1,14 @@
 
 import { ArrowUp, ArrowDown, TrendingUp, Sparkles, RefreshCw } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useCryptoData } from '@/hooks/useCryptoData';
+import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 
 interface TopMetricsProps {
   isDarkMode: boolean;
 }
 
 const TopMetrics = ({ isDarkMode }: TopMetricsProps) => {
-  const { data: marketData, loading } = useCryptoData();
+  const { data: marketData, isLoading: loading, isRealTime } = useOptimizedCryptoData(100, false);
 
   if (!marketData) {
     return (

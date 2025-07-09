@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, BarChart, Bar, ComposedChart } from 'recharts';
 import { TrendingUp, TrendingDown, Calendar, Download, ArrowLeft } from 'lucide-react';
-import { useCryptoData } from '@/hooks/useCryptoData';
+import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
@@ -12,7 +12,7 @@ const VolumeDetails = () => {
   const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [timeframe, setTimeframe] = useState('7d');
-  const { data: marketData } = useCryptoData();
+  const { data: marketData, isRealTime } = useOptimizedCryptoData(250, false);
 
   if (!marketData) {
     return (
