@@ -287,18 +287,41 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
   }
 
   const chartHeight = 'h-96 lg:h-[32rem]';
-  const fullscreenStyles = isFullscreen ? 'fixed inset-0 z-[9999] bg-background' : '';
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className={isFullscreen ? 'fixed inset-0 z-[9999] bg-background flex flex-col h-screen w-screen overflow-hidden' : ''}
+      className={isFullscreen ? 'fixed inset-0 z-[9999] bg-background/95 backdrop-blur-md flex flex-col' : ''}
     >
+      {/* Fullscreen Header with Close Button */}
+      {isFullscreen && (
+        <div className="flex items-center justify-between p-4 border-b border-border/50 bg-card/80 backdrop-blur-sm">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-lg">
+              <BarChart3 className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">{coin.name} Chart</h2>
+              <p className="text-sm text-muted-foreground">{coin.symbol.toUpperCase()} • Full View</p>
+            </div>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setIsFullscreen(false)}
+            className="h-9 px-3 hover:bg-destructive/10 hover:border-destructive/20"
+          >
+            <span className="mr-2">Close</span>
+            <span className="text-xs">✕</span>
+          </Button>
+        </div>
+      )}
+
       <Card className={`shadow-lg border-0 bg-gradient-to-br from-card to-muted/30 ${
         isFullscreen 
-          ? 'flex-1 rounded-none m-0 h-full flex flex-col' 
+          ? 'flex-1 rounded-none m-0 border-0 shadow-none bg-transparent overflow-auto' 
           : 'mb-6 lg:mb-8'
       }`}>
         <CardHeader className={`pb-6 border-b border-border/50 bg-gradient-to-r from-card to-muted/20 ${isFullscreen ? 'flex-shrink-0' : ''}`}>
