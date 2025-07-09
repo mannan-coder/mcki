@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
         return false;
       },
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
-      placeholderData: (previousData) => previousData, // Keep previous data during refetch
+      placeholderData: (previousData: any) => previousData, // Keep previous data during refetch for glitch-free updates
     },
   },
 })

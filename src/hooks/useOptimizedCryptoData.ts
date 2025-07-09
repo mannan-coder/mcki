@@ -51,6 +51,7 @@ export const useOptimizedCryptoData = (limit: number = 250) => {
     staleTime: 30 * 1000, // 30 seconds
     refetchInterval: 30 * 1000, // Refetch every 30 seconds
     refetchOnWindowFocus: false, // Disabled to prevent unnecessary refetches
+    placeholderData: (previousData: CryptoData | undefined) => previousData, // Keep previous data during refetch for smooth updates
     retry: (failureCount, error) => {
       // Smart retry logic based on error type
       if (failureCount < 2 && !error?.message?.includes('rate limit')) {
@@ -59,7 +60,6 @@ export const useOptimizedCryptoData = (limit: number = 250) => {
       return false;
     },
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
-    placeholderData: (previousData) => previousData, // Keep previous data during refetch
     meta: {
       errorMessage: 'Failed to fetch market data'
     }

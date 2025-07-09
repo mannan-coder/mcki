@@ -1,80 +1,91 @@
 
 import { useState, Suspense, lazy } from 'react';
-import Navbar from '@/components/Navbar';
-import TopMetricsBanner from '@/components/TopMetricsBanner';
-import Footer from '@/components/Footer';
+import Layout from '@/components/Layout';
 import { SkeletonCard } from '@/components/ui/skeleton-card';
+import { MarketOverviewSection } from '@/components/sections/MarketOverviewSection';
+import { TopGainersLosers } from '@/components/sections/TopGainersLosers';
+import { TopVolumeSection } from '@/components/sections/TopVolumeSection';
+import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 
-// Lazy load heavy components
+// Lazy load heavy components for better performance
 const ArbitrageDashboard = lazy(() => import('@/components/ArbitrageDashboard'));
-const MarketOverview = lazy(() => import('@/components/MarketOverview'));
 const OnChainAnalysis = lazy(() => import('@/components/OnChainAnalysis'));
 const NewsAlert = lazy(() => import('@/components/NewsAlert'));
 const InsightsAlerts = lazy(() => import('@/components/InsightsAlerts'));
 const CalculatorsSection = lazy(() => import('@/components/CalculatorsSection'));
 
 const Index = () => {
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return document.documentElement.classList.contains('dark');
+    }
+    return true;
+  });
+
+  const { data: marketData, isLoading } = useOptimizedCryptoData();
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${isDarkMode ? 'dark' : ''}`}>
-      <div className="relative bg-gradient-to-br from-background via-background to-muted/20 min-h-screen">
-        <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />
-        
-        {/* Sticky Navbar */}
-        <div className="sticky top-0 z-50 backdrop-blur-md bg-background/80 border-b border-border/50">
-          <Navbar isDarkMode={isDarkMode} setIsDarkMode={setIsDarkMode} />
-        </div>
-        
-        <main className="relative z-10">
-          {/* Compact Top Banner */}
-          <TopMetricsBanner isDarkMode={isDarkMode} />
-          
-          {/* Ultra-Compact Hero Section */}
-          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 pt-3 sm:pt-4 pb-2 sm:pb-3">
-            <div className="text-center mb-3 sm:mb-4">
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 text-foreground">
-                <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent animate-gradient">
-                  Professional Crypto Analytics
-                </span>
-              </h1>
-              <p className="text-sm sm:text-base max-w-2xl mx-auto text-muted-foreground">
-                Real-time market data, arbitrage opportunities, and comprehensive cryptocurrency analytics
-              </p>
-            </div>
+    <Layout showFooter={true}>
+      <div className="min-h-screen">
+        {/* Hero Section - Minimal and Clean */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
+          <div className="text-center">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 text-foreground">
+              <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
+                Professional Crypto Analytics
+              </span>
+            </h1>
+            <p className="text-base sm:text-lg max-w-3xl mx-auto text-muted-foreground">
+              Real-time market data, arbitrage opportunities, and comprehensive cryptocurrency analytics
+            </p>
           </div>
+        </div>
 
-          {/* Ultra-Compact Content Sections with Lazy Loading */}
-          <div className="space-y-4 sm:space-y-6 lg:space-y-8 pb-4 sm:pb-6">
-            <Suspense fallback={<div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6"><SkeletonCard isDarkMode={isDarkMode} /></div>}>
-              <MarketOverview isDarkMode={isDarkMode} />
-            </Suspense>
-            
-            <Suspense fallback={<div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6"><SkeletonCard isDarkMode={isDarkMode} /></div>}>
-              <ArbitrageDashboard isDarkMode={isDarkMode} />
-            </Suspense>
-            
-            <Suspense fallback={<div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6"><SkeletonCard isDarkMode={isDarkMode} /></div>}>
-              <OnChainAnalysis isDarkMode={isDarkMode} />
-            </Suspense>
-            
-            <Suspense fallback={<div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6"><SkeletonCard isDarkMode={isDarkMode} /></div>}>
+        {/* Main Content Sections */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 pb-8">
+          {/* Market Overview Section */}
+          <MarketOverviewSection isDarkMode={isDarkMode} />
+          
+          {/* Top Gainers & Losers Section */}
+          <TopGainersLosers 
+            coins={marketData?.coins || []} 
+            loading={isLoading && !marketData}
+          />
+          
+          {/* Top Volume Section */}
+          <TopVolumeSection 
+            coins={marketData?.coins || []} 
+            loading={isLoading && !marketData}
+          />
+          
+          {/* Arbitrage Opportunities Section */}
+          <Suspense fallback={<SkeletonCard isDarkMode={isDarkMode} />}>
+            <ArbitrageDashboard isDarkMode={isDarkMode} />
+          </Suspense>
+          
+          {/* On-Chain Analysis Section */}
+          <Suspense fallback={<SkeletonCard isDarkMode={isDarkMode} />}>
+            <OnChainAnalysis isDarkMode={isDarkMode} />
+          </Suspense>
+          
+          {/* News & Insights Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <Suspense fallback={<SkeletonCard isDarkMode={isDarkMode} />}>
               <NewsAlert isDarkMode={isDarkMode} />
             </Suspense>
             
-            <Suspense fallback={<div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6"><SkeletonCard isDarkMode={isDarkMode} /></div>}>
+            <Suspense fallback={<SkeletonCard isDarkMode={isDarkMode} />}>
               <InsightsAlerts isDarkMode={isDarkMode} />
             </Suspense>
-            
-            <Suspense fallback={<div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6"><SkeletonCard isDarkMode={isDarkMode} /></div>}>
-              <CalculatorsSection isDarkMode={isDarkMode} />
-            </Suspense>
           </div>
-        </main>
-        
-        <Footer isDarkMode={isDarkMode} />
+          
+          {/* Tools & Calculators Section */}
+          <Suspense fallback={<SkeletonCard isDarkMode={isDarkMode} />}>
+            <CalculatorsSection isDarkMode={isDarkMode} />
+          </Suspense>
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 
