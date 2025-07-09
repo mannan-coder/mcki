@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp, TrendingDown, Activity, Minus, AlertTriangle } from 'lucide-react';
+import { TrendingUp, TrendingDown, Activity, Minus, AlertTriangle, Zap } from 'lucide-react';
 import { useMemo } from 'react';
 import { Badge } from '@/components/ui/badge';
 
@@ -274,7 +274,10 @@ export const MarketSignalCards = ({ coins }: MarketSignalCardsProps) => {
     <div className="space-y-6">
       {/* Signal Cards Header */}
       <div className="text-left">
-        <h2 className="text-2xl font-bold text-foreground mb-2">Live Market Signals</h2>
+        <h2 className="text-2xl font-bold text-foreground mb-2 flex items-center gap-2">
+          <Zap className="h-6 w-6 text-primary" />
+          Live Market Signals
+        </h2>
         <p className="text-muted-foreground">Real-time analysis based on price action, volume, and momentum indicators</p>
       </div>
 
