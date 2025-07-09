@@ -1,8 +1,11 @@
 import React from 'react';
-import { ArrowUp, ArrowDown, TrendingUp, BarChart3, Eye, Star, Clock } from 'lucide-react';
 import { useCoinDetails } from '@/hooks/useCoinDetails';
 import { usePriceHistory } from '@/hooks/usePriceHistory';
 import { TradingViewChart } from '@/components/coin-detail/TradingViewChart';
+import { CoinDetailModalHeader } from '@/components/coin-detail/CoinDetailModalHeader';
+import { CoinDetailPriceInfo } from '@/components/coin-detail/CoinDetailPriceInfo';
+import { CoinDetailMarketData } from '@/components/coin-detail/CoinDetailMarketData';
+import { CoinDetailDescription } from '@/components/coin-detail/CoinDetailDescription';
 
 interface CoinDetailModalProps {
   coinId: string;
@@ -49,34 +52,10 @@ const CoinDetailModal: React.FC<CoinDetailModalProps> = ({
           ? 'bg-card/95 border-border/50' 
           : 'bg-card/95 border-border/50'
       }`}>
-        {/* Header */}
-        <div className="flex-shrink-0 p-4 sm:p-6 border-b border-border/50">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3 sm:space-x-4">
-              {coinDetails?.image && (
-                <img 
-                  src={coinDetails.image} 
-                  alt={coinDetails.name}
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border border-border/20 shadow-sm"
-                />
-              )}
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold text-foreground">
-                  {coinDetails?.name || 'Loading...'}
-                </h2>
-                <p className="text-sm text-muted-foreground">
-                  {coinDetails?.symbol} • Rank #{coinDetails?.marketCapRank}
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={onClose}
-              className="p-2 rounded-lg hover:bg-muted/50 transition-colors"
-            >
-              ✕
-            </button>
-          </div>
-        </div>
+        <CoinDetailModalHeader 
+          coinDetails={coinDetails} 
+          onClose={onClose} 
+        />
 
         {/* Content */}
         <div className="flex-1 overflow-hidden flex flex-col">
@@ -108,137 +87,18 @@ const CoinDetailModal: React.FC<CoinDetailModalProps> = ({
               {/* Info Grid - Scrollable */}
               <div className="p-4 sm:p-6 space-y-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                  {/* Price Information */}
-                  <div className="p-4 rounded-xl bg-muted/30 border border-border/20">
-                    <h3 className="text-lg font-semibold mb-4 text-foreground">
-                      Price Information
-                    </h3>
-                    
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Current Price</span>
-                        <span className="text-xl sm:text-2xl font-bold text-primary">
-                          {formatPrice(coinDetails.currentPrice)}
-                        </span>
-                      </div>
+                  <CoinDetailPriceInfo 
+                    coinDetails={coinDetails} 
+                    formatPrice={formatPrice} 
+                  />
 
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">24h Change</span>
-                        <div className={`flex items-center space-x-1 ${
-                          coinDetails.priceChangePercentage24h >= 0 ? 'text-success' : 'text-destructive'
-                        }`}>
-                          {coinDetails.priceChangePercentage24h >= 0 ? (
-                            <ArrowUp size={16} />
-                          ) : (
-                            <ArrowDown size={16} />
-                          )}
-                          <span className="font-semibold">
-                            {Math.abs(coinDetails.priceChangePercentage24h).toFixed(2)}%
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">7d Change</span>
-                        <div className={`flex items-center space-x-1 ${
-                          coinDetails.priceChangePercentage7d >= 0 ? 'text-success' : 'text-destructive'
-                        }`}>
-                          {coinDetails.priceChangePercentage7d >= 0 ? (
-                            <TrendingUp size={16} />
-                          ) : (
-                            <ArrowDown size={16} />
-                          )}
-                          <span className="font-semibold">
-                            {Math.abs(coinDetails.priceChangePercentage7d).toFixed(2)}%
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">All Time High</span>
-                        <div className="text-right">
-                          <div className="font-semibold text-foreground">{formatPrice(coinDetails.ath)}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {new Date(coinDetails.athDate).toLocaleDateString()}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">All Time Low</span>
-                        <div className="text-right">
-                          <div className="font-semibold text-foreground">{formatPrice(coinDetails.atl)}</div>
-                          <div className="text-xs text-muted-foreground">
-                            {new Date(coinDetails.atlDate).toLocaleDateString()}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Market Data */}
-                  <div className="p-4 rounded-xl bg-muted/30 border border-border/20">
-                    <h3 className="text-lg font-semibold mb-4 text-foreground">
-                      Market Data
-                    </h3>
-                    
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Market Cap</span>
-                        <span className="font-semibold text-foreground">
-                          {formatMarketCap(coinDetails.marketCap)}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">24h Volume</span>
-                        <span className="font-semibold text-foreground">
-                          {formatMarketCap(coinDetails.totalVolume)}
-                        </span>
-                      </div>
-
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">Circulating Supply</span>
-                        <span className="font-semibold text-sm text-foreground">
-                          {coinDetails.circulatingSupply.toLocaleString()}
-                        </span>
-                      </div>
-
-                      {coinDetails.totalSupply && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-muted-foreground">Total Supply</span>
-                          <span className="font-semibold text-sm text-foreground">
-                            {coinDetails.totalSupply.toLocaleString()}
-                          </span>
-                        </div>
-                      )}
-
-                      {coinDetails.maxSupply && (
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-muted-foreground">Max Supply</span>
-                          <span className="font-semibold text-sm text-foreground">
-                            {coinDetails.maxSupply.toLocaleString()}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                  <CoinDetailMarketData 
+                    coinDetails={coinDetails} 
+                    formatMarketCap={formatMarketCap} 
+                  />
                 </div>
 
-                {/* Description */}
-                {coinDetails.description && (
-                  <div className="p-4 rounded-xl bg-muted/30 border border-border/20">
-                    <h3 className="text-lg font-semibold mb-4 text-foreground">
-                      About {coinDetails.name}
-                    </h3>
-                    <div 
-                      className="text-sm leading-relaxed max-h-32 overflow-y-auto text-muted-foreground"
-                      dangerouslySetInnerHTML={{ 
-                        __html: coinDetails.description.slice(0, 800) + '...' 
-                      }}
-                    />
-                  </div>
-                )}
+                <CoinDetailDescription coinDetails={coinDetails} />
               </div>
             </div>
           ) : (
