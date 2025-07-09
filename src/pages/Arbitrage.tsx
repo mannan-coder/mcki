@@ -427,55 +427,93 @@ const ArbitragePage = () => {
             }`}>
               <div className={`px-4 py-3 border-b ${isDarkMode ? 'border-gray-700/60 bg-gray-800/90' : 'border-gray-200/60 bg-gray-50/80'}`}>
                 <h3 className={`font-semibold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                  {selectedCoin} Prices
+                  {selectedCoin} Exchange Prices
                 </h3>
               </div>
 
-              <div className="space-y-0">
-                {selectedRates.map((rate, index) => (
-                  <div key={index} className={`px-4 py-4 border-b last:border-b-0 ${isDarkMode ? 'border-gray-700/30' : 'border-gray-200/30'}`}>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                        {rate.exchange}
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        {rate.price === maxPrice && (
-                          <span className="text-xs text-red-500 font-medium">HIGH</span>
-                        )}
-                        {rate.price === minPrice && (
-                          <span className="text-xs text-green-500 font-medium">LOW</span>
-                        )}
-                      </div>
-                    </div>
-                    
-                    <div className={`text-lg font-bold mb-1 ${
-                      rate.price === maxPrice ? 'text-red-500' : 
-                      rate.price === minPrice ? 'text-green-500' : 
-                      isDarkMode ? 'text-white' : 'text-gray-900'
-                    }`}>
-                      ${rate.price.toLocaleString()}
-                    </div>
-                    
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>
-                        24h Vol: {rate.volume24h}
-                      </div>
-                      <div className={`${rate.change24h >= 0 ? 'text-green-500' : 'text-red-500'}`}>
-                        {rate.change24h >= 0 ? '+' : ''}{rate.change24h}%
-                      </div>
-                      <div className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>
-                        Spread: {rate.spread}%
-                      </div>
-                      <div className={isDarkMode ? 'text-gray-400' : 'text-gray-600'}>
-                        Depth: {rate.orderBookDepth}
-                      </div>
-                    </div>
-                    
-                    <div className={`text-xs mt-2 ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-                      Updated: {rate.lastUpdate}
-                    </div>
-                  </div>
-                ))}
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead className={`${isDarkMode ? 'bg-gray-800/90' : 'bg-gray-50/90'}`}>
+                    <tr className={`border-b ${isDarkMode ? 'border-gray-700/40' : 'border-gray-200/40'}`}>
+                      <th className={`px-3 py-2 text-left text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Exchange
+                      </th>
+                      <th className={`px-3 py-2 text-right text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Price
+                      </th>
+                      <th className={`px-3 py-2 text-right text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        24h Change
+                      </th>
+                      <th className={`px-3 py-2 text-right text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Volume
+                      </th>
+                      <th className={`px-3 py-2 text-right text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Spread
+                      </th>
+                      <th className={`px-3 py-2 text-center text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                        Updated
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className={`${isDarkMode ? 'bg-gray-800/50' : 'bg-white/50'} divide-y ${isDarkMode ? 'divide-gray-700/40' : 'divide-gray-200/40'}`}>
+                    {selectedRates.map((rate, index) => (
+                      <tr key={index} className={`hover:bg-gray-500/5 transition-colors ${isDarkMode ? 'border-gray-700/30' : 'border-gray-200/30'}`}>
+                        <td className="px-3 py-3">
+                          <div className="flex items-center space-x-2">
+                            <div className={`font-medium ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                              {rate.exchange}
+                            </div>
+                            <div className="flex items-center space-x-1">
+                              {rate.price === maxPrice && (
+                                <span className="text-xs text-red-500 font-medium bg-red-500/10 px-1.5 py-0.5 rounded">HIGH</span>
+                              )}
+                              {rate.price === minPrice && (
+                                <span className="text-xs text-green-500 font-medium bg-green-500/10 px-1.5 py-0.5 rounded">LOW</span>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+                        
+                        <td className="px-3 py-3 text-right">
+                          <div className={`text-sm font-bold ${
+                            rate.price === maxPrice ? 'text-red-500' : 
+                            rate.price === minPrice ? 'text-green-500' : 
+                            isDarkMode ? 'text-white' : 'text-gray-900'
+                          }`}>
+                            ${rate.price.toLocaleString()}
+                          </div>
+                          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            Depth: {rate.orderBookDepth}
+                          </div>
+                        </td>
+                        
+                        <td className="px-3 py-3 text-right">
+                          <div className={`text-sm font-medium ${rate.change24h >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                            {rate.change24h >= 0 ? '+' : ''}{rate.change24h}%
+                          </div>
+                        </td>
+                        
+                        <td className="px-3 py-3 text-right">
+                          <div className={`text-sm ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                            {rate.volume24h}
+                          </div>
+                        </td>
+                        
+                        <td className="px-3 py-3 text-right">
+                          <div className={`text-sm font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                            {rate.spread}%
+                          </div>
+                        </td>
+                        
+                        <td className="px-3 py-3 text-center">
+                          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                            {rate.lastUpdate}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
