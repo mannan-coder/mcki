@@ -23,7 +23,7 @@ const MarketPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState<{key: string, direction: 'asc' | 'desc'}>({ key: 'rank', direction: 'asc' });
   
-  const ITEMS_PER_PAGE = 500; // Show all 500 coins
+  const ITEMS_PER_PAGE = 100; // Show 100 coins per page with pagination
 
   const categories = [
     'All', 'DeFi', 'Layer 1', 'Layer 2', 'Gaming', 'NFT', 'Meme', 'AI', 'RWA', 'Privacy'
@@ -45,7 +45,7 @@ const MarketPage = () => {
   }) || [];
 
   // Debug: Log total coins available
-  console.log(`Total coins available: ${cryptoData?.coins?.length || 0}, Filtered: ${filteredCoins.length}`);
+  console.log(`Total coins fetched: ${cryptoData?.coins?.length || 0}, Filtered: ${filteredCoins.length}, Category: ${selectedCategory}`);
 
   // Apply category filter after basic filtering
   const categoryFilteredCoins = getCoinsByCategory(filteredCoins, selectedCategory);
@@ -81,11 +81,11 @@ const MarketPage = () => {
     }
   ];
 
-  // Sorting and pagination logic
+  // Sorting and pagination logic with optimizations
   const sortedAndPaginatedData = useMemo(() => {
     let sortedCoins = [...categoryFilteredCoins];
     
-    // Sort data
+    // Sort data efficiently
     if (sortConfig.key) {
       sortedCoins.sort((a, b) => {
         let aVal, bVal;
@@ -125,17 +125,23 @@ const MarketPage = () => {
       });
     }
     
-    // Calculate pagination
+    // Calculate pagination efficiently
     const totalItems = sortedCoins.length;
     const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
     const paginatedCoins = sortedCoins.slice(startIndex, endIndex);
     
+    // Log pagination info for debugging
+    console.log(`Pagination: Page ${currentPage}/${totalPages}, Showing ${startIndex + 1}-${Math.min(endIndex, totalItems)} of ${totalItems} coins`);
+    
     return {
       coins: paginatedCoins,
       totalItems,
-      totalPages
+      totalPages,
+      currentPage,
+      startIndex: startIndex + 1,
+      endIndex: Math.min(endIndex, totalItems)
     };
   }, [categoryFilteredCoins, sortConfig, currentPage, ITEMS_PER_PAGE]);
 
@@ -152,26 +158,36 @@ const MarketPage = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const formatCoinData = (coins: any[]) => {
-    return coins.map((coin, index) => ({
-      rank: coin.rank,
-      name: coin.name,
-      symbol: coin.symbol,
-      price: `$${coin.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}`,
-      change24h: `${coin.change24h > 0 ? '+' : ''}${coin.change24h.toFixed(2)}%`,
-      marketCap: `$${(coin.marketCap / 1e9).toFixed(2)}B`,
-      volume: `$${(coin.volume / 1e9).toFixed(2)}B`,
-      signals: coin, // Pass the full coin object for signals
-      chart: coin, // Pass the full coin object for chart
-      image: coin.image,
-      id: coin.id,
-      // Raw values for sorting
-      _price: coin.price,
-      _change24h: coin.change24h,
-      _marketCap: coin.marketCap,
-      _volume: coin.volume
-    }));
-  };
+  // Optimized coin data formatting with memoization
+  const formatCoinData = useMemo(() => {
+    return (coins: any[]) => {
+      return coins.map((coin, index) => ({
+        rank: coin.rank,
+        name: coin.name,
+        symbol: coin.symbol,
+        price: `$${coin.price.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 6 })}`,
+        change24h: `${coin.change24h > 0 ? '+' : ''}${coin.change24h.toFixed(2)}%`,
+        marketCap: `$${(coin.marketCap / 1e9).toFixed(2)}B`,
+        volume: `$${(coin.volume / 1e9).toFixed(2)}B`,
+        signals: coin, // Pass the full coin object for signals
+        chart: coin, // Pass the full coin object for chart
+        image: coin.image,
+        id: coin.id,
+        // Raw values for sorting
+        _price: coin.price,
+        _change24h: coin.change24h,
+        _marketCap: coin.marketCap,
+        _volume: coin.volume,
+        // Additional data for enhanced signals
+        change1h: coin.change1h || 0,
+        change7d: coin.change7d || 0,
+        high24h: coin.high24h || coin.price,
+        low24h: coin.low24h || coin.price,
+        athChangePercentage: coin.athChangePercentage || -50,
+        sparkline: coin.sparkline || []
+      }));
+    };
+  }, []);
 
   const coinColumns = [
     { key: 'rank', header: '#', sortable: true },
@@ -227,16 +243,16 @@ const MarketPage = () => {
       sortable: false,
       render: (coin: any) => (
         <LiveSignals 
-          key={`${coin.id}-${coin.change24h}-${Date.now()}`} // Force re-render on data change
+          key={`${coin.id}-${coin.change24h}-${coin.change1h}-${lastUpdateTime}`} // Optimized key for signal updates
           coin={{
             priceChangePercentage24h: coin.change24h,
             priceChangePercentage7d: coin.change7d,
             priceChangePercentage1h: coin.change1h || 0,
-            volume: coin.volume,
-            marketCap: coin.marketCap,
+            volume: coin._volume, // Use raw volume value
+            marketCap: coin._marketCap, // Use raw market cap value
             high24h: coin.high24h,
             low24h: coin.low24h,
-            price: coin.price,
+            price: coin._price, // Use raw price value
             athChangePercentage: coin.athChangePercentage,
             sparkline: coin.sparkline
           }}
@@ -317,7 +333,7 @@ const MarketPage = () => {
             <StatsGrid stats={marketStats} />
 
             {/* Market Signal Cards */}
-            <MarketSignalCards coins={categoryFilteredCoins} />
+            <MarketSignalCards coins={categoryFilteredCoins.slice(0, 50)} />
 
             {/* Filters */}
             <ResponsiveCard>
@@ -375,7 +391,7 @@ const MarketPage = () => {
                   <h3 className="text-lg font-semibold text-foreground">Market Data</h3>
                   <div className="flex items-center gap-4">
                     <div className="text-sm text-muted-foreground">
-                      Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, sortedAndPaginatedData.totalItems)} of {sortedAndPaginatedData.totalItems} coins
+                      Showing {sortedAndPaginatedData.startIndex} to {sortedAndPaginatedData.endIndex} of {sortedAndPaginatedData.totalItems} coins
                       {selectedCategory !== 'All' && (
                         <span className="ml-2 px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
                           {selectedCategory}
