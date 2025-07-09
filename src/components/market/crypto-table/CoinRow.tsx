@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LiveSignals } from '../LiveSignals';
+import { EnhancedSignals } from '../EnhancedSignals';
 import { MiniChart } from '../MiniChart';
 import { CoinRowProps } from './types';
 
@@ -69,9 +70,8 @@ export const CoinRow = memo(({ coin, index, onToggleFavorite, favorites, lastUpd
       </div>
       
       <div className="space-y-2">
-        <div className="text-xs text-muted-foreground">Live Signals</div>
-        <LiveSignals 
-          key={`${coin.id}-${coin.change24h}-${lastUpdateTime}`}
+        <div className="text-xs text-muted-foreground">Trading Signals</div>
+        <EnhancedSignals 
           coin={{
             priceChangePercentage24h: coin._change24h,
             priceChangePercentage7d: coin.change7d,
@@ -153,8 +153,7 @@ export const CoinRow = memo(({ coin, index, onToggleFavorite, favorites, lastUpd
 
       {/* Signals */}
       <div>
-        <LiveSignals 
-          key={`${coin.id}-${coin.change24h}-${lastUpdateTime}`}
+        <EnhancedSignals 
           coin={{
             priceChangePercentage24h: coin._change24h,
             priceChangePercentage7d: coin.change7d,

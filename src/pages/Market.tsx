@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { Search, RefreshCw } from 'lucide-react';
+import { Search, RefreshCw, Filter, SortAsc } from 'lucide-react';
 import Layout from '@/components/Layout';
 import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 import { Card, CardContent } from '@/components/ui/card';
@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { getCoinsByCategory } from '@/utils/coinCategories';
 import { CryptoTable } from '@/components/market/crypto-table';
+import { MarketStats } from '@/components/market/MarketStats';
+import { TopMovers } from '@/components/market/TopMovers';
 import { toast } from "sonner";
 
 const MarketPage = () => {
@@ -171,28 +173,30 @@ const MarketPage = () => {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+      <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
           
-          {/* Header with Search */}
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            <div className="space-y-2">
-              <h1 className="text-3xl lg:text-4xl font-bold text-foreground">
+          {/* Professional Header */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
+            <div className="space-y-3">
+              <h1 className="text-3xl lg:text-4xl font-bold text-foreground tracking-tight">
                 Cryptocurrency Market
               </h1>
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <span>Real-time data from {cryptoData?.coins?.length || 0} cryptocurrencies</span>
-                <div className={`flex items-center gap-2 px-3 py-1 rounded-full transition-all ${
+              <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <span>Real-time data from {cryptoData?.coins?.length || 0} cryptocurrencies</span>
+                </div>
+                <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium border transition-all ${
                   isRealTime 
-                    ? 'bg-success/20 text-success border border-success/30' 
-                    : 'bg-muted/50 text-muted-foreground border border-border'
+                    ? 'bg-success/10 text-success border-success/20' 
+                    : 'bg-muted/50 text-muted-foreground border-border'
                 }`}>
                   <div className={`w-2 h-2 rounded-full transition-all ${
                     isRealTime ? 'bg-success animate-pulse' : 'bg-muted-foreground'
                   }`} />
-                  {isRealTime ? 'Live' : 'Offline'}
+                  <span>{isRealTime ? 'Live' : 'Offline'}</span>
                   {lastUpdateTime && (
-                    <span className="ml-1 font-mono text-xs">
+                    <span className="ml-1 font-mono opacity-75">
                       {new Date(lastUpdateTime).toLocaleTimeString()}
                     </span>
                   )}
@@ -201,56 +205,79 @@ const MarketPage = () => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              {/* Search */}
+              {/* Enhanced Search */}
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
                 <Input
                   placeholder="Search cryptocurrencies..."
                   value={searchTerm}
                   onChange={(e) => handleSearchChange(e.target.value)}
-                  className="pl-10 min-w-[250px] bg-background/50 border-border/50 focus:bg-background"
+                  className="pl-10 min-w-[280px] bg-background/60 backdrop-blur-sm border-border/50 focus:bg-background focus:border-primary/50 transition-all"
                 />
               </div>
 
               <Button
                 onClick={handleRefresh}
                 disabled={isLoading}
-                className="whitespace-nowrap"
+                variant="outline"
+                className="whitespace-nowrap bg-background/60 backdrop-blur-sm hover:bg-background"
               >
                 <RefreshCw className={`h-4 w-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-                Refresh Data
+                Refresh
               </Button>
             </div>
           </div>
 
-          {/* Category Filters */}
-          <Card className="border-0 bg-gradient-to-br from-card to-muted/30">
+          {/* Market Stats Overview */}
+          <MarketStats 
+            data={cryptoData}
+            loading={isLoading && !cryptoData}
+          />
+
+          {/* Top Movers Section */}
+          <TopMovers 
+            coins={categoryFilteredCoins}
+            loading={isLoading && !cryptoData}
+          />
+
+          {/* Enhanced Filters */}
+          <Card className="border-0 bg-gradient-to-br from-card/50 to-card/30 backdrop-blur-sm">
             <CardContent className="p-4">
-              <div className="flex flex-wrap gap-2">
-                {categories.map((category) => {
-                  const categoryCount = getCoinsByCategory(filteredCoins, category).length;
-                  return (
-                    <Button
-                      key={category}
-                      variant={selectedCategory === category ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => handleCategoryChange(category)}
-                      className="text-xs"
-                    >
-                      {category}
-                      {category !== 'All' && categoryCount > 0 && (
-                        <span className="ml-1 text-xs opacity-70">
-                          ({categoryCount})
-                        </span>
-                      )}
-                    </Button>
-                  );
-                })}
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex flex-wrap gap-2">
+                  {categories.map((category) => {
+                    const categoryCount = getCoinsByCategory(filteredCoins, category).length;
+                    return (
+                      <Button
+                        key={category}
+                        variant={selectedCategory === category ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handleCategoryChange(category)}
+                        className="text-xs font-medium transition-all hover:scale-105"
+                      >
+                        {category}
+                        {category !== 'All' && categoryCount > 0 && (
+                          <span className="ml-1.5 text-xs opacity-70 font-normal">
+                            {categoryCount}
+                          </span>
+                        )}
+                      </Button>
+                    );
+                  })}
+                </div>
+                
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <SortAsc className="h-3 w-3" />
+                  <span>Sort by: {sortConfig.key}</span>
+                  <span className="px-2 py-1 bg-muted rounded-full">
+                    {sortConfig.direction === 'asc' ? '↑' : '↓'}
+                  </span>
+                </div>
               </div>
             </CardContent>
           </Card>
 
-          {/* Main Data Table */}
+          {/* Enhanced Data Table */}
           <CryptoTable
             data={formattedCoinData}
             loading={isLoading && !cryptoData}

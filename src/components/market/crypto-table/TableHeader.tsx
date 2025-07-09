@@ -31,7 +31,7 @@ export const TableHeader = memo(({ sortConfig, onSort, startIndex, endIndex, tot
         <SortButton label="Volume" sortKey="volume" sortConfig={sortConfig} onSort={onSort} />
       </div>
       <div>
-        <span className="text-sm font-medium text-muted-foreground">Live Signals</span>
+        <span className="text-sm font-medium text-muted-foreground">Trading Signals</span>
       </div>
     </div>
   </>
