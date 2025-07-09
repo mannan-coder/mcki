@@ -84,17 +84,39 @@ export const getArbitrageTableColumns = () => [
       
       return (
         <div className="flex items-center space-x-3">
-          <div className="relative">
+          <div className="relative w-8 h-8 flex-shrink-0">
             <img 
               src={coinLogo} 
               alt={row.pair ? row.pair.split('-')[0] : 'Coin'}
-              className="w-8 h-8 rounded-full border border-border/20 bg-background shadow-sm"
+              className="w-8 h-8 rounded-full border border-border/20 bg-background shadow-sm object-cover"
               onError={(e) => {
-                (e.target as HTMLImageElement).src = '/placeholder.svg';
+                const target = e.target as HTMLImageElement;
+                // Try alternative URL first
+                if (!target.src.includes('placeholder')) {
+                  target.src = `https://assets.coingecko.com/coins/images/1/large/${coinSymbol}.png`;
+                  return;
+                }
+                // Final fallback to a styled placeholder
+                target.style.display = 'none';
+                const parent = target.parentElement;
+                if (parent && !parent.querySelector('.coin-placeholder')) {
+                  const placeholder = document.createElement('div');
+                  placeholder.className = 'coin-placeholder w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs border border-border/20';
+                  placeholder.textContent = (row.pair ? row.pair.split('-')[0] : 'C').charAt(0).toUpperCase();
+                  parent.appendChild(placeholder);
+                }
+              }}
+              onLoad={(e) => {
+                // Remove any placeholder if image loads successfully
+                const target = e.target as HTMLImageElement;
+                const parent = target.parentElement;
+                const placeholder = parent?.querySelector('.coin-placeholder');
+                if (placeholder) {
+                  placeholder.remove();
+                }
+                target.style.display = 'block';
               }}
             />
-            {/* Loading state indicator */}
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 animate-pulse"></div>
           </div>
           <div className="flex-1 min-w-0">
             <div className="font-semibold text-foreground text-sm truncate">

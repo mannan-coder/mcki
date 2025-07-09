@@ -85,9 +85,11 @@ export const getCoinLogoById = (coinId: string): string => {
     return coinLogos[coinId];
   }
   
-  // Fallback with proper error handling
-  const fallbackUrl = `https://coin-images.coingecko.com/coins/images/1/large/${coinId}.png`;
-  return fallbackUrl;
+  // Try direct CoinGecko API approach
+  const directUrl = `https://coin-images.coingecko.com/coins/images/1/large/${coinId}.png`;
+  
+  // Return the direct URL - the component will handle errors
+  return directUrl;
 };
 
 export const getExchangeColor = (exchange: string): string => {
