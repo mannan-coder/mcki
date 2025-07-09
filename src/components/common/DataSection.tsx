@@ -4,7 +4,7 @@ import { RefreshCw } from 'lucide-react';
 
 interface DataSectionProps {
   title: string;
-  subtitle?: string;
+  subtitle?: string | ReactNode;
   icon?: ReactNode;
   children: ReactNode;
   onRefresh?: () => void;
@@ -39,9 +39,9 @@ export const DataSection = ({
             </h2>
           </div>
           {subtitle && (
-            <p className="text-sm text-muted-foreground">
+            <div className="text-sm text-muted-foreground">
               {subtitle}
-            </p>
+            </div>
           )}
         </div>
         

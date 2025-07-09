@@ -13,7 +13,7 @@ import { MarketSignalCards } from '@/components/market/MarketSignalCards';
 import { motion } from 'framer-motion';
 
 const MarketPage = () => {
-  const { data: cryptoData, isLoading, refetch } = useOptimizedCryptoData();
+  const { data: cryptoData, isLoading, refetch, isRealTime, lastUpdateTime } = useOptimizedCryptoData(500, true);
   
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
@@ -226,8 +226,14 @@ const MarketPage = () => {
           coin={{
             priceChangePercentage24h: coin.change24h,
             priceChangePercentage7d: coin.change7d,
+            priceChangePercentage1h: coin.change1h || 0,
             volume: coin.volume,
-            marketCap: coin.marketCap
+            marketCap: coin.marketCap,
+            high24h: coin.high24h,
+            low24h: coin.low24h,
+            price: coin.price,
+            athChangePercentage: coin.athChangePercentage,
+            sparkline: coin.sparkline
           }}
         />
       )
@@ -271,7 +277,26 @@ const MarketPage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 py-8">
         <DataSection
           title="Cryptocurrency Market"
-          subtitle="Real-time cryptocurrency prices, market caps, and trading data"
+          subtitle={
+            <div className="flex items-center gap-4">
+              <span>Real-time cryptocurrency prices, market caps, and trading data</span>
+              <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium ${
+                isRealTime 
+                  ? 'bg-success/20 text-success border border-success/30' 
+                  : 'bg-muted/50 text-muted-foreground border border-border'
+              }`}>
+                <div className={`w-2 h-2 rounded-full ${
+                  isRealTime ? 'bg-success animate-pulse' : 'bg-muted-foreground'
+                }`} />
+                {isRealTime ? 'Live' : 'Offline'}
+                {lastUpdateTime && (
+                  <span className="ml-1">
+                    • Updated {new Date(lastUpdateTime).toLocaleTimeString()}
+                  </span>
+                )}
+              </div>
+            </div>
+          }
           icon={<span className="text-2xl">🏪</span>}
           onRefresh={() => refetch()}
           isLoading={isLoading}
