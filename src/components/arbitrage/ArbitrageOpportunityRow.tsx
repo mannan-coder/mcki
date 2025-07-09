@@ -153,6 +153,18 @@ const ArbitrageOpportunityRow = ({ opportunity, isDarkMode, index }: ArbitrageOp
         </div>
       </td>
 
+      {/* Last Updated */}
+      <td className="px-3 py-3 text-center">
+        <div className="text-xs">
+          <div className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>
+            {new Date(opportunity.lastUpdated).toLocaleTimeString()}
+          </div>
+          <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
+            {new Date(opportunity.lastUpdated).toLocaleDateString()}
+          </div>
+        </div>
+      </td>
+
       {/* Action */}
       <td className="px-3 py-3 text-center">
         <button className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all duration-200 hover:scale-105 ${

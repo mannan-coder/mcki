@@ -31,8 +31,8 @@ serve(async (req) => {
     // Create real arbitrage opportunities using price differences
     const arbitrageOpportunities = [];
     
-    const coins = ['BTCUSDT', 'ETHUSDT', 'ADAUSDT', 'SOLUSDT', 'DOTUSDT'];
-    const exchanges = ['Binance', 'Coinbase', 'KuCoin', 'Kraken', 'OKX'];
+    const coins = ['BTCUSDT', 'ETHUSDT', 'ADAUSDT', 'SOLUSDT', 'DOTUSDT', 'AVAXUSDT', 'LINKUSDT', 'MATICUSDT', 'UNIUSDT', 'LTCUSDT', 'XLMUSDT', 'VETUSDT', 'FILUSDT', 'DOGEUSDT', 'SHIBUSDT', 'PEPEUSDT'];
+    const exchanges = ['Binance', 'Coinbase', 'KuCoin', 'Kraken', 'OKX', 'Bybit', 'Gate.io', 'Huobi'];
 
     coins.forEach(pair => {
       const binanceCoin = binanceData.find((item: any) => item.symbol === pair);

@@ -117,7 +117,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
             💰 Live Arbitrage Opportunities
           </h2>
           <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-2`}>
-            Real-time profit opportunities across exchanges - Updated every 30 seconds
+            Real-time profit opportunities across exchanges - Updated every 15 seconds
           </p>
           <div className="flex flex-wrap items-center gap-4 text-xs">
             <div className="flex items-center space-x-1">
@@ -191,6 +191,9 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
                 </th>
                 <th className={`px-3 py-2 text-center text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Profit
+                </th>
+                <th className={`px-3 py-2 text-center text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Last Updated
                 </th>
                 <th className={`px-3 py-2 text-center text-xs font-medium ${isDarkMode ? 'text-gray-300' : 'text-gray-700'}`}>
                   Action
