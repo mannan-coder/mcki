@@ -10,6 +10,8 @@ interface ArbitrageOpportunity {
   spread: number;
   volume24h: number;
   lastUpdated: string;
+  addedAt?: string;
+  expiresAt?: string;
 }
 
 interface ArbitrageOpportunityRowProps {
@@ -183,7 +185,7 @@ const ArbitrageOpportunityRow = ({ opportunity, isDarkMode, index }: ArbitrageOp
           <div className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>
             {(() => {
               const now = new Date();
-              const past = new Date(opportunity.lastUpdated);
+              const past = new Date(opportunity.addedAt || opportunity.lastUpdated);
               const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
               
               if (diffInSeconds < 60) {
@@ -201,7 +203,11 @@ const ArbitrageOpportunityRow = ({ opportunity, isDarkMode, index }: ArbitrageOp
             })()}
           </div>
           <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
-            {new Date(opportunity.lastUpdated).toLocaleDateString()}
+            {opportunity.expiresAt && (
+              <div className="text-orange-500 font-medium">
+                Expires in {Math.max(0, Math.floor((new Date(opportunity.expiresAt).getTime() - new Date().getTime()) / 1000))}s
+              </div>
+            )}
           </div>
         </div>
       </td>

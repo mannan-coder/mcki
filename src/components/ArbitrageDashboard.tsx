@@ -1,4 +1,5 @@
 
+import { useState, useEffect } from 'react';
 import { RefreshCw, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useArbitrageData } from '@/hooks/useArbitrageData';
@@ -12,6 +13,8 @@ interface ArbitrageDashboardProps {
 
 const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
   const { data: arbitrageData, loading, refetch } = useArbitrageData();
+  const [persistentOpportunities, setPersistentOpportunities] = useState<any[]>([]);
+  const [lastUpdateTime, setLastUpdateTime] = useState<Date>(new Date());
 
   if (!arbitrageData) {
     return (
@@ -102,7 +105,72 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
     );
   }
 
-  const opportunities = arbitrageData?.arbitrageOpportunities || [];
+  // Manage persistent opportunities with 60-second visibility
+  useEffect(() => {
+    if (arbitrageData?.arbitrageOpportunities) {
+      const now = new Date();
+      const newOpportunities = arbitrageData.arbitrageOpportunities.map(opp => ({
+        ...opp,
+        addedAt: now.toISOString(),
+        expiresAt: new Date(now.getTime() + 60000).toISOString() // 60 seconds from now
+      }));
+
+      setPersistentOpportunities(prev => {
+        // Remove expired opportunities
+        const unexpired = prev.filter(opp => new Date(opp.expiresAt) > now);
+        
+        // Merge with new opportunities, avoiding duplicates
+        const merged = [...unexpired];
+        newOpportunities.forEach(newOpp => {
+          const exists = merged.find(existing => 
+            existing.pair === newOpp.pair && 
+            existing.buyExchange === newOpp.buyExchange && 
+            existing.sellExchange === newOpp.sellExchange
+          );
+          if (!exists) {
+            merged.push(newOpp);
+          }
+        });
+        
+        return merged.sort((a, b) => b.spread - a.spread);
+      });
+      
+      setLastUpdateTime(now);
+    }
+  }, [arbitrageData]);
+
+  // Clean up expired opportunities every second
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const now = new Date();
+      setPersistentOpportunities(prev => 
+        prev.filter(opp => new Date(opp.expiresAt) > now)
+      );
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const getTimeAgo = (timestamp: string) => {
+    const now = new Date();
+    const past = new Date(timestamp);
+    const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
+    
+    if (diffInSeconds < 60) {
+      return `${diffInSeconds}s ago`;
+    } else if (diffInSeconds < 3600) {
+      const minutes = Math.floor(diffInSeconds / 60);
+      return `${minutes}m ago`;
+    } else if (diffInSeconds < 86400) {
+      const hours = Math.floor(diffInSeconds / 3600);
+      return `${hours}h ago`;
+    } else {
+      const days = Math.floor(diffInSeconds / 86400);
+      return `${days}d ago`;
+    }
+  };
+
+  const opportunities = persistentOpportunities;
   const stats = arbitrageData?.marketMaking || { totalOpportunities: 0, avgSpread: 0, estimatedDailyVolume: 0 };
 
   const handleRefresh = () => {
