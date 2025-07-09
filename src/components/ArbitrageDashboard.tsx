@@ -218,7 +218,7 @@ const ArbitrageDashboard = ({ isDarkMode }: ArbitrageDashboardProps) => {
       {arbitrageData && (
         <>
           <ArbitrageStats stats={stats} isDarkMode={isDarkMode} />
-          <LivePricesAcrossExchanges opportunities={opportunities} isDarkMode={isDarkMode} />
+          <LivePricesAcrossExchanges />
         </>
       )}
     </DataSection>

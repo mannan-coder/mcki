@@ -1,27 +1,20 @@
 
-import { useState, Suspense, lazy } from 'react';
+import { Suspense, lazy } from 'react';
 import Layout from '@/components/Layout';
-import { SkeletonCard } from '@/components/ui/skeleton-card';
 import { MarketOverviewSection } from '@/components/sections/MarketOverviewSection';
 import { TopGainersLosers } from '@/components/sections/TopGainersLosers';
 import { TopVolumeSection } from '@/components/sections/TopVolumeSection';
+import { NewsAlertsSection } from '@/components/sections/NewsAlertsSection';
+import { InsightsAlertsSection } from '@/components/sections/InsightsAlertsSection';
+import { CalculatorsSuiteSection } from '@/components/sections/CalculatorsSuiteSection';
 import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 
 // Lazy load heavy components for better performance
 const ArbitrageDashboard = lazy(() => import('@/components/ArbitrageDashboard'));
 const OnChainAnalysis = lazy(() => import('@/components/OnChainAnalysis'));
-const NewsAlert = lazy(() => import('@/components/NewsAlert'));
-const InsightsAlerts = lazy(() => import('@/components/InsightsAlerts'));
-const CalculatorsSection = lazy(() => import('@/components/CalculatorsSection'));
+const LivePricesAcrossExchanges = lazy(() => import('@/components/arbitrage/LivePricesAcrossExchanges'));
 
 const Index = () => {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return document.documentElement.classList.contains('dark');
-    }
-    return true;
-  });
-
   const { data: marketData, isLoading } = useOptimizedCryptoData();
 
   return (
@@ -44,7 +37,7 @@ const Index = () => {
         {/* Main Content Sections */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 pb-8">
           {/* Market Overview Section */}
-          <MarketOverviewSection isDarkMode={isDarkMode} />
+          <MarketOverviewSection isDarkMode={false} />
           
           {/* Top Gainers & Losers Section */}
           <TopGainersLosers 
@@ -58,31 +51,29 @@ const Index = () => {
             loading={isLoading && !marketData}
           />
           
+          {/* Live Prices Across Exchanges */}
+          <Suspense fallback={<div className="h-96 animate-pulse bg-muted/20 rounded-lg" />}>
+            <LivePricesAcrossExchanges loading={isLoading && !marketData} />
+          </Suspense>
+          
           {/* Arbitrage Opportunities Section */}
-          <Suspense fallback={<SkeletonCard isDarkMode={isDarkMode} />}>
-            <ArbitrageDashboard isDarkMode={isDarkMode} />
+          <Suspense fallback={<div className="h-96 animate-pulse bg-muted/20 rounded-lg" />}>
+            <ArbitrageDashboard isDarkMode={false} />
           </Suspense>
           
           {/* On-Chain Analysis Section */}
-          <Suspense fallback={<SkeletonCard isDarkMode={isDarkMode} />}>
-            <OnChainAnalysis isDarkMode={isDarkMode} />
+          <Suspense fallback={<div className="h-96 animate-pulse bg-muted/20 rounded-lg" />}>
+            <OnChainAnalysis loading={isLoading && !marketData} />
           </Suspense>
           
-          {/* News & Insights Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <Suspense fallback={<SkeletonCard isDarkMode={isDarkMode} />}>
-              <NewsAlert isDarkMode={isDarkMode} />
-            </Suspense>
-            
-            <Suspense fallback={<SkeletonCard isDarkMode={isDarkMode} />}>
-              <InsightsAlerts isDarkMode={isDarkMode} />
-            </Suspense>
-          </div>
+          {/* News & Market Alerts Section */}
+          <NewsAlertsSection loading={isLoading && !marketData} />
           
-          {/* Tools & Calculators Section */}
-          <Suspense fallback={<SkeletonCard isDarkMode={isDarkMode} />}>
-            <CalculatorsSection isDarkMode={isDarkMode} />
-          </Suspense>
+          {/* Insights & Alerts Section */}
+          <InsightsAlertsSection loading={isLoading && !marketData} />
+          
+          {/* Finance Calculators Suite Section */}
+          <CalculatorsSuiteSection loading={isLoading && !marketData} />
         </div>
       </div>
     </Layout>
