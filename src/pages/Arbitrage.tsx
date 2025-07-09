@@ -70,6 +70,49 @@ const ArbitragePage = () => {
     }));
   };
 
+  const getTimeAgo = (timestamp: string) => {
+    const now = new Date();
+    const past = new Date(timestamp);
+    const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
+    
+    if (diffInSeconds < 60) {
+      return `${diffInSeconds}s ago`;
+    } else if (diffInSeconds < 3600) {
+      const minutes = Math.floor(diffInSeconds / 60);
+      return `${minutes}m ago`;
+    } else if (diffInSeconds < 86400) {
+      const hours = Math.floor(diffInSeconds / 3600);
+      return `${hours}h ago`;
+    } else {
+      const days = Math.floor(diffInSeconds / 86400);
+      return `${days}d ago`;
+    }
+  };
+
+  const getCoinSymbolFromPair = (pair: string) => {
+    const symbol = pair?.split('/')[0] || '';
+    // Map common symbols to their CoinGecko IDs
+    const symbolMap: { [key: string]: string } = {
+      'BTC': 'bitcoin',
+      'ETH': 'ethereum', 
+      'BNB': 'binancecoin',
+      'SOL': 'solana',
+      'ADA': 'cardano',
+      'AVAX': 'avalanche-2',
+      'MATIC': 'polygon',
+      'LINK': 'chainlink',
+      'LTC': 'litecoin',
+      'UNI': 'uniswap',
+      'XLM': 'stellar',
+      'VET': 'vechain',
+      'FIL': 'filecoin',
+      'DOGE': 'dogecoin',
+      'SHIB': 'shiba-inu',
+      'PEPE': 'pepe'
+    };
+    return symbolMap[symbol.toUpperCase()] || symbol.toLowerCase();
+  };
+
   const handleViewDetails = (coin: string) => {
     setSelectedCoinForChart(coin);
     setShowChartModal(true);
@@ -262,26 +305,26 @@ const ArbitragePage = () => {
                 {sortedOpportunities.map((opportunity, index) => (
                   <div key={index} className={`px-6 py-5 hover:bg-gray-500/5 transition-colors`}>
                     <div className="grid grid-cols-12 gap-4 items-center">
-                      {/* Asset */}
-                      <div className="col-span-3 flex items-center space-x-3">
-                        <img 
-                          src={getCoinLogoById(opportunity.pair?.split('/')[0]?.toLowerCase() || '')} 
-                          alt={opportunity.pair?.split('/')[0] || ''}
-                          className="w-10 h-10 rounded-full"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            target.src = `https://via.placeholder.com/40x40/666666/ffffff?text=${(opportunity.pair?.split('/')[0] || 'C').charAt(0)}`;
-                          }}
-                        />
-                        <div>
-                          <div className={`font-semibold text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                            {opportunity.pair?.split('/')[0] || 'Unknown'}
-                          </div>
-                          <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                            {opportunity.pair || 'N/A'}
-                          </div>
-                        </div>
-                      </div>
+                       {/* Asset */}
+                       <div className="col-span-3 flex items-center space-x-3">
+                         <img 
+                           src={getCoinLogoById(getCoinSymbolFromPair(opportunity.pair || ''))} 
+                           alt={opportunity.pair?.split('/')[0] || ''}
+                           className="w-10 h-10 rounded-full"
+                           onError={(e) => {
+                             const target = e.target as HTMLImageElement;
+                             target.src = `https://via.placeholder.com/40x40/666666/ffffff?text=${(opportunity.pair?.split('/')[0] || 'C').charAt(0)}`;
+                           }}
+                         />
+                         <div>
+                           <div className={`font-semibold text-base ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
+                             {opportunity.pair?.split('/')[0] || 'Unknown'}
+                           </div>
+                           <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                             {opportunity.pair || 'N/A'}
+                           </div>
+                         </div>
+                       </div>
 
                       {/* Route */}
                       <div className="col-span-2 text-center">
@@ -332,12 +375,12 @@ const ArbitragePage = () => {
                         </div>
                       </div>
 
-                      {/* Time */}
-                      <div className="col-span-1 text-center">
-                        <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                          {new Date(opportunity.lastUpdated).toLocaleTimeString()}
-                        </div>
-                      </div>
+                       {/* Time */}
+                       <div className="col-span-1 text-center">
+                         <div className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                           {getTimeAgo(opportunity.lastUpdated)}
+                         </div>
+                       </div>
 
                       {/* Profit */}
                       <div className="col-span-1 text-center">

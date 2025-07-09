@@ -24,6 +24,30 @@ const ArbitrageOpportunityRow = ({ opportunity, isDarkMode, index }: ArbitrageOp
   const fees = (opportunity.sellPrice * 0.002).toFixed(2);
   const netProfit = (parseFloat(profit) - parseFloat(fees)).toFixed(2);
 
+  const getCoinSymbolFromPair = (pair: string) => {
+    const symbol = pair?.split('/')[0] || '';
+    // Map common symbols to their CoinGecko IDs
+    const symbolMap: { [key: string]: string } = {
+      'BTC': 'bitcoin',
+      'ETH': 'ethereum', 
+      'BNB': 'binancecoin',
+      'SOL': 'solana',
+      'ADA': 'cardano',
+      'AVAX': 'avalanche-2',
+      'MATIC': 'polygon',
+      'LINK': 'chainlink',
+      'LTC': 'litecoin',
+      'UNI': 'uniswap',
+      'XLM': 'stellar',
+      'VET': 'vechain',
+      'FIL': 'filecoin',
+      'DOGE': 'dogecoin',
+      'SHIB': 'shiba-inu',
+      'PEPE': 'pepe'
+    };
+    return symbolMap[symbol.toUpperCase()] || symbol.toLowerCase();
+  };
+
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -72,7 +96,7 @@ const ArbitrageOpportunityRow = ({ opportunity, isDarkMode, index }: ArbitrageOp
       <td className="px-3 py-3">
         <div className="flex items-center space-x-2">
           <img 
-            src={getCoinLogoById(symbol.toLowerCase())} 
+            src={getCoinLogoById(getCoinSymbolFromPair(opportunity.pair || ''))} 
             alt={symbol}
             className="w-8 h-8 rounded-full"
             onError={(e) => {
@@ -157,7 +181,24 @@ const ArbitrageOpportunityRow = ({ opportunity, isDarkMode, index }: ArbitrageOp
       <td className="px-3 py-3 text-center">
         <div className="text-xs">
           <div className={`${isDarkMode ? 'text-gray-400' : 'text-gray-600'} mb-1`}>
-            {new Date(opportunity.lastUpdated).toLocaleTimeString()}
+            {(() => {
+              const now = new Date();
+              const past = new Date(opportunity.lastUpdated);
+              const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
+              
+              if (diffInSeconds < 60) {
+                return `${diffInSeconds}s ago`;
+              } else if (diffInSeconds < 3600) {
+                const minutes = Math.floor(diffInSeconds / 60);
+                return `${minutes}m ago`;
+              } else if (diffInSeconds < 86400) {
+                const hours = Math.floor(diffInSeconds / 3600);
+                return `${hours}h ago`;
+              } else {
+                const days = Math.floor(diffInSeconds / 86400);
+                return `${days}d ago`;
+              }
+            })()}
           </div>
           <div className={`text-xs ${isDarkMode ? 'text-gray-500' : 'text-gray-500'}`}>
             {new Date(opportunity.lastUpdated).toLocaleDateString()}
