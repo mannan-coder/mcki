@@ -23,7 +23,7 @@ const MarketPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [sortConfig, setSortConfig] = useState<{key: string, direction: 'asc' | 'desc'}>({ key: 'rank', direction: 'asc' });
   
-  const ITEMS_PER_PAGE = 250; // Show more coins per page
+  const ITEMS_PER_PAGE = 100; // Show 100 coins per page for optimal performance
 
   const categories = [
     'All', 'DeFi', 'Layer 1', 'Layer 2', 'Gaming', 'NFT', 'Meme', 'AI', 'RWA', 'Privacy'
