@@ -286,16 +286,21 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
     );
   }
 
-  const chartHeight = isFullscreen ? 'h-screen' : 'h-96 lg:h-[32rem]';
+  const chartHeight = 'h-96 lg:h-[32rem]';
+  const fullscreenStyles = isFullscreen ? 'fixed inset-0 z-[9999] bg-background' : '';
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className={isFullscreen ? 'fixed inset-0 z-50 bg-background flex flex-col' : ''}
+      className={isFullscreen ? 'fixed inset-0 z-[9999] bg-background flex flex-col h-screen w-screen overflow-hidden' : ''}
     >
-      <Card className={`mb-6 lg:mb-8 shadow-lg border-0 bg-gradient-to-br from-card to-muted/30 ${isFullscreen ? 'flex-1 rounded-none m-0 mb-0' : ''}`}>
+      <Card className={`shadow-lg border-0 bg-gradient-to-br from-card to-muted/30 ${
+        isFullscreen 
+          ? 'flex-1 rounded-none m-0 h-full flex flex-col' 
+          : 'mb-6 lg:mb-8'
+      }`}>
         <CardHeader className={`pb-6 border-b border-border/50 bg-gradient-to-r from-card to-muted/20 ${isFullscreen ? 'flex-shrink-0' : ''}`}>
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
             {/* Title and Price Info */}
