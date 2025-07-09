@@ -91,7 +91,8 @@ const MarketPage = () => {
       header: 'Name', 
       sortable: true,
       render: (value: string, row: any) => (
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-3 cursor-pointer hover:bg-muted/20 p-2 rounded-lg transition-colors" 
+             onClick={() => window.location.href = `/coin/${row.id}`}>
           <img 
             src={row.image} 
             alt={value}

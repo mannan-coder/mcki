@@ -19,6 +19,7 @@ const About = lazy(() => import("./pages/About"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const MarketCapDetails = lazy(() => import("./pages/MarketCapDetails"));
 const VolumeDetails = lazy(() => import("./pages/VolumeDetails"));
+const CoinDetail = lazy(() => import("./pages/CoinDetail"));
 
 // Loading fallback component
 const PageLoader = () => (
@@ -45,6 +46,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/arbitrage" element={<Arbitrage />} />
           <Route path="/market" element={<Market />} />
+          <Route path="/coin/:id" element={<CoinDetail />} />
           <Route path="/market-cap-details" element={<MarketCapDetails />} />
           <Route path="/volume-details" element={<VolumeDetails />} />
           <Route path="/news" element={<News />} />
