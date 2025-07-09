@@ -292,58 +292,71 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className={isFullscreen ? 'fixed inset-0 z-50 bg-background overflow-auto' : ''}
+      className={isFullscreen ? 'fixed inset-0 z-50 bg-background' : ''}
     >
-      <Card className={`mb-6 lg:mb-8 hover:shadow-lg transition-all duration-300 ${isFullscreen ? 'h-full rounded-none border-0' : ''}`}>
-        <CardHeader className={`pb-4 border-b border-border/50 ${isFullscreen ? 'sticky top-0 bg-background z-10' : ''}`}>
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+      <Card className={`mb-6 lg:mb-8 shadow-lg border-0 bg-gradient-to-br from-card to-muted/30 ${isFullscreen ? 'h-full rounded-none' : ''}`}>
+        <CardHeader className={`pb-6 border-b border-border/50 bg-gradient-to-r from-card to-muted/20 ${isFullscreen ? 'sticky top-0 bg-background z-10' : ''}`}>
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
             {/* Title and Price Info */}
-            <div className="flex-1">
-              <CardTitle className="flex items-center gap-3 text-xl mb-3">
-                <BarChart3 className="h-6 w-6 text-primary" />
-                <span>{coin.name} ({coin.symbol.toUpperCase()})</span>
-                <Badge variant="secondary" className="text-xs">
-                  {timeframes.find(t => t.value === selectedTimeframe)?.interval}
-                </Badge>
-              </CardTitle>
+            <div className="flex-1 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <BarChart3 className="h-6 w-6 text-primary" />
+                </div>
+                <div>
+                  <CardTitle className="text-2xl font-bold text-foreground">
+                    {coin.name}
+                  </CardTitle>
+                  <div className="flex items-center gap-2 text-muted-foreground">
+                    <span className="text-sm font-medium">{coin.symbol.toUpperCase()}</span>
+                    <Badge variant="secondary" className="text-xs bg-muted/50">
+                      {timeframes.find(t => t.value === selectedTimeframe)?.interval}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
               
               {/* Real-time Price Display */}
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="text-3xl lg:text-4xl font-bold text-foreground">
-                  {formatPrice(coin.currentPrice)}
-                </div>
-                <div className={`flex items-center gap-2 text-lg font-semibold ${
-                  isPositive ? 'text-success' : 'text-destructive'
-                }`}>
-                  {isPositive ? <TrendingUp className="h-5 w-5" /> : <TrendingDown className="h-5 w-5" />}
-                  <span>{isPositive ? '+' : ''}{coin.priceChangePercentage24h.toFixed(2)}%</span>
+              <div className="flex flex-col sm:flex-row sm:items-end gap-4">
+                <div className="space-y-1">
+                  <div className="text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+                    {formatPrice(coin.currentPrice)}
+                  </div>
+                  <div className={`flex items-center gap-2 text-lg font-semibold px-3 py-1 rounded-full ${
+                    isPositive 
+                      ? 'text-success bg-success/10' 
+                      : 'text-destructive bg-destructive/10'
+                  }`}>
+                    {isPositive ? <TrendingUp className="h-4 w-4" /> : <TrendingDown className="h-4 w-4" />}
+                    <span>{isPositive ? '+' : ''}{coin.priceChangePercentage24h.toFixed(2)}%</span>
+                  </div>
                 </div>
               </div>
 
               {/* Chart Stats */}
               {chartStats && (
-                <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mt-4 text-sm">
-                  <div>
-                    <div className="text-muted-foreground">24h High</div>
-                    <div className="font-semibold text-success">{formatPrice(chartStats.highestPrice)}</div>
+                <div className="grid grid-cols-2 lg:grid-cols-5 gap-6 p-4 bg-muted/20 rounded-xl border border-border/30">
+                  <div className="text-center">
+                    <div className="text-xs text-muted-foreground font-medium mb-1">24h High</div>
+                    <div className="font-bold text-success text-lg">{formatPrice(chartStats.highestPrice)}</div>
                   </div>
-                  <div>
-                    <div className="text-muted-foreground">24h Low</div>
-                    <div className="font-semibold text-destructive">{formatPrice(chartStats.lowestPrice)}</div>
+                  <div className="text-center">
+                    <div className="text-xs text-muted-foreground font-medium mb-1">24h Low</div>
+                    <div className="font-bold text-destructive text-lg">{formatPrice(chartStats.lowestPrice)}</div>
                   </div>
-                  <div>
-                    <div className="text-muted-foreground">Avg Volume</div>
-                    <div className="font-semibold">{formatVolume(chartStats.avgVolume)}</div>
+                  <div className="text-center">
+                    <div className="text-xs text-muted-foreground font-medium mb-1">Volume</div>
+                    <div className="font-bold text-lg">{formatVolume(chartStats.avgVolume)}</div>
                   </div>
-                  <div>
-                    <div className="text-muted-foreground">Volatility</div>
-                    <div className="font-semibold">{chartStats.volatility.toFixed(2)}%</div>
+                  <div className="text-center">
+                    <div className="text-xs text-muted-foreground font-medium mb-1">Volatility</div>
+                    <div className="font-bold text-lg">{chartStats.volatility.toFixed(2)}%</div>
                   </div>
-                  <div>
-                    <div className="text-muted-foreground">Market Status</div>
-                    <div className="flex items-center gap-1">
+                  <div className="text-center">
+                    <div className="text-xs text-muted-foreground font-medium mb-1">Status</div>
+                    <div className="flex items-center justify-center gap-2">
                       <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
-                      <span className="font-semibold text-success">Live</span>
+                      <span className="font-bold text-success text-lg">Live</span>
                     </div>
                   </div>
                 </div>
@@ -351,16 +364,20 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
             </div>
 
             {/* Controls */}
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-4 lg:items-end">
               {/* Timeframe Selector */}
-              <div className="flex flex-wrap gap-1">
+              <div className="flex flex-wrap gap-2 p-2 bg-muted/30 rounded-lg border border-border/30">
                 {timeframes.map((timeframe) => (
                   <Button
                     key={timeframe.value}
-                    variant={selectedTimeframe === timeframe.value ? "default" : "outline"}
+                    variant={selectedTimeframe === timeframe.value ? "default" : "ghost"}
                     size="sm"
                     onClick={() => handleTimeframeChange(timeframe.value)}
-                    className="h-8 px-3 text-xs font-medium"
+                    className={`h-9 px-4 text-sm font-medium transition-all ${
+                      selectedTimeframe === timeframe.value 
+                        ? 'bg-primary text-primary-foreground shadow-sm' 
+                        : 'hover:bg-muted/50'
+                    }`}
                     disabled={historyLoading}
                   >
                     {timeframe.label}
@@ -369,60 +386,78 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
               </div>
 
               {/* Chart Controls */}
-              <div className="flex items-center gap-4 text-sm">
-                <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4 p-3 bg-muted/30 rounded-lg border border-border/30">
+                <div className="flex items-center gap-2 p-1 bg-background/50 rounded-md">
                   <Button
-                    variant={chartType === 'line' ? 'default' : 'outline'}
+                    variant={chartType === 'line' ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() => setChartType('line')}
+                    className="h-8 px-3"
                   >
-                    <Activity className="h-4 w-4" />
+                    <Activity className="h-4 w-4 mr-1" />
+                    Line
                   </Button>
                   <Button
-                    variant={chartType === 'candlestick' ? 'default' : 'outline'}
+                    variant={chartType === 'candlestick' ? 'default' : 'ghost'}
                     size="sm"
                     onClick={() => setChartType('candlestick')}
+                    className="h-8 px-3"
                   >
-                    <BarChart3 className="h-4 w-4" />
+                    <BarChart3 className="h-4 w-4 mr-1" />
+                    Candles
                   </Button>
                 </div>
 
-                <Separator orientation="vertical" className="h-6" />
+                <Separator orientation="vertical" className="h-8" />
 
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="volume"
-                    checked={showVolume}
-                    onCheckedChange={setShowVolume}
-                  />
-                  <Label htmlFor="volume" className="text-xs">Volume</Label>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="volume"
+                      checked={showVolume}
+                      onCheckedChange={setShowVolume}
+                      className="data-[state=checked]:bg-primary"
+                    />
+                    <Label htmlFor="volume" className="text-sm font-medium cursor-pointer">
+                      <Volume2 className="h-4 w-4 inline mr-1" />
+                      Volume
+                    </Label>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="grid"
+                      checked={showGrid}
+                      onCheckedChange={setShowGrid}
+                      className="data-[state=checked]:bg-primary"
+                    />
+                    <Label htmlFor="grid" className="text-sm font-medium cursor-pointer">
+                      <Grid3X3 className="h-4 w-4 inline mr-1" />
+                      Grid
+                    </Label>
+                  </div>
+
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="ma"
+                      checked={showMA}
+                      onCheckedChange={setShowMA}
+                      className="data-[state=checked]:bg-primary"
+                    />
+                    <Label htmlFor="ma" className="text-sm font-medium cursor-pointer">
+                      MA7
+                    </Label>
+                  </div>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setIsFullscreen(!isFullscreen)}
+                    className="h-9 px-3 bg-background/50 hover:bg-muted"
+                  >
+                    <Maximize2 className="h-4 w-4" />
+                  </Button>
                 </div>
-
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="grid"
-                    checked={showGrid}
-                    onCheckedChange={setShowGrid}
-                  />
-                  <Label htmlFor="grid" className="text-xs">Grid</Label>
-                </div>
-
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="ma"
-                    checked={showMA}
-                    onCheckedChange={setShowMA}
-                  />
-                  <Label htmlFor="ma" className="text-xs">MA7</Label>
-                </div>
-
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setIsFullscreen(!isFullscreen)}
-                >
-                  <Maximize2 className="h-4 w-4" />
-                </Button>
               </div>
             </div>
           </div>
@@ -437,8 +472,8 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
               </div>
             </div>
           ) : chartData.length > 0 ? (
-            <div className={`${isFullscreen ? 'min-h-[calc(100vh-200px)]' : chartHeight} w-full p-4 ${isFullscreen ? 'overflow-auto' : ''}`}>
-              <ResponsiveContainer width="100%" height={isFullscreen ? "100%" : "100%"}>
+            <div className={`${chartHeight} w-full p-6`}>
+              <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart
                   data={chartData}
                   margin={{ 
