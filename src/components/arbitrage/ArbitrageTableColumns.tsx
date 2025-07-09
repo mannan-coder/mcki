@@ -6,6 +6,8 @@ const getCoinIdFromSymbol = (symbol: string) => {
   const symbolMap: { [key: string]: string } = {
     'btc': 'bitcoin',
     'eth': 'ethereum',
+    'usdt': 'tether',
+    'usdc': 'usd-coin',
     'bnb': 'binancecoin',
     'sol': 'solana',
     'ada': 'cardano',
@@ -19,7 +21,42 @@ const getCoinIdFromSymbol = (symbol: string) => {
     'fil': 'filecoin',
     'doge': 'dogecoin',
     'shib': 'shiba-inu',
-    'pepe': 'pepe'
+    'pepe': 'pepe',
+    'xrp': 'xrp',
+    'trx': 'tron',
+    'dot': 'polkadot',
+    'bch': 'bitcoin-cash',
+    'near': 'near',
+    'icp': 'internet-computer',
+    'dai': 'multi-collateral-dai',
+    'etc': 'ethereum-classic',
+    'apt': 'aptos',
+    'rndr': 'render-token',
+    'mnt': 'mantle',
+    'cro': 'crypto-com-chain',
+    'okb': 'okb',
+    'atom': 'cosmos',
+    'xmr': 'monero',
+    'hbar': 'hedera-hashgraph',
+    'arb': 'arbitrum',
+    'op': 'optimism',
+    'kas': 'kaspa',
+    'imx': 'immutable-x',
+    'tao': 'bittensor',
+    'fet': 'artificial-superintelligence-alliance',
+    'inj': 'injective-protocol',
+    'ftm': 'fantom',
+    'fdusd': 'first-digital-usd',
+    'grt': 'the-graph',
+    'algo': 'algorand',
+    'rune': 'thorchain',
+    'sei': 'sei-network',
+    'mkr': 'maker',
+    'tia': 'celestia',
+    'ldo': 'lido-dao',
+    'ton': 'the-open-network',
+    'steth': 'staked-ether',
+    'wbtc': 'wrapped-bitcoin'
   };
   
   return symbolMap[symbol.toLowerCase()] || symbol.toLowerCase();
@@ -47,19 +84,23 @@ export const getArbitrageTableColumns = () => [
       
       return (
         <div className="flex items-center space-x-3">
-          <img 
-            src={coinLogo} 
-            alt={row.pair ? row.pair.split('-')[0] : 'Coin'}
-            className="w-10 h-10 rounded-full border border-border/20 bg-background"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = '/placeholder.svg';
-            }}
-          />
-          <div>
-            <div className="font-semibold text-foreground text-sm">
+          <div className="relative">
+            <img 
+              src={coinLogo} 
+              alt={row.pair ? row.pair.split('-')[0] : 'Coin'}
+              className="w-8 h-8 rounded-full border border-border/20 bg-background shadow-sm"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = '/placeholder.svg';
+              }}
+            />
+            {/* Loading state indicator */}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 animate-pulse"></div>
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="font-semibold text-foreground text-sm truncate">
               {row.pair ? row.pair.split('-')[0] : 'Unknown'}
             </div>
-            <div className="text-xs text-muted-foreground">
+            <div className="text-xs text-muted-foreground truncate">
               {row.pair || 'N/A'}
             </div>
           </div>
