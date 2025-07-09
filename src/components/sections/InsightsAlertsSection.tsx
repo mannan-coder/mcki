@@ -5,6 +5,7 @@ import { DataSection } from '@/components/common/DataSection';
 import { StatsGrid } from '@/components/common/StatsGrid';
 import { motion } from 'framer-motion';
 import { useUpcomingEvents } from '@/hooks/useUpcomingEvents';
+import { useLiveAlerts } from '@/hooks/useLiveAlerts';
 
 interface InsightsAlertsSectionProps {
   loading?: boolean;
@@ -12,6 +13,7 @@ interface InsightsAlertsSectionProps {
 
 export const InsightsAlertsSection = ({ loading = false }: InsightsAlertsSectionProps) => {
   const { events: upcomingEvents, loading: eventsLoading } = useUpcomingEvents();
+  const { alerts: recentAlerts, loading: alertsLoading } = useLiveAlerts();
   
   const alertStats = [
     {
@@ -44,45 +46,6 @@ export const InsightsAlertsSection = ({ loading = false }: InsightsAlertsSection
     }
   ];
 
-  const recentAlerts = [
-    { 
-      type: 'liquidation',
-      coin: 'BTC', 
-      exchange: 'Binance', 
-      amount: '$67.8M', 
-      direction: 'Long', 
-      change: '-12.5%', 
-      time: '2 min ago' 
-    },
-    { 
-      type: 'pump',
-      coin: 'PEPE', 
-      exchange: 'Binance', 
-      amount: '$12.5M', 
-      direction: 'Buy', 
-      change: '+247%', 
-      time: '3 min ago' 
-    },
-    { 
-      type: 'whale',
-      coin: 'ETH', 
-      exchange: 'Coinbase', 
-      amount: '15,000 ETH', 
-      direction: 'Out', 
-      change: 'Movement', 
-      time: '5 min ago' 
-    },
-    { 
-      type: 'listing',
-      coin: 'NEWCOIN', 
-      exchange: 'KuCoin', 
-      amount: '$2.1M', 
-      direction: 'New', 
-      change: '+487%', 
-      time: '8 min ago' 
-    }
-  ];
-
   const getAlertIcon = (type: string) => {
     switch (type) {
       case 'liquidation': return '🚨';
@@ -112,7 +75,7 @@ export const InsightsAlertsSection = ({ loading = false }: InsightsAlertsSection
     }
   };
 
-  if (loading || eventsLoading) {
+  if (loading || eventsLoading || alertsLoading) {
     return (
       <DataSection
         title="Insights & Alerts"
@@ -243,35 +206,53 @@ export const InsightsAlertsSection = ({ loading = false }: InsightsAlertsSection
               </div>
 
               <div className="space-y-3">
-                {recentAlerts.map((alert, index) => (
-                  <motion.div
-                    key={index}
-                    className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:bg-muted/30 transition-colors"
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <div className="flex items-center space-x-3">
-                      <span className="text-lg">{getAlertIcon(alert.type)}</span>
-                      <div>
-                        <div className="flex items-center space-x-2">
-                          <span className="font-medium text-foreground text-sm">{alert.coin}</span>
-                          <span className={`text-xs px-2 py-1 rounded ${
-                            alert.change.startsWith('+') ? 'bg-success/20 text-success' : 
-                            alert.change.startsWith('-') ? 'bg-destructive/20 text-destructive' : 
-                            'bg-muted/20 text-muted-foreground'
-                          }`}>
-                            {alert.change}
-                          </span>
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {alert.exchange} • {alert.amount}
+                {alertsLoading ? (
+                  [1, 2, 3, 4].map((i) => (
+                    <div key={i} className="flex items-center justify-between p-3 border border-border/50 rounded-lg">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-6 h-6 bg-muted rounded animate-pulse"></div>
+                        <div>
+                          <div className="h-4 w-24 bg-muted rounded animate-pulse mb-1"></div>
+                          <div className="h-3 w-32 bg-muted rounded animate-pulse"></div>
                         </div>
                       </div>
+                      <div className="h-3 w-16 bg-muted rounded animate-pulse"></div>
                     </div>
-                    <div className="text-xs text-muted-foreground">{alert.time}</div>
-                  </motion.div>
-                ))}
+                  ))
+                ) : (
+                  recentAlerts.slice(0, 4).map((alert, index) => (
+                    <motion.div
+                      key={alert.id}
+                      className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:bg-muted/30 transition-colors"
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <div className="flex items-center space-x-3">
+                        <span className="text-lg">{getAlertIcon(alert.type)}</span>
+                        <div>
+                          <div className="flex items-center space-x-2">
+                            <span className="font-medium text-foreground text-sm">{alert.coin}</span>
+                            <span className={`text-xs px-2 py-1 rounded ${
+                              alert.change.startsWith('+') ? 'bg-success/20 text-success' : 
+                              alert.change.startsWith('-') ? 'bg-destructive/20 text-destructive' : 
+                              'bg-muted/20 text-muted-foreground'
+                            }`}>
+                              {alert.change}
+                            </span>
+                            {alert.status === 'new' && (
+                              <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
+                            )}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            {alert.exchange} • {alert.amount}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="text-xs text-muted-foreground">{alert.time}</div>
+                    </motion.div>
+                  ))
+                )}
               </div>
 
               <div className="text-center">

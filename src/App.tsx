@@ -16,6 +16,7 @@ const Analytics = lazy(() => import("./pages/Analytics"));
 const ChainAnalytics = lazy(() => import("./pages/ChainAnalytics"));
 const Tools = lazy(() => import("./pages/Tools"));
 const About = lazy(() => import("./pages/About"));
+const Alerts = lazy(() => import("./pages/Alerts"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const MarketCapDetails = lazy(() => import("./pages/MarketCapDetails"));
 const VolumeDetails = lazy(() => import("./pages/VolumeDetails"));
@@ -53,6 +54,7 @@ const App = () => (
           <Route path="/news/:id" element={<NewsDetail />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/chain-analytics" element={<ChainAnalytics />} />
+          <Route path="/alerts" element={<Alerts />} />
           <Route path="/tools" element={<Tools />} />
           <Route path="/about" element={<About />} />
           <Route path="*" element={<NotFound />} />
