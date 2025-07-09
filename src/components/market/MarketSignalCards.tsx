@@ -273,7 +273,7 @@ export const MarketSignalCards = ({ coins }: MarketSignalCardsProps) => {
   return (
     <div className="space-y-6">
       {/* Signal Cards Header */}
-      <div className="text-center">
+      <div className="text-left">
         <h2 className="text-2xl font-bold text-foreground mb-2">Live Market Signals</h2>
         <p className="text-muted-foreground">Real-time analysis based on price action, volume, and momentum indicators</p>
       </div>
