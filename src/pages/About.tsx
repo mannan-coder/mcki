@@ -1,21 +1,28 @@
-import { useState } from 'react';
 import Layout from '@/components/Layout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { 
   Users, 
   Target,
   Shield,
-  Award,
   Globe,
   TrendingUp,
   Zap,
-  Heart,
-  Star,
   CheckCircle
 } from 'lucide-react';
+import { AboutHero } from '@/components/about/AboutHero';
+import { MissionVision } from '@/components/about/MissionVision';
+import { TeamSection } from '@/components/about/TeamSection';
+import { TechnologySection } from '@/components/about/TechnologySection';
+import { Card, CardContent } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
 
 const About = () => {
+  const achievements = [
+    { metric: '500K+', label: 'Active Users', icon: Users },
+    { metric: '$2.1B+', label: 'Trading Volume', icon: TrendingUp },
+    { metric: '150+', label: 'Exchanges', icon: Globe },
+    { metric: '99.9%', label: 'Uptime', icon: CheckCircle }
+  ];
 
   const team = [
     {
@@ -48,229 +55,113 @@ const About = () => {
     }
   ];
 
-  const values = [
+  const techFeatures = [
     {
-      icon: Shield,
-      title: 'Security First',
-      description: 'We prioritize the security of your data and investments with enterprise-grade encryption and security protocols.'
+      title: 'Real-Time Processing',
+      description: 'Advanced algorithms process millions of data points per second across 150+ exchanges to identify arbitrage opportunities instantly.',
+      gradient: 'bg-gradient-to-br from-primary/5 to-primary/10',
+      textColor: 'text-primary'
     },
     {
-      icon: Target,
-      title: 'Precision & Accuracy',
-      description: 'Our algorithms are tested and verified to provide the most accurate market data and arbitrage opportunities.'
+      title: 'Machine Learning',
+      description: 'Our AI models continuously learn from market patterns to improve prediction accuracy and identify emerging trading opportunities.',
+      gradient: 'bg-gradient-to-br from-success/5 to-success/10',
+      textColor: 'text-success'
     },
     {
-      icon: Zap,
-      title: 'Real-Time Performance',
-      description: 'Lightning-fast data processing ensures you never miss a profitable opportunity in the fast-moving crypto markets.'
-    },
-    {
-      icon: Heart,
-      title: 'Community Driven',
-      description: 'We build features based on community feedback and continuously improve based on user needs.'
+      title: 'Enterprise Security',
+      description: 'Bank-grade encryption, multi-factor authentication, and secure API endpoints protect your data and trading activities.',
+      gradient: 'bg-gradient-to-br from-accent/5 to-accent/10',
+      textColor: 'text-accent'
     }
   ];
 
-  const achievements = [
-    { metric: '500K+', label: 'Active Users', icon: Users },
-    { metric: '$2.1B+', label: 'Trading Volume', icon: TrendingUp },
-    { metric: '150+', label: 'Exchanges', icon: Globe },
-    { metric: '99.9%', label: 'Uptime', icon: CheckCircle }
-  ];
+  const mission = {
+    icon: Target,
+    title: 'Our Mission',
+    content: 'To democratize access to sophisticated cryptocurrency trading tools and provide real-time arbitrage opportunities that were previously available only to institutional traders. We believe everyone should have access to professional-grade market intelligence.'
+  };
+
+  const vision = {
+    icon: Zap,
+    title: 'Our Vision',
+    content: 'To become the global standard for cryptocurrency market intelligence, enabling millions of traders to make informed decisions through cutting-edge technology, real-time data, and innovative analytical tools that drive profitable trading strategies.'
+  };
 
   return (
     <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {/* Hero Section */}
-            <div className="text-center mb-16">
-              <h1 className="text-5xl font-bold mb-6 text-foreground">About MCKI</h1>
-              <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8">
-                We're revolutionizing cryptocurrency trading with intelligent arbitrage detection, 
-                advanced analytics, and professional-grade tools for traders and investors worldwide.
+        {/* Hero Section */}
+        <AboutHero achievements={achievements} />
+
+        {/* Mission & Vision */}
+        <MissionVision mission={mission} vision={vision} />
+
+        {/* Core Values */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+          {[
+            { icon: Shield, title: 'Security First', desc: 'Enterprise-grade security protocols', color: 'primary' },
+            { icon: Target, title: 'Precision & Accuracy', desc: 'Verified algorithms and data', color: 'success' },
+            { icon: Zap, title: 'Real-Time Performance', desc: 'Lightning-fast data processing', color: 'accent' }
+          ].map((value, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 50 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+            >
+              <Card className={`text-center bg-gradient-to-br from-${value.color}/5 to-${value.color}/10 border-${value.color}/20 hover:shadow-lg transition-all duration-300`}>
+                <CardContent className="p-6">
+                  <value.icon className={`h-8 w-8 text-${value.color} mx-auto mb-3`} />
+                  <div className={`text-xl font-bold text-${value.color} mb-2`}>{value.title}</div>
+                  <div className="text-sm text-muted-foreground">{value.desc}</div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Team Section */}
+        <TeamSection team={team} icon={Users} />
+
+        {/* Technology Stack */}
+        <TechnologySection icon={Zap} features={techFeatures} />
+
+        {/* Contact CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <Card className="text-center bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20 hover:shadow-xl transition-all duration-300">
+            <CardContent className="p-8">
+              <h2 className="text-2xl md:text-3xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+                Ready to Start Trading Smarter?
+              </h2>
+              <p className="text-muted-foreground mb-6 max-w-2xl mx-auto leading-relaxed">
+                Join thousands of traders who trust MCKI for their cryptocurrency arbitrage and market analysis needs. 
+                Start your journey with professional-grade tools today.
               </p>
-              <div className="flex items-center justify-center space-x-2">
-                <Badge variant="outline" className="text-primary border-primary">
-                  <Star className="h-3 w-3 mr-1" />
-                  Established 2019
-                </Badge>
-                <Badge variant="outline" className="text-success border-success">
-                  <Award className="h-3 w-3 mr-1" />
-                  Industry Leader
-                </Badge>
-                <Badge variant="outline" className="text-accent border-accent">
-                  <Globe className="h-3 w-3 mr-1" />
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <Badge variant="outline" className="text-primary border-primary px-4 py-2 hover:bg-primary/10 transition-colors">
+                  <Globe className="h-4 w-4 mr-2" />
                   Global Platform
                 </Badge>
+                <Badge variant="outline" className="text-success border-success px-4 py-2 hover:bg-success/10 transition-colors">
+                  <Shield className="h-4 w-4 mr-2" />
+                  Secure & Trusted
+                </Badge>
+                <Badge variant="outline" className="text-accent border-accent px-4 py-2 hover:bg-accent/10 transition-colors">
+                  <CheckCircle className="h-4 w-4 mr-2" />
+                  Industry Leading
+                </Badge>
               </div>
-            </div>
-
-            {/* Mission & Vision */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
-              <Card className="bg-primary/5 border-primary/20">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2 text-primary">
-                    <Target className="h-6 w-6" />
-                    <span>Our Mission</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">
-                    To democratize access to sophisticated cryptocurrency trading tools and provide 
-                    real-time arbitrage opportunities that were previously available only to institutional traders. 
-                    We believe everyone should have access to professional-grade market intelligence.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-success/5 border-success/20">
-                <CardHeader>
-                  <CardTitle className="flex items-center space-x-2 text-success">
-                    <Zap className="h-6 w-6" />
-                    <span>Our Vision</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">
-                    To become the global standard for cryptocurrency market intelligence, 
-                    enabling millions of traders to make informed decisions through cutting-edge technology, 
-                    real-time data, and innovative analytical tools that drive profitable trading strategies.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Company Values */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
-              <Card className="text-center bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
-                <CardContent className="p-6">
-                  <Shield className="h-8 w-8 text-primary mx-auto mb-3" />
-                  <div className="text-xl font-bold text-primary mb-2">Security First</div>
-                  <div className="text-sm text-muted-foreground">Enterprise-grade security protocols</div>
-                </CardContent>
-              </Card>
-              <Card className="text-center bg-gradient-to-br from-success/5 to-success/10 border-success/20">
-                <CardContent className="p-6">
-                  <Target className="h-8 w-8 text-success mx-auto mb-3" />
-                  <div className="text-xl font-bold text-success mb-2">Precision & Accuracy</div>
-                  <div className="text-sm text-muted-foreground">Verified algorithms and data</div>
-                </CardContent>
-              </Card>
-              <Card className="text-center bg-gradient-to-br from-accent/5 to-accent/10 border-accent/20">
-                <CardContent className="p-6">
-                  <Zap className="h-8 w-8 text-accent mx-auto mb-3" />
-                  <div className="text-xl font-bold text-accent mb-2">Real-Time Performance</div>
-                  <div className="text-sm text-muted-foreground">Lightning-fast data processing</div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Core Values */}
-            <div className="mb-16">
-              <h2 className="text-3xl font-bold text-center mb-8">Our Core Values</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {values.map((value, index) => (
-                  <Card key={index} className="text-center hover:shadow-lg transition-shadow">
-                    <CardHeader>
-                      <value.icon className="h-8 w-8 text-primary mx-auto mb-2" />
-                      <CardTitle className="text-lg">{value.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground">{value.description}</p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            {/* Team Section */}
-            <div className="mb-16">
-              <h2 className="text-3xl font-bold text-center mb-8">Meet Our Team</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {team.map((member, index) => (
-                  <Card key={index} className="hover:shadow-lg transition-shadow">
-                    <CardHeader className="text-center">
-                      <div className="w-16 h-16 bg-primary/10 rounded-full mx-auto mb-4 flex items-center justify-center">
-                        <Users className="h-8 w-8 text-primary" />
-                      </div>
-                      <CardTitle className="text-lg">{member.name}</CardTitle>
-                      <p className="text-sm text-primary font-medium">{member.role}</p>
-                    </CardHeader>
-                    <CardContent className="text-center space-y-2">
-                      <Badge variant="outline" className="text-xs">
-                        {member.expertise}
-                      </Badge>
-                      <p className="text-xs text-muted-foreground">{member.experience}</p>
-                      <p className="text-sm text-muted-foreground leading-relaxed">
-                        {member.description}
-                      </p>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            {/* Technology Stack */}
-            <Card className="mb-16">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2 text-center mx-auto">
-                  <Zap className="h-6 w-6" />
-                  <span>Our Technology</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <div className="text-center p-4 border border-border rounded-lg bg-gradient-to-br from-primary/5 to-primary/10">
-                    <h3 className="font-semibold mb-2 text-primary">Real-Time Processing</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Advanced algorithms process millions of data points per second across 150+ exchanges 
-                      to identify arbitrage opportunities instantly.
-                    </p>
-                  </div>
-                  <div className="text-center p-4 border border-border rounded-lg bg-gradient-to-br from-success/5 to-success/10">
-                    <h3 className="font-semibold mb-2 text-success">Machine Learning</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Our AI models continuously learn from market patterns to improve prediction accuracy 
-                      and identify emerging trading opportunities.
-                    </p>
-                  </div>
-                  <div className="text-center p-4 border border-border rounded-lg bg-gradient-to-br from-accent/5 to-accent/10">
-                    <h3 className="font-semibold mb-2 text-accent">Enterprise Security</h3>
-                    <p className="text-sm text-muted-foreground">
-                      Bank-grade encryption, multi-factor authentication, and secure API endpoints 
-                      protect your data and trading activities.
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Contact CTA */}
-            <Card className="text-center bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20">
-              <CardContent className="p-8">
-                <h2 className="text-2xl font-bold mb-4">Ready to Start Trading Smarter?</h2>
-                <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-                  Join thousands of traders who trust MCKI for their cryptocurrency arbitrage and market analysis needs. 
-                  Start your journey with professional-grade tools today.
-                </p>
-                <div className="flex items-center justify-center space-x-4">
-                  <Badge variant="outline" className="text-primary border-primary px-4 py-2">
-                    <Globe className="h-4 w-4 mr-2" />
-                    Global Platform
-                  </Badge>
-                  <Badge variant="outline" className="text-success border-success px-4 py-2">
-                    <Shield className="h-4 w-4 mr-2" />
-                    Secure & Trusted
-                  </Badge>
-                  <Badge variant="outline" className="text-accent border-accent px-4 py-2">
-                    <Award className="h-4 w-4 mr-2" />
-                    Industry Leading
-                  </Badge>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </Layout>
-      );
-    };
+            </CardContent>
+          </Card>
+        </motion.div>
+      </div>
+    </Layout>
+  );
+};
 
 export default About;
