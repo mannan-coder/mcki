@@ -6,7 +6,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { getCoinsByCategory } from '@/utils/coinCategories';
-import { ModernCryptoTable } from '@/components/market/ModernCryptoTable';
+import { CryptoTable } from '@/components/market/crypto-table';
 import { toast } from "sonner";
 
 const MarketPage = () => {
@@ -251,7 +251,7 @@ const MarketPage = () => {
           </Card>
 
           {/* Main Data Table */}
-          <ModernCryptoTable
+          <CryptoTable
             data={formattedCoinData}
             loading={isLoading && !cryptoData}
             sortConfig={sortConfig}
