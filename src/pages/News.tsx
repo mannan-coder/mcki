@@ -37,8 +37,8 @@ const News = () => {
   const categories = ['All', 'Regulation', 'DeFi', 'Government', 'NFT', 'Technology', 'Adoption', 'Market Analysis'];
   const impactFilters = ['All', 'bullish', 'bearish', 'neutral'];
 
-  // Use actual API data
-  const newsData = apiNews.map(item => ({
+  // Use actual API data and determine featured articles dynamically
+  const newsData = apiNews.map((item, index) => ({
     ...item,
     sentiment: {
       score: item.impact === 'bullish' ? 75 : item.impact === 'bearish' ? 25 : 50,
@@ -46,11 +46,26 @@ const News = () => {
       trend: item.impact === 'bullish' ? 'up' : item.impact === 'bearish' ? 'down' : 'neutral'
     },
     author: item.source,
-    readTime: '3 min read',
+    readTime: item.readTime || '3 min read',
     views: Math.floor(Math.random() * 10000) + 1000,
-    featured: item.id <= 2, // First 2 articles are featured
+    featured: false, // Will be set below based on criteria
     image: item.image || 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop&auto=format'
   }));
+
+  // Mark featured articles based on criteria: most recent, high impact, or important categories
+  newsData.forEach((item, index) => {
+    const isRecent = index < 3; // Top 3 most recent
+    const isHighImpact = item.impact === 'bullish' || item.impact === 'bearish';
+    const isImportantCategory = ['Bitcoin', 'Ethereum', 'Regulation', 'DeFi'].some(cat => 
+      item.category.toLowerCase().includes(cat.toLowerCase()) || 
+      item.title.toLowerCase().includes(cat.toLowerCase())
+    );
+    
+    // Mark as featured if it meets any of these criteria and we haven't exceeded 3 featured articles
+    if ((isRecent || isHighImpact || isImportantCategory) && newsData.filter(n => n.featured).length < 3) {
+      item.featured = true;
+    }
+  });
 
   const newsStats = [
     {
