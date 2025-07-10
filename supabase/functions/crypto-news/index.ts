@@ -51,6 +51,7 @@ serve(async (req) => {
   }
 
   try {
+    console.log('=== CRYPTO NEWS FUNCTION START ===');
     console.log('Fetching crypto news from NewsData.io...');
     
     // First try to fetch from NewsData.io API
@@ -105,11 +106,13 @@ serve(async (req) => {
         console.log('No NewsData.io API key found');
       }
     } catch (apiError) {
+      console.log('=== API ERROR ===');
       console.log('NewsData.io API error, using fallback news:', apiError.message);
     }
     
     // Fallback to static news if API fails or no API key
     if (news.length === 0) {
+      console.log('=== USING FALLBACK DATA ===');
       console.log('Using fallback news data');
       news = [
       {
