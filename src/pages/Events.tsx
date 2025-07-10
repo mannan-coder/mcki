@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { 
   Calendar, 
@@ -18,7 +18,9 @@ import {
   BarChart3,
   Activity,
   Globe,
-  DollarSign
+  DollarSign,
+  X,
+  ChevronUp
 } from 'lucide-react';
 import Layout from '@/components/Layout';
 import { ResponsiveCard } from '@/components/common/ResponsiveCard';
@@ -26,7 +28,7 @@ import { DataSection } from '@/components/common/DataSection';
 import { StatsGrid } from '@/components/common/StatsGrid';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLiveEvents } from '@/hooks/useLiveEvents';
@@ -34,14 +36,281 @@ import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 import { getTimeAgo } from '@/utils/timeUtils';
 import { useToast } from '@/hooks/use-toast';
 
-interface EventDetailPageProps {}
+interface EventDetailModalProps {
+  event: any;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  impactData: any;
+}
 
-const EventsPage = ({}: EventDetailPageProps) => {
+const EventDetailModal = ({ event, open, onOpenChange, impactData }: EventDetailModalProps) => {
+  const [liveMetrics, setLiveMetrics] = useState({
+    priceMovement: 0,
+    volumeSpike: 0,
+    socialMentions: 0,
+    lastUpdate: new Date().toISOString()
+  });
+
+  useEffect(() => {
+    if (!open) return;
+
+    const updateLiveMetrics = () => {
+      setLiveMetrics({
+        priceMovement: (Math.random() - 0.5) * 10,
+        volumeSpike: Math.random() * 200,
+        socialMentions: Math.random() * 1000,
+        lastUpdate: new Date().toISOString()
+      });
+    };
+
+    updateLiveMetrics();
+    const interval = setInterval(updateLiveMetrics, 5000); // Update every 5 seconds
+
+    return () => clearInterval(interval);
+  }, [open]);
+
+  const getImpactColor = (impact: string) => {
+    switch (impact) {
+      case 'high': return 'bg-destructive/10 text-destructive border-destructive/30';
+      case 'medium': return 'bg-warning/10 text-warning border-warning/30';
+      case 'low': return 'bg-success/10 text-success border-success/30';
+      default: return 'bg-muted/10 text-muted-foreground border-border';
+    }
+  };
+
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'network': return <Zap className="h-5 w-5" />;
+      case 'upgrade': return <TrendingUp className="h-5 w-5" />;
+      case 'economic': return <DollarSign className="h-5 w-5" />;
+      case 'regulatory': return <Target className="h-5 w-5" />;
+      case 'conference': return <Users className="h-5 w-5" />;
+      default: return <AlertCircle className="h-5 w-5" />;
+    }
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle className="text-2xl font-bold text-foreground flex items-center gap-3">
+            {getTypeIcon(event.type)}
+            {event.title}
+          </DialogTitle>
+        </DialogHeader>
+
+        <div className="space-y-6">
+          {/* Event Meta Information */}
+          <div className="flex flex-wrap items-center gap-4">
+            <Badge className={`px-3 py-1 border ${getImpactColor(event.impact)}`}>
+              <AlertCircle className="h-3 w-3 mr-1" />
+              {event.impact.toUpperCase()} IMPACT
+            </Badge>
+            
+            <Badge variant="outline" className="px-3 py-1">
+              {getTypeIcon(event.type)}
+              <span className="ml-1 capitalize">{event.type}</span>
+            </Badge>
+
+            <div className="flex items-center text-sm text-muted-foreground">
+              <Clock className="h-4 w-4 mr-1" />
+              {event.countdown}
+            </div>
+
+            <div className="flex items-center text-sm text-success">
+              <div className="w-2 h-2 bg-success rounded-full animate-pulse mr-2"></div>
+              Live Data
+            </div>
+          </div>
+
+          {/* Live Metrics Dashboard */}
+          <ResponsiveCard>
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <h4 className="font-semibold text-foreground flex items-center">
+                  <Activity className="h-4 w-4 mr-2 text-primary" />
+                  Live Event Impact
+                </h4>
+                <span className="text-xs text-muted-foreground">
+                  Updated {getTimeAgo(liveMetrics.lastUpdate)}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="p-4 bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg border border-primary/20">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-muted-foreground">Price Movement</span>
+                    <TrendingUp className={`h-4 w-4 ${liveMetrics.priceMovement > 0 ? 'text-success' : 'text-destructive'}`} />
+                  </div>
+                  <div className={`text-2xl font-bold ${liveMetrics.priceMovement > 0 ? 'text-success' : 'text-destructive'}`}>
+                    {liveMetrics.priceMovement > 0 ? '+' : ''}{liveMetrics.priceMovement.toFixed(2)}%
+                  </div>
+                  <div className="text-xs text-muted-foreground">Pre-event movement</div>
+                </div>
+
+                <div className="p-4 bg-gradient-to-br from-warning/5 to-warning/10 rounded-lg border border-warning/20">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-muted-foreground">Volume Spike</span>
+                    <BarChart3 className="h-4 w-4 text-warning" />
+                  </div>
+                  <div className="text-2xl font-bold text-warning">
+                    +{liveMetrics.volumeSpike.toFixed(0)}%
+                  </div>
+                  <div className="text-xs text-muted-foreground">Above average</div>
+                </div>
+
+                <div className="p-4 bg-gradient-to-br from-success/5 to-success/10 rounded-lg border border-success/20">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm font-medium text-muted-foreground">Social Mentions</span>
+                    <Globe className="h-4 w-4 text-success" />
+                  </div>
+                  <div className="text-2xl font-bold text-success">
+                    {(liveMetrics.socialMentions).toFixed(0)}
+                  </div>
+                  <div className="text-xs text-muted-foreground">Mentions/hour</div>
+                </div>
+              </div>
+            </div>
+          </ResponsiveCard>
+
+          {/* Event Details */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <ResponsiveCard>
+              <div className="space-y-3">
+                <h4 className="font-semibold text-foreground flex items-center">
+                  <Calendar className="h-4 w-4 mr-2 text-primary" />
+                  Event Schedule
+                </h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Date:</span>
+                    <span className="font-medium text-foreground">{event.date}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Time:</span>
+                    <span className="font-medium text-foreground">{event.time}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Countdown:</span>
+                    <span className="font-medium text-primary">{event.countdown}</span>
+                  </div>
+                </div>
+              </div>
+            </ResponsiveCard>
+
+            <ResponsiveCard>
+              <div className="space-y-3">
+                <h4 className="font-semibold text-foreground flex items-center">
+                  <Target className="h-4 w-4 mr-2 text-primary" />
+                  Impact Analysis
+                </h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Market Impact:</span>
+                    <Badge className={`${getImpactColor(event.impact)} text-xs`}>
+                      {event.impact.toUpperCase()}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Event Type:</span>
+                    <span className="font-medium text-foreground capitalize">{event.type}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Priority:</span>
+                    <span className={`font-medium ${
+                      event.impact === 'high' ? 'text-destructive' : 
+                      event.impact === 'medium' ? 'text-warning' : 'text-success'
+                    }`}>
+                      {event.impact === 'high' ? 'Critical' : event.impact === 'medium' ? 'Important' : 'Monitor'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </ResponsiveCard>
+          </div>
+
+          {/* Description */}
+          <ResponsiveCard>
+            <div className="space-y-3">
+              <h4 className="font-semibold text-foreground flex items-center">
+                <Users className="h-4 w-4 mr-2 text-primary" />
+                Event Details
+              </h4>
+              <p className="text-muted-foreground leading-relaxed">
+                {event.description}
+              </p>
+            </div>
+          </ResponsiveCard>
+
+          {/* Market Scenarios */}
+          <ResponsiveCard>
+            <div className="space-y-4">
+              <h4 className="font-semibold text-foreground flex items-center">
+                <TrendingUp className="h-4 w-4 mr-2 text-primary" />
+                Potential Market Scenarios
+              </h4>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="p-3 bg-success/5 border border-success/20 rounded-lg">
+                  <div className="text-sm font-medium text-success mb-1">Bullish Scenario</div>
+                  <div className="text-xs text-muted-foreground">
+                    {event.impact === 'high' ? '+15-25% price increase' : '+5-10% price increase'}
+                  </div>
+                </div>
+                
+                <div className="p-3 bg-warning/5 border border-warning/20 rounded-lg">
+                  <div className="text-sm font-medium text-warning mb-1">Neutral Scenario</div>
+                  <div className="text-xs text-muted-foreground">
+                    Minimal price movement, consolidation
+                  </div>
+                </div>
+                
+                <div className="p-3 bg-destructive/5 border border-destructive/20 rounded-lg">
+                  <div className="text-sm font-medium text-destructive mb-1">Bearish Scenario</div>
+                  <div className="text-xs text-muted-foreground">
+                    {event.impact === 'high' ? '-10-20% price decline' : '-3-8% price decline'}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ResponsiveCard>
+
+          {/* Action Buttons */}
+          <div className="flex flex-wrap gap-3 pt-4 border-t border-border">
+            <Button variant="default" className="flex-1 min-w-32">
+              <AlertCircle className="h-4 w-4 mr-2" />
+              Set Alert
+            </Button>
+            <Button variant="outline" className="flex-1 min-w-32">
+              <Calendar className="h-4 w-4 mr-2" />
+              Add to Calendar
+            </Button>
+            <Button variant="outline" size="sm">
+              <Share2 className="h-4 w-4 mr-2" />
+              Share
+            </Button>
+            <Button variant="outline" size="sm">
+              <Bookmark className="h-4 w-4 mr-2" />
+              Save
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+interface EventsPageProps {}
+
+const EventsPage = ({}: EventsPageProps) => {
   const { eventId } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [filter, setFilter] = useState(searchParams.get('filter') || 'all');
   const [sortBy, setSortBy] = useState(searchParams.get('sort') || 'date');
-  const [viewMode, setViewMode] = useState(searchParams.get('view') || 'grid');
+  const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [displayCount, setDisplayCount] = useState(9); // Start with 9 events
+  const [isLoading, setIsLoading] = useState(false);
   
   const { data: liveEventsData, loading: eventsLoading, refetch } = useLiveEvents();
   const { data: marketData, isLoading: marketLoading } = useOptimizedCryptoData();
@@ -49,7 +318,6 @@ const EventsPage = ({}: EventDetailPageProps) => {
 
   const upcomingEvents = liveEventsData?.upcomingEvents || [];
   const liveAlerts = liveEventsData?.liveAlerts || [];
-  const marketSignals = liveEventsData?.marketSignals || [];
 
   // Live Impact Analysis Data
   const [impactData, setImpactData] = useState({
@@ -78,26 +346,37 @@ const EventsPage = ({}: EventDetailPageProps) => {
     return () => clearInterval(interval);
   }, []);
 
-  // Filter and sort events
-  const filteredEvents = upcomingEvents.filter(event => {
-    if (filter === 'all') return true;
-    return event.impact === filter || event.type === filter;
-  });
+  // Optimized filtering and sorting with useMemo
+  const filteredAndSortedEvents = useMemo(() => {
+    let filtered = upcomingEvents.filter(event => {
+      if (filter === 'all') return true;
+      return event.impact === filter || event.type === filter;
+    });
 
-  const sortedEvents = [...filteredEvents].sort((a, b) => {
-    switch (sortBy) {
-      case 'impact':
-        const impactOrder = { high: 3, medium: 2, low: 1 };
-        return impactOrder[b.impact] - impactOrder[a.impact];
-      case 'type':
-        return a.type.localeCompare(b.type);
-      case 'date':
-      default:
-        return new Date(a.date).getTime() - new Date(b.date).getTime();
-    }
-  });
+    const sorted = [...filtered].sort((a, b) => {
+      switch (sortBy) {
+        case 'impact':
+          const impactOrder = { high: 3, medium: 2, low: 1 };
+          return impactOrder[b.impact] - impactOrder[a.impact];
+        case 'type':
+          return a.type.localeCompare(b.type);
+        case 'date':
+        default:
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
+      }
+    });
 
-  const eventStats = [
+    return sorted;
+  }, [upcomingEvents, filter, sortBy]);
+
+  // Displayed events with pagination
+  const displayedEvents = useMemo(() => {
+    return filteredAndSortedEvents.slice(0, displayCount);
+  }, [filteredAndSortedEvents, displayCount]);
+
+  const hasMoreEvents = displayCount < filteredAndSortedEvents.length;
+
+  const eventStats = useMemo(() => [
     {
       label: 'Total Events',
       value: upcomingEvents.length.toString(),
@@ -126,9 +405,9 @@ const EventsPage = ({}: EventDetailPageProps) => {
       trend: 'up' as const,
       icon: <Eye className="h-5 w-5" />
     }
-  ];
+  ], [upcomingEvents, impactData, liveAlerts]);
 
-  const impactAnalysisData = [
+  const impactAnalysisData = useMemo(() => [
     {
       label: 'Market Volatility',
       value: impactData.marketVolatility,
@@ -157,7 +436,7 @@ const EventsPage = ({}: EventDetailPageProps) => {
       description: 'Community sentiment score',
       color: impactData.socialSentiment > 60 ? 'text-success' : impactData.socialSentiment > 40 ? 'text-warning' : 'text-destructive'
     }
-  ];
+  ], [impactData]);
 
   const getImpactColor = (impact: string) => {
     switch (impact) {
@@ -173,25 +452,50 @@ const EventsPage = ({}: EventDetailPageProps) => {
       case 'network': return <Zap className="h-4 w-4" />;
       case 'upgrade': return <TrendingUp className="h-4 w-4" />;
       case 'economic': return <DollarSign className="h-4 w-4" />;
+      case 'regulatory': return <Target className="h-4 w-4" />;
+      case 'conference': return <Users className="h-4 w-4" />;
       default: return <AlertCircle className="h-4 w-4" />;
     }
   };
 
-  const handleFilterChange = (newFilter: string) => {
+  const handleFilterChange = useCallback((newFilter: string) => {
     setFilter(newFilter);
+    setDisplayCount(9); // Reset pagination when filter changes
     setSearchParams(prev => {
       prev.set('filter', newFilter);
       return prev;
     });
-  };
+  }, [setSearchParams]);
 
-  const handleRefresh = () => {
+  const handleSortChange = useCallback((newSort: string) => {
+    setSortBy(newSort);
+    setDisplayCount(9); // Reset pagination when sort changes
+    setSearchParams(prev => {
+      prev.set('sort', newSort);
+      return prev;
+    });
+  }, [setSearchParams]);
+
+  const handleRefresh = useCallback(() => {
     refetch();
     toast({
       title: "Events Updated",
       description: "Latest event data has been refreshed successfully.",
     });
-  };
+  }, [refetch, toast]);
+
+  const handleEventClick = useCallback((event: any) => {
+    setSelectedEvent(event);
+    setIsModalOpen(true);
+  }, []);
+
+  const handleLoadMore = useCallback(async () => {
+    setIsLoading(true);
+    // Simulate API call delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+    setDisplayCount(prev => prev + 6);
+    setIsLoading(false);
+  }, []);
 
   if (eventsLoading) {
     return (
@@ -329,10 +633,12 @@ const EventsPage = ({}: EventDetailPageProps) => {
                     <SelectItem value="network">Network Events</SelectItem>
                     <SelectItem value="economic">Economic Events</SelectItem>
                     <SelectItem value="upgrade">Upgrades</SelectItem>
+                    <SelectItem value="regulatory">Regulatory</SelectItem>
+                    <SelectItem value="conference">Conferences</SelectItem>
                   </SelectContent>
                 </Select>
 
-                <Select value={sortBy} onValueChange={setSortBy}>
+                <Select value={sortBy} onValueChange={handleSortChange}>
                   <SelectTrigger className="w-40">
                     <SelectValue placeholder="Sort by..." />
                   </SelectTrigger>
@@ -345,21 +651,21 @@ const EventsPage = ({}: EventDetailPageProps) => {
               </div>
 
               <div className="text-sm text-muted-foreground">
-                Showing {sortedEvents.length} of {upcomingEvents.length} events
+                Showing {displayedEvents.length} of {filteredAndSortedEvents.length} events
               </div>
             </div>
 
             {/* Events Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               <AnimatePresence>
-                {sortedEvents.map((event, index) => (
+                {displayedEvents.map((event, index) => (
                   <motion.div
                     key={event.id}
                     className="group"
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    transition={{ delay: index * 0.05 }}
+                    transition={{ delay: (index % 9) * 0.05 }}
                   >
                     <ResponsiveCard className="h-full hover:shadow-lg transition-all duration-300 cursor-pointer">
                       <div className="space-y-4">
@@ -407,7 +713,12 @@ const EventsPage = ({}: EventDetailPageProps) => {
                             <span className="text-muted-foreground">
                               {event.time}
                             </span>
-                            <Button variant="outline" size="sm" className="h-8">
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="h-8"
+                              onClick={() => handleEventClick(event)}
+                            >
                               <ExternalLink className="h-3 w-3 mr-1" />
                               Details
                             </Button>
@@ -421,21 +732,53 @@ const EventsPage = ({}: EventDetailPageProps) => {
             </div>
 
             {/* Load More or Empty State */}
-            {sortedEvents.length === 0 ? (
+            {filteredAndSortedEvents.length === 0 ? (
               <div className="text-center py-12">
                 <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-foreground mb-2">No events found</h3>
                 <p className="text-muted-foreground">Try adjusting your filters to see more events.</p>
               </div>
-            ) : (
+            ) : hasMoreEvents ? (
               <div className="text-center">
-                <Button variant="outline">
-                  Load More Events
+                <Button 
+                  variant="outline" 
+                  onClick={handleLoadMore}
+                  disabled={isLoading}
+                  className="min-w-40"
+                >
+                  {isLoading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary mr-2"></div>
+                      Loading...
+                    </>
+                  ) : (
+                    <>
+                      <ChevronDown className="h-4 w-4 mr-2" />
+                      Load More Events ({filteredAndSortedEvents.length - displayCount} remaining)
+                    </>
+                  )}
                 </Button>
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <div className="flex items-center justify-center text-muted-foreground">
+                  <ChevronUp className="h-4 w-4 mr-2" />
+                  <span>All events displayed</span>
+                </div>
               </div>
             )}
           </div>
         </DataSection>
+
+        {/* Event Detail Modal */}
+        {selectedEvent && (
+          <EventDetailModal
+            event={selectedEvent}
+            open={isModalOpen}
+            onOpenChange={setIsModalOpen}
+            impactData={impactData}
+          />
+        )}
       </div>
     </Layout>
   );
