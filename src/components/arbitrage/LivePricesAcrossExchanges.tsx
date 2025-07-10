@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { Building2 } from 'lucide-react';
 import { DataSection } from '@/components/common/DataSection';
 import { useLivePricesData } from '@/hooks/useLivePricesData';
-import { ExchangePricesTable } from '../live-prices/ExchangePricesTable';
+import { StabilizedExchangePricesTable } from '../live-prices/StabilizedExchangePricesTable';
 
 interface LivePricesAcrossExchangesProps {
   loading?: boolean;
@@ -37,7 +37,7 @@ const LivePricesAcrossExchanges = ({ loading = false }: LivePricesAcrossExchange
     >
       <div className="space-y-6">
         {/* Exchange Prices Table */}
-        <ExchangePricesTable
+        <StabilizedExchangePricesTable
           coinPricesData={coinPricesData.slice(0, 10)}
           loading={isLoading || loading}
         />

@@ -7,7 +7,7 @@ export const useLivePricesData = () => {
   const generateExchangePrices = () => {
     if (!cryptoData?.coins) return [];
     
-    const exchanges = ['Binance', 'Coinbase', 'Kraken', 'OKX', 'Bybit', 'Gate.io'];
+    const exchanges = ['Binance', 'Coinbase', 'Kraken', 'OKX', 'Bybit', 'Gate.io', 'Kucoin', 'Huobi', 'Bitfinex', 'Gemini'];
     
     return cryptoData.coins.slice(0, 12).map(coin => {
       const prices = exchanges.map(exchange => {
