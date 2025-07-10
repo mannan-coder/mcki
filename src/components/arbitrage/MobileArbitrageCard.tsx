@@ -153,11 +153,16 @@ export const MobileArbitrageCard = ({ opportunity, index }: MobileArbitrageCardP
         </div>
       </div>
 
-      {/* Exchange Route */}
+      {/* Exchange Route with Prices */}
       <div className="flex items-center justify-between bg-muted/30 rounded-lg p-3">
         <div className="text-center flex-1">
           <div className="text-xs text-muted-foreground mb-1">Buy From</div>
           <div className="text-sm font-medium text-success">{opportunity.buyExchange}</div>
+          {opportunity.buyPrice && (
+            <div className="text-xs text-muted-foreground mt-1">
+              ${typeof opportunity.buyPrice === 'number' ? opportunity.buyPrice.toLocaleString(undefined, {maximumFractionDigits: 2}) : opportunity.buyPrice}
+            </div>
+          )}
         </div>
         
         <div className="px-3">
@@ -167,6 +172,11 @@ export const MobileArbitrageCard = ({ opportunity, index }: MobileArbitrageCardP
         <div className="text-center flex-1">
           <div className="text-xs text-muted-foreground mb-1">Sell To</div>
           <div className="text-sm font-medium text-destructive">{opportunity.sellExchange}</div>
+          {opportunity.sellPrice && (
+            <div className="text-xs text-muted-foreground mt-1">
+              ${typeof opportunity.sellPrice === 'number' ? opportunity.sellPrice.toLocaleString(undefined, {maximumFractionDigits: 2}) : opportunity.sellPrice}
+            </div>
+          )}
         </div>
       </div>
 

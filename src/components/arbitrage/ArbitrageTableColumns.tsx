@@ -214,7 +214,14 @@ export const getArbitrageTableColumns = () => [
     header: 'Buy From',
     className: 'text-center hidden sm:table-cell',
     render: (value: any, row: any) => (
-      <div className="text-xs sm:text-sm font-medium text-success truncate px-1">{row.buyExchange}</div>
+      <div className="text-center">
+        <div className="text-xs sm:text-sm font-medium text-success truncate px-1">{row.buyExchange}</div>
+        {row.buyPrice && (
+          <div className="text-[10px] sm:text-xs text-muted-foreground mt-1">
+            ${typeof row.buyPrice === 'number' ? row.buyPrice.toLocaleString(undefined, {maximumFractionDigits: 2}) : row.buyPrice}
+          </div>
+        )}
+      </div>
     )
   },
   {
@@ -228,7 +235,14 @@ export const getArbitrageTableColumns = () => [
     header: 'Sell To',
     className: 'text-center hidden sm:table-cell',
     render: (value: any, row: any) => (
-      <div className="text-xs sm:text-sm font-medium text-destructive truncate px-1">{row.sellExchange}</div>
+      <div className="text-center">
+        <div className="text-xs sm:text-sm font-medium text-destructive truncate px-1">{row.sellExchange}</div>
+        {row.sellPrice && (
+          <div className="text-[10px] sm:text-xs text-muted-foreground mt-1">
+            ${typeof row.sellPrice === 'number' ? row.sellPrice.toLocaleString(undefined, {maximumFractionDigits: 2}) : row.sellPrice}
+          </div>
+        )}
+      </div>
     )
   },
   {
@@ -238,8 +252,18 @@ export const getArbitrageTableColumns = () => [
     render: (value: any, row: any) => (
       <div className="text-[10px] space-y-1">
         <div className="text-success font-medium">{row.buyExchange}</div>
+        {row.buyPrice && (
+          <div className="text-[9px] text-muted-foreground">
+            ${typeof row.buyPrice === 'number' ? row.buyPrice.toLocaleString(undefined, {maximumFractionDigits: 2}) : row.buyPrice}
+          </div>
+        )}
         <div className="text-muted-foreground">↓</div>
         <div className="text-destructive font-medium">{row.sellExchange}</div>
+        {row.sellPrice && (
+          <div className="text-[9px] text-muted-foreground">
+            ${typeof row.sellPrice === 'number' ? row.sellPrice.toLocaleString(undefined, {maximumFractionDigits: 2}) : row.sellPrice}
+          </div>
+        )}
       </div>
     )
   },
