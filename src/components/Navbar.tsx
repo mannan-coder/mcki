@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Menu, X, Sun, MoonIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import logoHD from '@/assets/mcki-logo-hd.png';
 
 interface NavbarProps {
   isDarkMode: boolean;
@@ -28,9 +29,14 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <img 
-              src="/lovable-uploads/c84519c3-5e94-486b-b886-2607fc4a8a15.png" 
+              src={logoHD}
               alt="MCKI Logo" 
               className="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-300"
+              style={{
+                imageRendering: 'crisp-edges',
+                backfaceVisibility: 'hidden',
+                transform: 'translateZ(0)'
+              }}
             />
             <div>
               <h1 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">

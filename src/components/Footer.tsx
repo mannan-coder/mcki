@@ -13,6 +13,7 @@ import {
   Briefcase,
   BookOpen
 } from 'lucide-react';
+import logoHD from '@/assets/mcki-logo-hd.png';
 
 interface FooterProps {
   isDarkMode: boolean;
@@ -69,9 +70,14 @@ const Footer = ({ isDarkMode }: FooterProps) => {
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center space-x-3 mb-6 group">
               <img 
-                src="/lovable-uploads/c84519c3-5e94-486b-b886-2607fc4a8a15.png" 
+                src={logoHD}
                 alt="MCKI Logo" 
                 className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-300"
+                style={{
+                  imageRendering: 'crisp-edges',
+                  backfaceVisibility: 'hidden',
+                  transform: 'translateZ(0)'
+                }}
               />
               <div>
                 <h3 className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors">MCKI</h3>
