@@ -39,8 +39,9 @@ serve(async (req) => {
     newsUrl.searchParams.set('language', 'en')
     newsUrl.searchParams.set('category', 'business,technology')
     newsUrl.searchParams.set('country', 'us,gb,ca,au')
-    newsUrl.searchParams.set('size', limit.toString())
+    newsUrl.searchParams.set('size', Math.min(50, limit).toString()) // Increased limit
     newsUrl.searchParams.set('page', page.toString())
+    newsUrl.searchParams.set('image', '1') // Request images
 
     const response = await fetch(newsUrl.toString())
     

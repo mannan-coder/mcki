@@ -6,8 +6,9 @@ import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Clock, User, ArrowRight, RefreshCw, ExternalLink, AlertCircle } from 'lucide-react';
-import { useBlogData } from '@/hooks/useBlogData';
+import { useBlogData, BlogPost } from '@/hooks/useBlogData';
 import { formatDistanceToNow, parseISO } from 'date-fns';
+import { useState } from 'react';
 
 const Blog = () => {
   const {
@@ -21,6 +22,8 @@ const Blog = () => {
     refresh,
     hasMore
   } = useBlogData();
+  
+  const [selectedArticle, setSelectedArticle] = useState<BlogPost | null>(null);
 
   const formatDate = (dateString: string) => {
     try {
@@ -36,10 +39,8 @@ const Blog = () => {
     return text.slice(0, maxLength).trim() + '...';
   };
 
-  const openArticle = (url: string) => {
-    if (url && url !== '#') {
-      window.open(url, '_blank', 'noopener,noreferrer');
-    }
+  const openArticle = (post: BlogPost) => {
+    setSelectedArticle(post);
   };
 
   // Loading skeleton component
@@ -146,11 +147,62 @@ const Blog = () => {
         {loading && !blogData && <BlogSkeleton />}
 
         {/* Content */}
-        {blogData && (
+        {selectedArticle ? (
+          <div className="max-w-4xl mx-auto">
+            <Button 
+              variant="outline" 
+              onClick={() => setSelectedArticle(null)}
+              className="mb-8 gap-2"
+            >
+              ← Back to Blog
+            </Button>
+            
+            <article className="prose prose-lg max-w-none dark:prose-invert">
+              {selectedArticle.image_url && (
+                <img 
+                  src={selectedArticle.image_url} 
+                  alt={selectedArticle.title}
+                  className="w-full h-64 md:h-80 object-cover rounded-lg mb-8"
+                />
+              )}
+              
+              <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-muted-foreground">
+                <Badge variant="secondary">{selectedArticle.category}</Badge>
+                <span>{formatDate(selectedArticle.published_at)}</span>
+                <span>•</span>
+                <span>{selectedArticle.read_time}</span>
+                <span>•</span>
+                <span>By {selectedArticle.source_name}</span>
+              </div>
+              
+              <h1 className="text-3xl md:text-4xl font-bold mb-6">{selectedArticle.title}</h1>
+              
+              <div className="text-lg text-muted-foreground mb-8 leading-relaxed">
+                {selectedArticle.description}
+              </div>
+              
+              <div className="prose-content" dangerouslySetInnerHTML={{ 
+                __html: selectedArticle.content.replace(/\n/g, '<br>') 
+              }} />
+              
+              <div className="mt-8 p-4 bg-muted/50 rounded-lg">
+                <p className="text-sm text-muted-foreground mb-2">Read the full article at:</p>
+                <a 
+                  href={selectedArticle.source_url} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline font-semibold"
+                >
+                  {selectedArticle.source_name} <ExternalLink className="inline h-4 w-4" />
+                </a>
+              </div>
+            </article>
+          </div>
+        ) : (
           <>
             {/* Featured Posts */}
             {blogData.posts.filter(post => post.featured).map((post) => (
-              <Card key={post.id} className="mb-12 overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group" onClick={() => openArticle(post.source_url)}>
+              <Card key={post.id} className="mb-12 overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group" onClick={() => openArticle(post)}>
                 <div className="grid grid-cols-1 lg:grid-cols-2">
                   <div className="relative bg-gradient-to-br from-primary/10 to-accent/10 p-8 flex items-center justify-center overflow-hidden">
                     {post.image_url ? (
@@ -185,7 +237,7 @@ const Blog = () => {
                       {truncateText(post.description)}
                     </p>
                     <Button className="gap-2 group-hover:bg-primary/90 transition-colors">
-                      Read Full Article <ExternalLink className="h-4 w-4" />
+                      Read Full Article <ArrowRight className="h-4 w-4" />
                     </Button>
                   </CardContent>
                 </div>
@@ -198,7 +250,7 @@ const Blog = () => {
                 <Card 
                   key={post.id} 
                   className="hover:shadow-lg transition-all duration-300 cursor-pointer group h-full flex flex-col" 
-                  onClick={() => openArticle(post.source_url)}
+                  onClick={() => openArticle(post)}
                 >
                   {post.image_url && (
                     <div className="relative h-48 overflow-hidden">
@@ -240,42 +292,12 @@ const Blog = () => {
                         </span>
                       </div>
                       <Button variant="ghost" size="sm" className="gap-1 group-hover:text-primary">
-                        Read <ExternalLink className="h-3 w-3" />
+                        Read <ArrowRight className="h-3 w-3" />
                       </Button>
                     </div>
                   </CardContent>
                 </Card>
               ))}
-            </div>
-
-            {/* Load More */}
-            {hasMore && (
-              <div className="text-center mt-12">
-                <Button 
-                  variant="outline" 
-                  size="lg"
-                  onClick={loadMore}
-                  disabled={loadingMore}
-                  className="gap-2"
-                >
-                  {loadingMore ? (
-                    <>
-                      <RefreshCw className="h-4 w-4 animate-spin" />
-                      Loading...
-                    </>
-                  ) : (
-                    <>
-                      Load More Posts
-                      <ArrowRight className="h-4 w-4" />
-                    </>
-                  )}
-                </Button>
-              </div>
-            )}
-
-            {/* Stats */}
-            <div className="text-center mt-8 text-sm text-muted-foreground">
-              Showing {blogData.posts.length} of {blogData.total} articles
             </div>
           </>
         )}
