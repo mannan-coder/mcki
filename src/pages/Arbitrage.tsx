@@ -128,9 +128,6 @@ const ArbitragePage = () => {
               formattedData={formattedOpportunityData}
               columns={opportunityColumns}
             />
-
-            {/* Exchange Status - Full Width Below */}
-            <ExchangeStatusSection exchangeData={exchangeData} />
           </div>
         </DataSection>
 
@@ -154,6 +151,15 @@ const ArbitragePage = () => {
             coinPricesData={coinPricesData}
             loading={pricesLoading}
           />
+        </DataSection>
+
+        {/* Exchange Status & Performance Section */}
+        <DataSection
+          title="Exchange Status & Performance"
+          subtitle="Monitor exchange health, trading volumes, and operational status"
+          icon={<Building2 className="h-6 w-6 text-primary" />}
+        >
+          <ExchangeStatusSection exchangeData={exchangeData} />
         </DataSection>
       </div>
     </Layout>
