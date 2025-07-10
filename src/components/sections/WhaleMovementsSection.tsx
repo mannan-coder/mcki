@@ -5,6 +5,8 @@ import { StatsGrid } from '@/components/common/StatsGrid';
 import { motion } from 'framer-motion';
 import { useWhaleData } from '@/hooks/useWhaleData';
 import { getTimeAgo } from '@/utils/timeUtils';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 interface WhaleMovementsSectionProps {
   loading?: boolean;
@@ -12,6 +14,7 @@ interface WhaleMovementsSectionProps {
 
 export const WhaleMovementsSection = ({ loading = false }: WhaleMovementsSectionProps) => {
   const { data: whaleData, loading: whaleLoading } = useWhaleData();
+  const navigate = useNavigate();
 
   const whaleStats = [
     {
@@ -123,10 +126,14 @@ export const WhaleMovementsSection = ({ loading = false }: WhaleMovementsSection
                 {(whaleData?.whaleTransactions || []).slice(0, 5).map((transaction, index) => (
                   <motion.div
                     key={transaction.id}
-                    className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:bg-muted/30 transition-colors"
+                    className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:bg-muted/30 transition-colors cursor-pointer"
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
+                    onClick={() => {
+                      navigate(`/whale-detail/${transaction.id}`);
+                      toast.success(`Opening whale transaction details`);
+                    }}
                   >
                     <div className="flex items-center space-x-3">
                       {getStatusIcon(transaction.status)}

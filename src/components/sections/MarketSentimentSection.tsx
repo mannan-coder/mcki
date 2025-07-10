@@ -4,6 +4,8 @@ import { DataSection } from '@/components/common/DataSection';
 import { StatsGrid } from '@/components/common/StatsGrid';
 import { motion } from 'framer-motion';
 import { useLiveSentiment } from '@/hooks/useLiveSentiment';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
 
 interface MarketSentimentSectionProps {
   loading?: boolean;
@@ -11,6 +13,7 @@ interface MarketSentimentSectionProps {
 
 export const MarketSentimentSection = ({ loading = false }: MarketSentimentSectionProps) => {
   const { data: sentimentData, loading: sentimentLoading } = useLiveSentiment();
+  const navigate = useNavigate();
 
   const sentimentStats = [
     {
@@ -247,10 +250,14 @@ export const MarketSentimentSection = ({ loading = false }: MarketSentimentSecti
                 {(sentimentData?.trending || []).slice(0, 8).map((topic, index) => (
                   <motion.div
                     key={index}
-                    className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:bg-muted/30 transition-colors"
+                    className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:bg-muted/30 transition-colors cursor-pointer"
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
+                    onClick={() => {
+                      navigate(`/trending-detail/${topic.symbol || index}`);
+                      toast.success(`Opening ${topic.name} trend analysis`);
+                    }}
                   >
                     <div className="flex items-center space-x-3">
                       <div className="w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center">
