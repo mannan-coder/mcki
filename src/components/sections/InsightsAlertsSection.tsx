@@ -1,19 +1,21 @@
-import { AlertTriangle, TrendingUp, Eye, Calendar, Target } from 'lucide-react';
+import { AlertTriangle, TrendingUp, Eye, Calendar, Target, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ResponsiveCard } from '@/components/common/ResponsiveCard';
 import { DataSection } from '@/components/common/DataSection';
 import { StatsGrid } from '@/components/common/StatsGrid';
 import { motion } from 'framer-motion';
-import { useUpcomingEvents } from '@/hooks/useUpcomingEvents';
-import { useLiveAlerts } from '@/hooks/useLiveAlerts';
+import { useLiveEvents } from '@/hooks/useLiveEvents';
+import { getTimeAgo } from '@/utils/timeUtils';
 
 interface InsightsAlertsSectionProps {
   loading?: boolean;
 }
 
 export const InsightsAlertsSection = ({ loading = false }: InsightsAlertsSectionProps) => {
-  const { events: upcomingEvents, loading: eventsLoading } = useUpcomingEvents();
-  const { alerts: recentAlerts, loading: alertsLoading } = useLiveAlerts();
+  const { data: liveEventsData, loading: eventsLoading } = useLiveEvents();
+  
+  const upcomingEvents = liveEventsData?.upcomingEvents || [];
+  const recentAlerts = liveEventsData?.liveAlerts || [];
   
   const alertStats = [
     {
@@ -75,7 +77,7 @@ export const InsightsAlertsSection = ({ loading = false }: InsightsAlertsSection
     }
   };
 
-  if (loading || eventsLoading || alertsLoading) {
+  if (loading || eventsLoading) {
     return (
       <DataSection
         title="Insights & Alerts"
@@ -162,15 +164,15 @@ export const InsightsAlertsSection = ({ loading = false }: InsightsAlertsSection
                     transition={{ delay: index * 0.1 }}
                   >
                     <div className="flex-1">
-                      <div className="font-medium text-foreground text-sm">{event.event}</div>
+                      <div className="font-medium text-foreground text-sm">{event.title}</div>
                       <div className="text-xs text-muted-foreground">{event.time}</div>
                     </div>
                     <div className="flex items-center space-x-2">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${getImpactColor(event.impact)}`}>
                         {event.impact.toUpperCase()}
                       </span>
-                      {event.status === 'updated' && (
-                        <div className="w-2 h-2 bg-warning rounded-full animate-pulse" title="Recently updated" />
+                      {event.type === 'Regulatory' && (
+                        <div className="w-2 h-2 bg-warning rounded-full animate-pulse" title="Regulatory event" />
                       )}
                     </div>
                   </motion.div>
@@ -206,7 +208,7 @@ export const InsightsAlertsSection = ({ loading = false }: InsightsAlertsSection
               </div>
 
               <div className="space-y-3">
-                {alertsLoading ? (
+                {eventsLoading ? (
                   [1, 2, 3, 4].map((i) => (
                     <div key={i} className="flex items-center justify-between p-3 border border-border/50 rounded-lg">
                       <div className="flex items-center space-x-3">
@@ -232,24 +234,26 @@ export const InsightsAlertsSection = ({ loading = false }: InsightsAlertsSection
                         <span className="text-lg">{getAlertIcon(alert.type)}</span>
                         <div>
                           <div className="flex items-center space-x-2">
-                            <span className="font-medium text-foreground text-sm">{alert.coin}</span>
-                            <span className={`text-xs px-2 py-1 rounded ${
-                              alert.change.startsWith('+') ? 'bg-success/20 text-success' : 
-                              alert.change.startsWith('-') ? 'bg-destructive/20 text-destructive' : 
-                              'bg-muted/20 text-muted-foreground'
-                            }`}>
-                              {alert.change}
-                            </span>
-                            {alert.status === 'new' && (
+                            <span className="font-medium text-foreground text-sm">{alert.symbol || alert.title}</span>
+                            {alert.change && (
+                              <span className={`text-xs px-2 py-1 rounded ${
+                                alert.change.startsWith('+') ? 'bg-success/20 text-success' : 
+                                alert.change.startsWith('-') ? 'bg-destructive/20 text-destructive' : 
+                                'bg-muted/20 text-muted-foreground'
+                              }`}>
+                                {alert.change}
+                              </span>
+                            )}
+                            {alert.severity === 'high' && (
                               <div className="w-2 h-2 bg-primary rounded-full animate-pulse" />
                             )}
                           </div>
                           <div className="text-xs text-muted-foreground">
-                            {alert.exchange} • {alert.amount}
+                            {alert.message}
                           </div>
                         </div>
                       </div>
-                      <div className="text-xs text-muted-foreground">{alert.time}</div>
+                      <div className="text-xs text-muted-foreground">{getTimeAgo(alert.time)}</div>
                     </motion.div>
                   ))
                 )}

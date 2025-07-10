@@ -8,6 +8,8 @@ import { TopVolumeSection } from '@/components/sections/TopVolumeSection';
 import { NewsAlertsSection } from '@/components/sections/NewsAlertsSection';
 import { InsightsAlertsSection } from '@/components/sections/InsightsAlertsSection';
 import { CalculatorsSuiteSection } from '@/components/sections/CalculatorsSuiteSection';
+import { WhaleMovementsSection } from '@/components/sections/WhaleMovementsSection';
+import { MarketSentimentSection } from '@/components/sections/MarketSentimentSection';
 import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 
 // Lazy load heavy components for better performance
@@ -39,6 +41,12 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 pb-8">
           {/* Market Overview Section */}
           <MarketOverviewSection isDarkMode={false} />
+          
+          {/* Whale Movements Section */}
+          <WhaleMovementsSection loading={isLoading && !marketData} />
+          
+          {/* Market Sentiment Section */}
+          <MarketSentimentSection loading={isLoading && !marketData} />
           
           {/* Top Gainers & Losers Section */}
           <TopGainersLosers 
