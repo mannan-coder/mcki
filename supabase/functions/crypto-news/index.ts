@@ -58,18 +58,16 @@ serve(async (req) => {
     let news = [];
     
     try {
-      const newsApiKey = Deno.env.get('NEWSDATA_API_KEY');
-      console.log('API Key status:', newsApiKey ? 'Found' : 'Missing');
+      console.log('Using provided NewsData.io API endpoint');
       
-      if (newsApiKey) {
-        const newsResponse = await fetch(
-          `https://newsdata.io/api/1/crypto?apikey=${newsApiKey}&language=en&size=20`,
-          {
-            headers: {
-              'Accept': 'application/json',
-            },
-          }
-        );
+      const newsResponse = await fetch(
+        'https://newsdata.io/api/1/latest?apikey=pub_a19aad2b782c4a91ad05bd34e0bdfcb1&q=crypto',
+        {
+          headers: {
+            'Accept': 'application/json',
+          },
+        }
+      );
 
         if (newsResponse.ok) {
           const newsData = await newsResponse.json();
@@ -102,9 +100,6 @@ serve(async (req) => {
         } else {
           console.log('NewsData.io API failed with status:', newsResponse.status);
         }
-      } else {
-        console.log('No NewsData.io API key found');
-      }
     } catch (apiError) {
       console.log('=== API ERROR ===');
       console.log('NewsData.io API error, using fallback news:', apiError.message);
