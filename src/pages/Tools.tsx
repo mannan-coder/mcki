@@ -1125,152 +1125,205 @@ const Tools = () => {
                   </Card>
                 </TabsContent>
 
-                {/* Trading Fees Calculator */}
-                <TabsContent value="fees" className="h-full">
-                  <Card className="h-full card-enhanced">
-                    <CardHeader>
-                      <CardTitle className="flex items-center space-x-3 text-gradient-premium">
-                        <div className="p-2 bg-primary/10 rounded-lg">
-                          <DollarSign className="h-6 w-6 text-primary" />
+                {/* Trading Fees Calculator - Full Desktop View */}
+                <TabsContent value="fees" className="w-full">
+                  <div className="space-y-8">
+                    {/* Header Section */}
+                    <div className="text-center space-y-4">
+                      <div className="flex items-center justify-center space-x-3">
+                        <div className="p-3 bg-primary/10 rounded-xl">
+                          <DollarSign className="h-8 w-8 text-primary" />
                         </div>
-                        <span>Trading Fees Calculator</span>
-                      </CardTitle>
-                      <div className="text-muted-foreground">Compare trading costs across multiple exchanges with comprehensive fee analysis</div>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {/* Input Section */}
-                        <div className="space-y-4">
-                          <div>
-                            <label className="text-sm font-medium mb-2 block">Trade Amount ($)</label>
+                        <div>
+                          <h2 className="text-3xl lg:text-4xl font-bold bg-gradient-premium text-transparent bg-clip-text">
+                            Trading Fees Calculator
+                          </h2>
+                          <p className="text-muted-foreground mt-2">Compare trading costs across multiple exchanges with comprehensive fee analysis</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Input Section */}
+                    <Card className="border-border/50 bg-gradient-card backdrop-blur-sm card-enhanced">
+                      <CardContent className="p-8">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                          <div className="space-y-2">
+                            <label className="text-lg font-semibold text-foreground">Trade Amount ($)</label>
                             <Input
                               type="number"
                               value={tradeAmount}
                               onChange={(e) => setTradeAmount(e.target.value)}
                               placeholder="Enter trade amount"
-                              className="focus-visible"
+                              className="h-14 text-lg border-2 border-primary/20 focus:border-primary/60 bg-background/50"
                             />
                           </div>
                           
-                          <div className="grid grid-cols-2 gap-4">
-                            <div>
-                              <label className="text-sm font-medium mb-2 block">Maker Fee (%)</label>
-                              <Input
-                                type="number"
-                                step="0.01"
-                                value={makerFee}
-                                onChange={(e) => setMakerFee(e.target.value)}
-                                placeholder="0.1"
-                                className="focus-visible"
-                              />
-                            </div>
-                            <div>
-                              <label className="text-sm font-medium mb-2 block">Taker Fee (%)</label>
-                              <Input
-                                type="number"
-                                step="0.01"
-                                value={takerFee}
-                                onChange={(e) => setTakerFee(e.target.value)}
-                                placeholder="0.1"
-                                className="focus-visible"
-                              />
-                            </div>
+                          <div className="space-y-2">
+                            <label className="text-lg font-semibold text-foreground">Maker Fee (%)</label>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={makerFee}
+                              onChange={(e) => setMakerFee(e.target.value)}
+                              placeholder="0.1"
+                              className="h-14 text-lg border-2 border-primary/20 focus:border-primary/60 bg-background/50"
+                            />
                           </div>
+                          
+                          <div className="space-y-2">
+                            <label className="text-lg font-semibold text-foreground">Taker Fee (%)</label>
+                            <Input
+                              type="number"
+                              step="0.01"
+                              value={takerFee}
+                              onChange={(e) => setTakerFee(e.target.value)}
+                              placeholder="0.1"
+                              className="h-14 text-lg border-2 border-primary/20 focus:border-primary/60 bg-background/50"
+                            />
+                          </div>
+                        </div>
 
-                          <div className="space-y-3">
-                            <h4 className="text-sm font-semibold">Exchange Comparison</h4>
-                            <div>
-                              <label className="text-xs font-medium mb-1 block text-muted-foreground">Binance Fee (%)</label>
+                        {/* Exchange Comparison Inputs */}
+                        <div className="border-t border-border/30 pt-6">
+                          <h3 className="text-xl font-semibold mb-6 flex items-center space-x-2">
+                            <BarChart3 className="h-5 w-5 text-primary" />
+                            <span>Exchange Fee Comparison</span>
+                          </h3>
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div className="space-y-2">
+                              <label className="text-base font-medium text-foreground flex items-center space-x-2">
+                                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
+                                <span>Binance Fee (%)</span>
+                              </label>
                               <Input
                                 type="number"
                                 step="0.01"
                                 value={exchange1Fee}
                                 onChange={(e) => setExchange1Fee(e.target.value)}
                                 placeholder="0.1"
-                                className="focus-visible text-sm"
+                                className="h-12 border-2 border-blue-500/20 focus:border-blue-500/60"
                               />
                             </div>
-                            <div>
-                              <label className="text-xs font-medium mb-1 block text-muted-foreground">Coinbase Fee (%)</label>
+                            <div className="space-y-2">
+                              <label className="text-base font-medium text-foreground flex items-center space-x-2">
+                                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                                <span>Coinbase Fee (%)</span>
+                              </label>
                               <Input
                                 type="number"
                                 step="0.01"
                                 value={exchange2Fee}
                                 onChange={(e) => setExchange2Fee(e.target.value)}
                                 placeholder="0.15"
-                                className="focus-visible text-sm"
+                                className="h-12 border-2 border-green-500/20 focus:border-green-500/60"
                               />
                             </div>
-                            <div>
-                              <label className="text-xs font-medium mb-1 block text-muted-foreground">Kraken Fee (%)</label>
+                            <div className="space-y-2">
+                              <label className="text-base font-medium text-foreground flex items-center space-x-2">
+                                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
+                                <span>Kraken Fee (%)</span>
+                              </label>
                               <Input
                                 type="number"
                                 step="0.01"
                                 value={exchange3Fee}
                                 onChange={(e) => setExchange3Fee(e.target.value)}
                                 placeholder="0.25"
-                                className="focus-visible text-sm"
+                                className="h-12 border-2 border-purple-500/20 focus:border-purple-500/60"
                               />
                             </div>
                           </div>
                         </div>
+                      </CardContent>
+                    </Card>
 
-                        {/* Results Section */}
-                        <div className="space-y-4">
-                          <h4 className="text-lg font-semibold mb-4">Fee Analysis Results</h4>
-                          
-                          <div className="grid grid-cols-2 gap-4">
-                            <Card className="bg-primary/5 border-primary/20">
-                              <CardContent className="p-4 text-center">
-                                <DollarSign className="h-5 w-5 text-primary mx-auto mb-2" />
-                                <div className="text-lg font-bold text-primary font-mono">${tradingFeesResult.makerCost}</div>
-                                <div className="text-xs text-muted-foreground">Maker Cost</div>
-                              </CardContent>
-                            </Card>
-                            
-                            <Card className="bg-secondary/5 border-secondary/20">
-                              <CardContent className="p-4 text-center">
-                                <TrendingUp className="h-5 w-5 text-secondary mx-auto mb-2" />
-                                <div className="text-lg font-bold text-secondary font-mono">${tradingFeesResult.takerCost}</div>
-                                <div className="text-xs text-muted-foreground">Taker Cost</div>
-                              </CardContent>
-                            </Card>
-                          </div>
+                    {/* Results Section */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                      <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10 card-enhanced">
+                        <CardContent className="p-6 text-center">
+                          <DollarSign className="h-8 w-8 text-primary mx-auto mb-3" />
+                          <div className="text-2xl lg:text-3xl font-bold text-primary font-mono">${tradingFeesResult.makerCost}</div>
+                          <div className="text-sm text-muted-foreground font-medium">Maker Cost</div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card className="border-secondary/20 bg-gradient-to-br from-secondary/5 to-secondary/10 card-enhanced">
+                        <CardContent className="p-6 text-center">
+                          <TrendingUp className="h-8 w-8 text-secondary mx-auto mb-3" />
+                          <div className="text-2xl lg:text-3xl font-bold text-secondary font-mono">${tradingFeesResult.takerCost}</div>
+                          <div className="text-sm text-muted-foreground font-medium">Taker Cost</div>
+                        </CardContent>
+                      </Card>
 
+                      <Card className="border-success/20 bg-gradient-to-br from-success/5 to-success/10 card-enhanced">
+                        <CardContent className="p-6 text-center">
+                          <Target className="h-8 w-8 text-success mx-auto mb-3" />
+                          <div className="text-xl lg:text-2xl font-bold text-success">{tradingFeesResult.bestExchange}</div>
+                          <div className="text-sm text-muted-foreground font-medium">Best Exchange</div>
+                        </CardContent>
+                      </Card>
+
+                      <Card className="border-warning/20 bg-gradient-to-br from-warning/5 to-warning/10 card-enhanced">
+                        <CardContent className="p-6 text-center">
+                          <Eye className="h-8 w-8 text-warning mx-auto mb-3" />
+                          <div className="text-2xl lg:text-3xl font-bold text-warning font-mono">${tradingFeesResult.savings}</div>
+                          <div className="text-sm text-muted-foreground font-medium">Potential Savings</div>
+                        </CardContent>
+                      </Card>
+                    </div>
+
+                    {/* Detailed Exchange Comparison */}
+                    <Card className="border-border/50 bg-gradient-card backdrop-blur-sm card-enhanced">
+                      <CardHeader>
+                        <CardTitle className="flex items-center space-x-3">
+                          <BarChart3 className="h-6 w-6 text-primary" />
+                          <span>Exchange Fee Breakdown</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                           <div className="space-y-3">
-                            <h5 className="text-sm font-semibold">Exchange Costs</h5>
-                            <div className="space-y-2">
-                              <div className="flex justify-between items-center p-2 rounded-lg bg-muted/30">
-                                <span className="text-sm">Binance:</span>
-                                <span className="font-semibold">${tradingFeesResult.ex1Cost}</span>
+                            <div className="flex items-center space-x-3">
+                              <div className="w-4 h-4 bg-blue-500 rounded-full"></div>
+                              <span className="font-semibold text-lg">Binance</span>
+                            </div>
+                            <div className="bg-blue-500/10 border border-blue-500/20 rounded-lg p-4">
+                              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400 font-mono">
+                                ${tradingFeesResult.ex1Cost}
                               </div>
-                              <div className="flex justify-between items-center p-2 rounded-lg bg-muted/30">
-                                <span className="text-sm">Coinbase:</span>
-                                <span className="font-semibold">${tradingFeesResult.ex2Cost}</span>
-                              </div>
-                              <div className="flex justify-between items-center p-2 rounded-lg bg-muted/30">
-                                <span className="text-sm">Kraken:</span>
-                                <span className="font-semibold">${tradingFeesResult.ex3Cost}</span>
-                              </div>
+                              <div className="text-sm text-muted-foreground">Trading Fee</div>
                             </div>
                           </div>
 
-                          <Card className="bg-success/10 border-success/20">
-                            <CardContent className="p-4">
-                              <div className="flex items-center space-x-2 mb-2">
-                                <Target className="h-4 w-4 text-success" />
-                                <span className="text-sm font-medium text-success">Best Exchange</span>
+                          <div className="space-y-3">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-4 h-4 bg-green-500 rounded-full"></div>
+                              <span className="font-semibold text-lg">Coinbase</span>
+                            </div>
+                            <div className="bg-green-500/10 border border-green-500/20 rounded-lg p-4">
+                              <div className="text-2xl font-bold text-green-600 dark:text-green-400 font-mono">
+                                ${tradingFeesResult.ex2Cost}
                               </div>
-                              <div className="text-lg font-bold text-success">{tradingFeesResult.bestExchange}</div>
-                              <div className="text-xs text-muted-foreground mt-1">
-                                Save ${tradingFeesResult.savings} vs worst option
+                              <div className="text-sm text-muted-foreground">Trading Fee</div>
+                            </div>
+                          </div>
+
+                          <div className="space-y-3">
+                            <div className="flex items-center space-x-3">
+                              <div className="w-4 h-4 bg-purple-500 rounded-full"></div>
+                              <span className="font-semibold text-lg">Kraken</span>
+                            </div>
+                            <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-4">
+                              <div className="text-2xl font-bold text-purple-600 dark:text-purple-400 font-mono">
+                                ${tradingFeesResult.ex3Cost}
                               </div>
-                            </CardContent>
-                          </Card>
+                              <div className="text-sm text-muted-foreground">Trading Fee</div>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+                      </CardContent>
+                    </Card>
+                  </div>
                 </TabsContent>
               </Tabs>
             </div>
