@@ -13,7 +13,6 @@ import {
   Briefcase,
   BookOpen
 } from 'lucide-react';
-import { MCKILogo } from '@/components/ui/mcki-logo';
 
 interface FooterProps {
   isDarkMode: boolean;
@@ -69,7 +68,11 @@ const Footer = ({ isDarkMode }: FooterProps) => {
           {/* Brand Section */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center space-x-3 mb-6 group">
-              <MCKILogo size="lg" className="group-hover:scale-110 transition-transform duration-300" />
+              <img 
+                src="/lovable-uploads/c84519c3-5e94-486b-b886-2607fc4a8a15.png" 
+                alt="MCKI Logo" 
+                className="w-12 h-12 object-contain group-hover:scale-110 transition-transform duration-300"
+              />
               <div>
                 <h3 className="text-2xl font-bold text-foreground group-hover:text-primary transition-colors">MCKI</h3>
                 <p className="text-sm text-muted-foreground">Crypto Intelligence Platform</p>

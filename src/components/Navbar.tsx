@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { Menu, X, Sun, MoonIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { MCKILogo } from '@/components/ui/mcki-logo';
 
 interface NavbarProps {
   isDarkMode: boolean;
@@ -28,7 +27,11 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <MCKILogo size="md" className="group-hover:scale-110 transition-transform duration-300" />
+            <img 
+              src="/lovable-uploads/c84519c3-5e94-486b-b886-2607fc4a8a15.png" 
+              alt="MCKI Logo" 
+              className="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-300"
+            />
             <div>
               <h1 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
                 MCKI
