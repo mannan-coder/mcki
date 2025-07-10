@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { AlertTriangle, Clock, Filter, Search, TrendingUp, TrendingDown, Eye, Zap } from 'lucide-react';
+import { AlertTriangle, Clock, Filter, Search, TrendingUp, TrendingDown, Eye, Zap, ArrowLeft, RefreshCw, Home, BarChart3 } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Layout from '@/components/Layout';
 import { DataSection } from '@/components/common/DataSection';
 import { StatsGrid } from '@/components/common/StatsGrid';
@@ -12,7 +13,7 @@ import { motion } from 'framer-motion';
 import { useLiveAlerts } from '@/hooks/useLiveAlerts';
 
 const Alerts = () => {
-  const { alerts, stats, loading, error } = useLiveAlerts();
+  const { alerts, stats, loading, error, refetch } = useLiveAlerts();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
   const [filterSeverity, setFilterSeverity] = useState<string>('all');
@@ -147,16 +148,59 @@ const Alerts = () => {
   return (
     <Layout>
       <div className="min-h-screen bg-background">
+        {/* Navigation Header */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-2">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <Link 
+                to="/"
+                className="flex items-center text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Dashboard
+              </Link>
+            </div>
+            
+            <div className="flex items-center space-x-3">
+              <Link 
+                to="/#market-overview"
+                className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
+              >
+                <BarChart3 className="h-4 w-4" />
+                <span>Market Overview</span>
+              </Link>
+              <Link 
+                to="/#live-signals"
+                className="flex items-center space-x-2 text-muted-foreground hover:text-foreground transition-colors text-sm"
+              >
+                <TrendingUp className="h-4 w-4" />
+                <span>Live Signals</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+
         {/* Container with proper mobile margins */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <DataSection
             title="Live Alerts"
-            subtitle="Real-time crypto market alerts and notifications"
+            subtitle="Real-time crypto market alerts and notifications powered by live API data"
             icon={<AlertTriangle className="h-6 w-6 text-primary" />}
             headerActions={
-              <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
-                <span className="text-sm text-muted-foreground">Live</span>
+              <div className="flex items-center space-x-3">
+                <div className="flex items-center space-x-2">
+                  <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
+                  <span className="text-sm text-muted-foreground">Live Data</span>
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={refetch}
+                  className="flex items-center space-x-2"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                  <span>Refresh</span>
+                </Button>
               </div>
             }
             className="px-0" // Remove internal padding since we handle it at container level
