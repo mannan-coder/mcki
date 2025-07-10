@@ -55,6 +55,14 @@ const Tools = () => {
   const [stakingAmount, setStakingAmount] = useState('1000');
   const [stakingAPY, setStakingAPY] = useState('12');
   const [stakingPeriod, setStakingPeriod] = useState('12');
+  
+  // Trading Fees Calculator state
+  const [tradeAmount, setTradeAmount] = useState('10000');
+  const [makerFee, setMakerFee] = useState('0.1');
+  const [takerFee, setTakerFee] = useState('0.1');
+  const [exchange1Fee, setExchange1Fee] = useState('0.1');
+  const [exchange2Fee, setExchange2Fee] = useState('0.15');
+  const [exchange3Fee, setExchange3Fee] = useState('0.25');
 
   // Calculation functions
   const calculateROI = () => {
@@ -203,6 +211,43 @@ const Tools = () => {
     };
   };
 
+  const calculateTradingFees = () => {
+    const amount = parseFloat(tradeAmount) || 0;
+    const maker = parseFloat(makerFee) / 100 || 0;
+    const taker = parseFloat(takerFee) / 100 || 0;
+    const ex1 = parseFloat(exchange1Fee) / 100 || 0;
+    const ex2 = parseFloat(exchange2Fee) / 100 || 0;
+    const ex3 = parseFloat(exchange3Fee) / 100 || 0;
+    
+    const makerCost = amount * maker;
+    const takerCost = amount * taker;
+    const ex1Cost = amount * ex1;
+    const ex2Cost = amount * ex2;
+    const ex3Cost = amount * ex3;
+    
+    const exchanges = [
+      { name: 'Binance', cost: ex1Cost },
+      { name: 'Coinbase', cost: ex2Cost },
+      { name: 'Kraken', cost: ex3Cost }
+    ];
+    
+    const sortedExchanges = exchanges.sort((a, b) => a.cost - b.cost);
+    const bestExchange = sortedExchanges[0].name;
+    const worstCost = sortedExchanges[2].cost;
+    const bestCost = sortedExchanges[0].cost;
+    const savings = worstCost - bestCost;
+    
+    return {
+      makerCost: makerCost.toFixed(2),
+      takerCost: takerCost.toFixed(2),
+      ex1Cost: ex1Cost.toFixed(2),
+      ex2Cost: ex2Cost.toFixed(2),
+      ex3Cost: ex3Cost.toFixed(2),
+      bestExchange,
+      savings: savings.toFixed(2)
+    };
+  };
+
   // Get calculation results
   const roiResult = calculateROI();
   const priceResult = calculatePriceChange();
@@ -212,6 +257,7 @@ const Tools = () => {
   const compoundResult = calculateCompound();
   const dcaResult = calculateDCA();
   const stakingResult = calculateStaking();
+  const tradingFeesResult = calculateTradingFees();
 
   const tools = [
     {
@@ -277,6 +323,14 @@ const Tools = () => {
       icon: Database,
       category: 'defi',
       tabValue: 'staking'
+    },
+    {
+      id: 'fees',
+      title: 'Trading Fees Calculator',
+      description: 'Compare trading costs across multiple exchanges',
+      icon: DollarSign,
+      category: 'trading',
+      tabValue: 'fees'
     }
   ];
 
@@ -299,17 +353,17 @@ const Tools = () => {
           </div>
 
           {/* Enhanced Stats */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 lg:gap-6 mb-12">
             <div className="group">
               <Card className="relative overflow-hidden border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10 hover:shadow-card-hover transition-all duration-300 hover:scale-105 animate-slide-up card-enhanced">
                 <div className="absolute inset-0 bg-gradient-premium opacity-5" />
-                <CardContent className="p-6 text-center relative">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-xl mb-4 group-hover:animate-glow-pulse">
-                    <Calculator className="h-6 w-6 text-primary" />
+                <CardContent className="p-4 lg:p-6 text-center relative">
+                  <div className="inline-flex items-center justify-center w-10 h-10 lg:w-12 lg:h-12 bg-primary/10 rounded-xl mb-3 lg:mb-4 group-hover:animate-glow-pulse">
+                    <Calculator className="h-5 w-5 lg:h-6 lg:w-6 text-primary" />
                   </div>
-                  <div className="text-3xl font-bold text-primary font-mono number-glow">8+</div>
-                  <div className="text-sm text-muted-foreground font-medium">Professional Tools</div>
-                  <div className="mt-2 text-xs text-primary/70">Always Available</div>
+                  <div className="text-2xl lg:text-3xl font-bold text-primary font-mono number-glow">9+</div>
+                  <div className="text-xs lg:text-sm text-muted-foreground font-medium">Professional Tools</div>
+                  <div className="mt-1 lg:mt-2 text-xs text-primary/70">Always Available</div>
                 </CardContent>
               </Card>
             </div>
@@ -317,13 +371,13 @@ const Tools = () => {
             <div className="group">
               <Card className="relative overflow-hidden border-success/20 bg-gradient-to-br from-success/5 to-success/10 hover:shadow-card-hover transition-all duration-300 hover:scale-105 animate-slide-up [animation-delay:100ms] card-enhanced">
                 <div className="absolute inset-0 bg-gradient-success opacity-5" />
-                <CardContent className="p-6 text-center relative">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-success/10 rounded-xl mb-4 group-hover:animate-glow-pulse">
-                    <BarChart3 className="h-6 w-6 text-success" />
+                <CardContent className="p-4 lg:p-6 text-center relative">
+                  <div className="inline-flex items-center justify-center w-10 h-10 lg:w-12 lg:h-12 bg-success/10 rounded-xl mb-3 lg:mb-4 group-hover:animate-glow-pulse">
+                    <BarChart3 className="h-5 w-5 lg:h-6 lg:w-6 text-success" />
                   </div>
-                  <div className="text-3xl font-bold text-success font-mono number-glow">500K+</div>
-                  <div className="text-sm text-muted-foreground font-medium">Calculations Made</div>
-                  <div className="mt-2 text-xs text-success/70">High Performance</div>
+                  <div className="text-2xl lg:text-3xl font-bold text-success font-mono number-glow">500K+</div>
+                  <div className="text-xs lg:text-sm text-muted-foreground font-medium">Calculations Made</div>
+                  <div className="mt-1 lg:mt-2 text-xs text-success/70">High Performance</div>
                 </CardContent>
               </Card>
             </div>
@@ -331,13 +385,13 @@ const Tools = () => {
             <div className="group">
               <Card className="relative overflow-hidden border-accent/20 bg-gradient-to-br from-accent/5 to-accent/10 hover:shadow-card-hover transition-all duration-300 hover:scale-105 animate-slide-up [animation-delay:200ms] card-enhanced">
                 <div className="absolute inset-0 bg-gradient-to-br from-accent/5 to-transparent" />
-                <CardContent className="p-6 text-center relative">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-accent/10 rounded-xl mb-4 group-hover:animate-glow-pulse">
-                    <Target className="h-6 w-6 text-accent" />
+                <CardContent className="p-4 lg:p-6 text-center relative">
+                  <div className="inline-flex items-center justify-center w-10 h-10 lg:w-12 lg:h-12 bg-accent/10 rounded-xl mb-3 lg:mb-4 group-hover:animate-glow-pulse">
+                    <Target className="h-5 w-5 lg:h-6 lg:w-6 text-accent" />
                   </div>
-                  <div className="text-3xl font-bold text-accent font-mono number-glow">99.9%</div>
-                  <div className="text-sm text-muted-foreground font-medium">Accuracy Rate</div>
-                  <div className="mt-2 text-xs text-accent/70">Verified Results</div>
+                  <div className="text-2xl lg:text-3xl font-bold text-accent font-mono number-glow">99.9%</div>
+                  <div className="text-xs lg:text-sm text-muted-foreground font-medium">Accuracy Rate</div>
+                  <div className="mt-1 lg:mt-2 text-xs text-accent/70">Verified Results</div>
                 </CardContent>
               </Card>
             </div>
@@ -345,13 +399,13 @@ const Tools = () => {
             <div className="group">
               <Card className="relative overflow-hidden border-warning/20 bg-gradient-to-br from-warning/5 to-warning/10 hover:shadow-card-hover transition-all duration-300 hover:scale-105 animate-slide-up [animation-delay:300ms] card-enhanced">
                 <div className="absolute inset-0 bg-gradient-to-br from-warning/5 to-transparent" />
-                <CardContent className="p-6 text-center relative">
-                  <div className="inline-flex items-center justify-center w-12 h-12 bg-warning/10 rounded-xl mb-4 group-hover:animate-glow-pulse">
-                    <Clock className="h-6 w-6 text-warning" />
+                <CardContent className="p-4 lg:p-6 text-center relative">
+                  <div className="inline-flex items-center justify-center w-10 h-10 lg:w-12 lg:h-12 bg-warning/10 rounded-xl mb-3 lg:mb-4 group-hover:animate-glow-pulse">
+                    <Clock className="h-5 w-5 lg:h-6 lg:w-6 text-warning" />
                   </div>
-                  <div className="text-3xl font-bold text-warning font-mono number-glow">24/7</div>
-                  <div className="text-sm text-muted-foreground font-medium">Available</div>
-                  <div className="mt-2 text-xs text-warning/70">Real-time</div>
+                  <div className="text-2xl lg:text-3xl font-bold text-warning font-mono number-glow">24/7</div>
+                  <div className="text-xs lg:text-sm text-muted-foreground font-medium">Available</div>
+                  <div className="mt-1 lg:mt-2 text-xs text-warning/70">Real-time</div>
                 </CardContent>
               </Card>
             </div>
@@ -1066,6 +1120,154 @@ const Tools = () => {
                             <div className="text-sm text-muted-foreground">Effective APY</div>
                           </CardContent>
                         </Card>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </TabsContent>
+
+                {/* Trading Fees Calculator */}
+                <TabsContent value="fees" className="h-full">
+                  <Card className="h-full card-enhanced">
+                    <CardHeader>
+                      <CardTitle className="flex items-center space-x-3 text-gradient-premium">
+                        <div className="p-2 bg-primary/10 rounded-lg">
+                          <DollarSign className="h-6 w-6 text-primary" />
+                        </div>
+                        <span>Trading Fees Calculator</span>
+                      </CardTitle>
+                      <div className="text-muted-foreground">Compare trading costs across multiple exchanges with comprehensive fee analysis</div>
+                    </CardHeader>
+                    <CardContent className="space-y-6">
+                      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        {/* Input Section */}
+                        <div className="space-y-4">
+                          <div>
+                            <label className="text-sm font-medium mb-2 block">Trade Amount ($)</label>
+                            <Input
+                              type="number"
+                              value={tradeAmount}
+                              onChange={(e) => setTradeAmount(e.target.value)}
+                              placeholder="Enter trade amount"
+                              className="focus-visible"
+                            />
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <label className="text-sm font-medium mb-2 block">Maker Fee (%)</label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={makerFee}
+                                onChange={(e) => setMakerFee(e.target.value)}
+                                placeholder="0.1"
+                                className="focus-visible"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-sm font-medium mb-2 block">Taker Fee (%)</label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={takerFee}
+                                onChange={(e) => setTakerFee(e.target.value)}
+                                placeholder="0.1"
+                                className="focus-visible"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="space-y-3">
+                            <h4 className="text-sm font-semibold">Exchange Comparison</h4>
+                            <div>
+                              <label className="text-xs font-medium mb-1 block text-muted-foreground">Binance Fee (%)</label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={exchange1Fee}
+                                onChange={(e) => setExchange1Fee(e.target.value)}
+                                placeholder="0.1"
+                                className="focus-visible text-sm"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-xs font-medium mb-1 block text-muted-foreground">Coinbase Fee (%)</label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={exchange2Fee}
+                                onChange={(e) => setExchange2Fee(e.target.value)}
+                                placeholder="0.15"
+                                className="focus-visible text-sm"
+                              />
+                            </div>
+                            <div>
+                              <label className="text-xs font-medium mb-1 block text-muted-foreground">Kraken Fee (%)</label>
+                              <Input
+                                type="number"
+                                step="0.01"
+                                value={exchange3Fee}
+                                onChange={(e) => setExchange3Fee(e.target.value)}
+                                placeholder="0.25"
+                                className="focus-visible text-sm"
+                              />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Results Section */}
+                        <div className="space-y-4">
+                          <h4 className="text-lg font-semibold mb-4">Fee Analysis Results</h4>
+                          
+                          <div className="grid grid-cols-2 gap-4">
+                            <Card className="bg-primary/5 border-primary/20">
+                              <CardContent className="p-4 text-center">
+                                <DollarSign className="h-5 w-5 text-primary mx-auto mb-2" />
+                                <div className="text-lg font-bold text-primary font-mono">${tradingFeesResult.makerCost}</div>
+                                <div className="text-xs text-muted-foreground">Maker Cost</div>
+                              </CardContent>
+                            </Card>
+                            
+                            <Card className="bg-secondary/5 border-secondary/20">
+                              <CardContent className="p-4 text-center">
+                                <TrendingUp className="h-5 w-5 text-secondary mx-auto mb-2" />
+                                <div className="text-lg font-bold text-secondary font-mono">${tradingFeesResult.takerCost}</div>
+                                <div className="text-xs text-muted-foreground">Taker Cost</div>
+                              </CardContent>
+                            </Card>
+                          </div>
+
+                          <div className="space-y-3">
+                            <h5 className="text-sm font-semibold">Exchange Costs</h5>
+                            <div className="space-y-2">
+                              <div className="flex justify-between items-center p-2 rounded-lg bg-muted/30">
+                                <span className="text-sm">Binance:</span>
+                                <span className="font-semibold">${tradingFeesResult.ex1Cost}</span>
+                              </div>
+                              <div className="flex justify-between items-center p-2 rounded-lg bg-muted/30">
+                                <span className="text-sm">Coinbase:</span>
+                                <span className="font-semibold">${tradingFeesResult.ex2Cost}</span>
+                              </div>
+                              <div className="flex justify-between items-center p-2 rounded-lg bg-muted/30">
+                                <span className="text-sm">Kraken:</span>
+                                <span className="font-semibold">${tradingFeesResult.ex3Cost}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <Card className="bg-success/10 border-success/20">
+                            <CardContent className="p-4">
+                              <div className="flex items-center space-x-2 mb-2">
+                                <Target className="h-4 w-4 text-success" />
+                                <span className="text-sm font-medium text-success">Best Exchange</span>
+                              </div>
+                              <div className="text-lg font-bold text-success">{tradingFeesResult.bestExchange}</div>
+                              <div className="text-xs text-muted-foreground mt-1">
+                                Save ${tradingFeesResult.savings} vs worst option
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
