@@ -20,26 +20,23 @@ export const MCKILogo = ({ size = 'md', className }: MCKILogoProps) => {
 
   return (
     <div className={cn(
-      "relative rounded-xl bg-gradient-to-br from-orange-400 via-yellow-400 to-orange-500 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-105",
+      "relative rounded-lg bg-gradient-to-br from-orange-400 via-amber-400 to-orange-500 flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-105 border border-orange-300/50",
       sizeClasses[size],
       className
     )}>
-      {/* Geometric background pattern */}
-      <div className="absolute inset-0 rounded-xl overflow-hidden">
-        <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-bl from-orange-300/30 to-transparent"></div>
-        <div className="absolute bottom-0 left-0 w-1/2 h-1/2 bg-gradient-to-tr from-yellow-600/20 to-transparent"></div>
-      </div>
+      {/* Corner accent - top right */}
+      <div className="absolute top-0 right-0 w-0 h-0 border-l-[12px] border-l-transparent border-b-[12px] border-b-slate-800"></div>
       
-      {/* ML Text */}
+      {/* ML Text with better styling to match reference */}
       <div className={cn(
-        "relative z-10 font-black tracking-tight select-none",
+        "relative z-10 font-black tracking-tight select-none transform",
         textSizeClasses[size]
       )}>
-        <span className="text-gray-900 drop-shadow-sm">ML</span>
+        <span className="text-slate-800 drop-shadow-sm">ML</span>
       </div>
       
-      {/* Subtle border effect */}
-      <div className="absolute inset-0 rounded-xl border border-orange-200/50 shadow-inner"></div>
+      {/* Subtle lighting effect */}
+      <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-white/20 via-transparent to-black/10 pointer-events-none"></div>
     </div>
   );
 };
