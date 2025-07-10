@@ -29,6 +29,11 @@ const Terms = lazy(() => import('@/pages/Terms'));
 const Cookies = lazy(() => import('@/pages/Cookies'));
 const Disclaimer = lazy(() => import('@/pages/Disclaimer'));
 
+// Detail pages
+const WhaleDetail = lazy(() => import('@/pages/WhaleDetail'));
+const TrendingDetail = lazy(() => import('@/pages/TrendingDetail'));
+const AlertDetail = lazy(() => import('@/pages/AlertDetail'));
+
 // Loading component
 const PageLoader = () => (
   <div className="min-h-screen p-8 space-y-6">

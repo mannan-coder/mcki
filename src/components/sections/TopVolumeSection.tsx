@@ -82,7 +82,14 @@ export const TopVolumeSection = ({ coins, loading = false }: TopVolumeSectionPro
       transition={{ delay: index * 0.1 }}
       whileHover={{ y: -2 }}
     >
-      <ResponsiveCard size="sm" className="h-full cursor-pointer hover:shadow-lg transition-all">
+      <ResponsiveCard 
+        size="sm" 
+        className="h-full cursor-pointer hover:shadow-lg transition-all"
+        onClick={() => {
+          window.location.href = `/coin/${coin.id}`;
+          toast.success(`Opening ${coin.name} details`);
+        }}
+      >
         <div className="space-y-3">
           <div className="flex items-center space-x-3">
             <div className="relative">
