@@ -66,8 +66,8 @@ export const useWhaleData = () => {
   useEffect(() => {
     fetchWhaleData();
     
-    // Refresh every 2 minutes for real-time feel
-    const interval = setInterval(fetchWhaleData, 2 * 60 * 1000);
+    // Refresh every 90 seconds for live data feel
+    const interval = setInterval(fetchWhaleData, 90 * 1000);
     
     return () => clearInterval(interval);
   }, []);

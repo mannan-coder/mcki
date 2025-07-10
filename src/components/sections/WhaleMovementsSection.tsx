@@ -16,7 +16,7 @@ export const WhaleMovementsSection = ({ loading = false }: WhaleMovementsSection
   const whaleStats = [
     {
       label: 'Large Transfers (24h)',
-      value: '15',
+      value: whaleData?.whaleTransactions?.length?.toString() || '15',
       change: '+25%',
       trend: 'up' as const,
       icon: <Activity className="h-5 w-5" />
