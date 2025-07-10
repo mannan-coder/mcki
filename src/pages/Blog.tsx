@@ -160,43 +160,108 @@ const Blog = () => {
                 </Button>
                 
                 <article className="prose prose-lg max-w-none dark:prose-invert">
+                  {/* Hero Image */}
                   {selectedArticle.image_url && (
-                    <img 
-                      src={selectedArticle.image_url} 
-                      alt={selectedArticle.title}
-                      className="w-full h-64 md:h-80 object-cover rounded-lg mb-8"
-                    />
+                    <div className="relative w-full h-64 md:h-96 mb-8 rounded-xl overflow-hidden">
+                      <img 
+                        src={selectedArticle.image_url} 
+                        alt={selectedArticle.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                    </div>
                   )}
                   
-                  <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-muted-foreground">
-                    <Badge variant="secondary">{selectedArticle.category}</Badge>
-                    <span>{formatDate(selectedArticle.published_at)}</span>
-                    <span>•</span>
-                    <span>{selectedArticle.read_time}</span>
-                    <span>•</span>
-                    <span>By {selectedArticle.source_name}</span>
+                  {/* Article Metadata */}
+                  <div className="flex flex-wrap items-center gap-4 mb-8 not-prose">
+                    <Badge variant="secondary" className="text-sm px-3 py-1">
+                      {selectedArticle.category}
+                    </Badge>
+                    <span className="text-sm text-muted-foreground">
+                      {formatDate(selectedArticle.published_at)}
+                    </span>
+                    <span className="text-muted-foreground">•</span>
+                    <span className="text-sm text-muted-foreground">
+                      {selectedArticle.read_time}
+                    </span>
+                    <span className="text-muted-foreground">•</span>
+                    <span className="text-sm text-muted-foreground">
+                      By {selectedArticle.source_name}
+                    </span>
                   </div>
                   
-                  <h1 className="text-3xl md:text-4xl font-bold mb-6">{selectedArticle.title}</h1>
+                  {/* Article Title */}
+                  <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">
+                    {selectedArticle.title}
+                  </h1>
                   
-                  <div className="text-lg text-muted-foreground mb-8 leading-relaxed">
+                  {/* Article Summary */}
+                  <div className="text-xl text-muted-foreground mb-8 leading-relaxed font-medium border-l-4 border-primary pl-6 italic">
                     {selectedArticle.description}
                   </div>
                   
-                  <div className="prose-content" dangerouslySetInnerHTML={{ 
-                    __html: selectedArticle.content.replace(/\n/g, '<br>') 
-                  }} />
+                  {/* Article Content */}
+                  <div className="prose-content text-base leading-relaxed">
+                    {selectedArticle.content.split('\n\n').map((paragraph, index) => {
+                      if (paragraph.trim().startsWith('**') && paragraph.trim().endsWith('**')) {
+                        // Handle bold headers
+                        return (
+                          <div key={index} className="my-6 p-4 bg-primary/10 rounded-lg border-l-4 border-primary">
+                            <h3 className="font-bold text-lg text-primary m-0">
+                              {paragraph.replace(/\*\*/g, '')}
+                            </h3>
+                          </div>
+                        );
+                      }
+                      return (
+                        <p key={index} className="mb-4 text-foreground">
+                          {paragraph}
+                        </p>
+                      );
+                    })}
+                  </div>
                   
-                  <div className="mt-8 p-4 bg-muted/50 rounded-lg">
-                    <p className="text-sm text-muted-foreground mb-2">Read the full article at:</p>
-                    <a 
-                      href={selectedArticle.source_url} 
-                      target="_blank" 
-                      rel="noopener noreferrer"
-                      className="text-primary hover:underline font-semibold"
-                    >
-                      {selectedArticle.source_name} <ExternalLink className="inline h-4 w-4" />
-                    </a>
+                  {/* Tags and Categories */}
+                  <div className="mt-12 p-6 bg-muted/50 rounded-lg not-prose">
+                    <div className="flex flex-wrap items-center gap-2 mb-4">
+                      <span className="text-sm font-medium text-muted-foreground">Related Topics:</span>
+                      <Badge variant="outline">{selectedArticle.category}</Badge>
+                      <Badge variant="outline">Cryptocurrency</Badge>
+                      <Badge variant="outline">Trading</Badge>
+                      <Badge variant="outline">Blockchain</Badge>
+                    </div>
+                    
+                    <div className="border-t pt-4 mt-4">
+                      <p className="text-sm text-muted-foreground mb-3">
+                        Read the complete article from the original source:
+                      </p>
+                      <a 
+                        href={selectedArticle.source_url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-primary hover:underline font-semibold text-base"
+                      >
+                        {selectedArticle.source_name}
+                        <ExternalLink className="h-4 w-4" />
+                      </a>
+                    </div>
+                  </div>
+                  
+                  {/* Call to Action */}
+                  <div className="mt-8 p-6 bg-gradient-to-r from-primary/10 to-accent/10 rounded-lg not-prose text-center">
+                    <h3 className="text-xl font-bold mb-3">Interested in Crypto Trading?</h3>
+                    <p className="text-muted-foreground mb-4">
+                      Discover profitable arbitrage opportunities with MCKI's real-time market analysis.
+                    </p>
+                    <div className="flex flex-wrap justify-center gap-3">
+                      <Button className="gap-2">
+                        Explore Arbitrage Tools
+                        <ArrowRight className="h-4 w-4" />
+                      </Button>
+                      <Button variant="outline">
+                        View Market Data
+                      </Button>
+                    </div>
                   </div>
                 </article>
               </div>
