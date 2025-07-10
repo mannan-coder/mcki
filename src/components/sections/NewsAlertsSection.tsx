@@ -164,7 +164,11 @@ export const NewsAlertsSection = ({ loading = false }: NewsAlertsSectionProps) =
                           </span>
                           <div className="flex items-center text-xs text-muted-foreground">
                             <Clock className="h-3 w-3 mr-1" />
-                            {news.time}
+                            {new Date(news.time).toLocaleTimeString([], { 
+                              hour: '2-digit', 
+                              minute: '2-digit',
+                              hour12: true 
+                            })} • {new Date(news.time).toLocaleDateString()}
                           </div>
                         </div>
                         
