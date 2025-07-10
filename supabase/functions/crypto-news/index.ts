@@ -58,6 +58,7 @@ serve(async (req) => {
     
     try {
       const newsApiKey = Deno.env.get('NEWSDATA_API_KEY');
+      console.log('API Key status:', newsApiKey ? 'Found' : 'Missing');
       
       if (newsApiKey) {
         const newsResponse = await fetch(
@@ -72,6 +73,7 @@ serve(async (req) => {
         if (newsResponse.ok) {
           const newsData = await newsResponse.json();
           console.log(`Fetched ${newsData.results?.length || 0} articles from NewsData.io`);
+          console.log('API Response status:', newsResponse.status);
           
           news = newsData.results?.map((article: any, index: number) => {
             const sentiment = analyzeSentiment(`${article.title} ${article.description || ''}`);
@@ -96,7 +98,11 @@ serve(async (req) => {
               featured: index < 3
             };
           }) || [];
+        } else {
+          console.log('NewsData.io API failed with status:', newsResponse.status);
         }
+      } else {
+        console.log('No NewsData.io API key found');
       }
     } catch (apiError) {
       console.log('NewsData.io API error, using fallback news:', apiError.message);
