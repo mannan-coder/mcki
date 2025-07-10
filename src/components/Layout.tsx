@@ -12,10 +12,16 @@ const Layout = ({ children, showFooter = true }: LayoutProps) => {
     if (typeof window !== 'undefined') {
       return document.documentElement.classList.contains('dark');
     }
-    return true;
+    return true; // Default to dark mode
   });
 
   useEffect(() => {
+    // Set dark mode as default on first load
+    if (!document.documentElement.classList.contains('dark') && !document.documentElement.classList.contains('light')) {
+      document.documentElement.classList.add('dark');
+      setIsDarkMode(true);
+    }
+
     const handleThemeChange = () => {
       setIsDarkMode(document.documentElement.classList.contains('dark'));
     };

@@ -27,7 +27,17 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+            <img 
+              src="/src/assets/mcki-logo.png" 
+              alt="MCKI Logo" 
+              className="w-10 h-10 object-contain"
+              onError={(e) => {
+                // Fallback to letter if image fails
+                e.currentTarget.style.display = 'none';
+                e.currentTarget.nextElementSibling?.classList.remove('hidden');
+              }}
+            />
+            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center hidden">
               <span className="text-primary-foreground font-bold text-lg">M</span>
             </div>
             <div>
@@ -35,7 +45,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
                 MCKI
               </h1>
               <p className="text-xs text-muted-foreground">
-                Arbitrage Intelligence
+                Crypto Intelligence Platform
               </p>
             </div>
           </Link>

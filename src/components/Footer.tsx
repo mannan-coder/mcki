@@ -1,5 +1,18 @@
-
 import { Link } from 'react-router-dom';
+import { 
+  Twitter, 
+  MessageCircle, 
+  Send, 
+  Github, 
+  Mail, 
+  Shield, 
+  FileText, 
+  Info,
+  Building2,
+  Users,
+  Briefcase,
+  BookOpen
+} from 'lucide-react';
 
 interface FooterProps {
   isDarkMode: boolean;
@@ -8,90 +21,126 @@ interface FooterProps {
 const Footer = ({ isDarkMode }: FooterProps) => {
   const currentYear = new Date().getFullYear();
 
-  const footerLinks = {
-    product: [
-      { name: 'Dashboard', href: '/' },
-      { name: 'Arbitrage Scanner', href: '#arbitrage' },
-      { name: 'Market Analysis', href: '#market' },
-      { name: 'Calculators', href: '#tools' },
-    ],
-    company: [
-      { name: 'About Us', href: '/about' },
-      { name: 'Contact', href: '/contact' },
-      { name: 'Blog', href: '/blog' },
-      { name: 'Careers', href: '/careers' },
-    ],
-    legal: [
-      { name: 'Privacy Policy', href: '/privacy' },
-      { name: 'Terms of Service', href: '/terms' },
-      { name: 'Cookie Policy', href: '/cookies' },
-      { name: 'Disclaimer', href: '/disclaimer' },
-    ],
-    social: [
-      { name: 'Twitter', href: 'https://twitter.com/mcki' },
-      { name: 'Discord', href: 'https://discord.gg/mcki' },
-      { name: 'Telegram', href: 'https://t.me/mcki' },
-      { name: 'GitHub', href: 'https://github.com/mcki' },
-    ]
+  const footerSections = {
+    product: {
+      title: 'Platform',
+      links: [
+        { name: 'Dashboard', href: '/', icon: Building2 },
+        { name: 'Arbitrage Scanner', href: '/arbitrage', icon: Briefcase },
+        { name: 'Market Analysis', href: '/market', icon: FileText },
+        { name: 'Analytics', href: '/analytics', icon: Info },
+        { name: 'News', href: '/news', icon: BookOpen },
+        { name: 'Tools', href: '/tools', icon: Briefcase },
+      ]
+    },
+    company: {
+      title: 'Company',
+      links: [
+        { name: 'About Us', href: '/about', icon: Users },
+        { name: 'Contact', href: '/contact', icon: Mail },
+        { name: 'Blog', href: '/blog', icon: BookOpen },
+        { name: 'Careers', href: '/careers', icon: Briefcase },
+      ]
+    },
+    legal: {
+      title: 'Legal',
+      links: [
+        { name: 'Privacy Policy', href: '/privacy', icon: Shield },
+        { name: 'Terms of Service', href: '/terms', icon: FileText },
+        { name: 'Cookie Policy', href: '/cookies', icon: FileText },
+        { name: 'Disclaimer', href: '/disclaimer', icon: Info },
+      ]
+    }
   };
 
+  const socialLinks = [
+    { name: 'Twitter', href: 'https://twitter.com/mcki_crypto', icon: Twitter },
+    { name: 'Discord', href: 'https://discord.gg/mcki', icon: MessageCircle },
+    { name: 'Telegram', href: 'https://t.me/mcki_official', icon: Send },
+    { name: 'GitHub', href: 'https://github.com/mcki-platform', icon: Github },
+  ];
+
   return (
-    <footer className={`border-t ${isDarkMode ? 'border-gray-700 bg-gray-900' : 'border-gray-200 bg-white'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
+    <footer className="border-t bg-card/50 backdrop-blur-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Main Footer Content */}
+        <div className="py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Section */}
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-sm">M</span>
+          <div className="lg:col-span-2">
+            <Link to="/" className="flex items-center space-x-3 mb-6">
+              <img 
+                src="/src/assets/mcki-logo.png" 
+                alt="MCKI Logo" 
+                className="w-10 h-10 object-contain"
+                onError={(e) => {
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center hidden">
+                <span className="text-primary-foreground font-bold text-lg">M</span>
+              </div>
+              <div>
+                <h3 className="text-2xl font-bold text-foreground">MCKI</h3>
+                <p className="text-sm text-muted-foreground">Crypto Intelligence Platform</p>
+              </div>
+            </Link>
+            
+            <p className="text-muted-foreground text-sm mb-6 max-w-md">
+              Advanced cryptocurrency arbitrage intelligence powered by AI. Real-time market analysis, 
+              profitable trading opportunities, and comprehensive tools for multi-chain operations.
+            </p>
+            
+            {/* Social Links */}
+            <div className="flex space-x-4">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 transition-colors group"
+                  aria-label={social.name}
+                >
+                  <social.icon className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
+                </a>
+              ))}
             </div>
-            <div>
-              <h3 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-gray-900'}`}>
-                MCKI
-              </h3>
-              <p className={`text-xs ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-                Multi-Chain Knowledge Intelligence
-              </p>
+          </div>
+
+          {/* Footer Links */}
+          {Object.entries(footerSections).map(([key, section]) => (
+            <div key={key}>
+              <h4 className="font-semibold text-foreground mb-4">{section.title}</h4>
+              <ul className="space-y-3">
+                {section.links.map((link) => (
+                  <li key={link.name}>
+                    <Link 
+                      to={link.href}
+                      className="flex items-center space-x-2 text-sm text-muted-foreground hover:text-primary transition-colors group"
+                    >
+                      <link.icon className="w-4 h-4 group-hover:text-primary transition-colors" />
+                      <span>{link.name}</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
+          ))}
+        </div>
 
-          {/* Quick Links */}
-          <div className="flex flex-wrap items-center justify-center space-x-6 text-sm">
-            <Link to="/" className={`hover:text-blue-500 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Dashboard
-            </Link>
-            <Link to="/arbitrage" className={`hover:text-blue-500 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Arbitrage
-            </Link>
-            <Link to="/market" className={`hover:text-blue-500 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Market
-            </Link>
-            <Link to="/analytics" className={`hover:text-blue-500 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Analytics
-            </Link>
-            <Link to="/news" className={`hover:text-blue-500 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              News
-            </Link>
+        {/* Bottom Section */}
+        <div className="py-6 border-t flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
+          <div className="text-sm text-muted-foreground">
+            © {currentYear} MCKI Platform. All rights reserved.
           </div>
-
-          {/* Social & Legal */}
-          <div className="flex flex-wrap items-center justify-center space-x-4 text-sm">
-            <a href="https://twitter.com/mcki" target="_blank" rel="noopener noreferrer" className={`hover:text-blue-500 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Twitter
-            </a>
-            <a href="https://discord.gg/mcki" target="_blank" rel="noopener noreferrer" className={`hover:text-blue-500 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Discord
-            </a>
-            <Link to="/privacy" className={`hover:text-blue-500 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Privacy
-            </Link>
-            <Link to="/terms" className={`hover:text-blue-500 transition-colors ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-              Terms
-            </Link>
-          </div>
-
-          {/* Copyright */}
-          <div className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>
-            © {currentYear} MCKI. All rights reserved.
+          
+          <div className="flex items-center space-x-6 text-sm">
+            <span className="text-muted-foreground">Built with</span>
+            <div className="flex items-center space-x-1">
+              <span className="text-red-500">♥</span>
+              <span className="text-muted-foreground">for crypto traders</span>
+            </div>
           </div>
         </div>
       </div>
