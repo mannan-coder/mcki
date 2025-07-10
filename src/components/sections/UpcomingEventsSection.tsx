@@ -1,5 +1,6 @@
 import { Calendar, Clock, TrendingUp, AlertCircle, ExternalLink, Users, Target, Zap } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ResponsiveCard } from '@/components/common/ResponsiveCard';
 import { DataSection } from '@/components/common/DataSection';
 import { StatsGrid } from '@/components/common/StatsGrid';
@@ -320,6 +321,8 @@ export const UpcomingEventsSection = ({ loading = false }: UpcomingEventsSection
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.1 }}
                         onClick={() => handleEventClick(event)}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
                       >
                         <div className="flex items-start justify-between">
                           <div className="flex-1 min-w-0">
@@ -356,8 +359,10 @@ export const UpcomingEventsSection = ({ loading = false }: UpcomingEventsSection
                 </div>
 
                 {upcomingEvents.length > 6 && (
-                  <Button variant="outline" className="w-full mt-4">
-                    View All Events ({upcomingEvents.length})
+                  <Button variant="outline" className="w-full mt-4" asChild>
+                    <Link to="/events">
+                      View All Events ({upcomingEvents.length})
+                    </Link>
                   </Button>
                 )}
               </div>

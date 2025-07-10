@@ -18,6 +18,7 @@ const VolumeDetails = lazy(() => import('@/pages/VolumeDetails'));
 const CoinDetail = lazy(() => import('@/pages/CoinDetail'));
 const Alerts = lazy(() => import('@/pages/Alerts'));
 const NotFound = lazy(() => import('@/pages/NotFound'));
+const Events = lazy(() => import('@/pages/Events'));
 
 // New pages
 const Contact = lazy(() => import('@/pages/Contact'));
@@ -58,6 +59,8 @@ function App() {
           <Route path="/tools" element={<Tools />} />
           <Route path="/volume-details" element={<VolumeDetails />} />
           <Route path="/coin/:id" element={<CoinDetail />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/events/:eventId" element={<Events />} />
           <Route path="/alerts" element={<Alerts />} />
           
           {/* New pages */}

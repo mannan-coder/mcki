@@ -251,9 +251,11 @@ export const InsightsEventsSection = ({ loading = false }: InsightsEventsSection
                   <Button 
                     variant="outline" 
                     className="w-full"
-                    onClick={() => setSelectedTab('events')}
+                    asChild
                   >
-                    View All Events
+                    <Link to="/events">
+                      View All Events
+                    </Link>
                   </Button>
                 </div>
               </ResponsiveCard>
@@ -339,7 +341,16 @@ export const InsightsEventsSection = ({ loading = false }: InsightsEventsSection
                     <div className="p-2 bg-primary/10 rounded-lg">
                       <Calendar className="h-5 w-5 text-primary" />
                     </div>
-                    <h3 className="text-lg font-semibold text-foreground">Major Events</h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-lg font-semibold text-foreground">Major Events</h3>
+                      <Link 
+                        to="/events"
+                        className="text-sm text-primary hover:text-primary/80 transition-colors flex items-center gap-1"
+                      >
+                        View All
+                        <ExternalLink className="h-3 w-3" />
+                      </Link>
+                    </div>
                   </div>
 
                   <div className="space-y-3">
