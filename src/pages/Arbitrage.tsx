@@ -41,30 +41,26 @@ const ArbitragePage = () => {
             <div className="space-y-6">
               <StatsGrid stats={[]} loading={true} />
               
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2">
-                  {/* Loading skeleton for opportunities */}
-                  <div className="space-y-4">
-                    <div className="h-6 bg-muted rounded animate-pulse"></div>
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <div key={i} className="flex justify-between p-4 border-b border-border/50 last:border-b-0">
-                        <div className="h-4 w-32 bg-muted rounded animate-pulse"></div>
-                        <div className="h-4 w-24 bg-muted rounded animate-pulse"></div>
-                      </div>
-                    ))}
+              {/* Loading skeleton for opportunities - Full Width */}
+              <div className="space-y-4">
+                <div className="h-6 bg-muted rounded animate-pulse"></div>
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="flex justify-between p-4 border-b border-border/50 last:border-b-0">
+                    <div className="h-4 w-32 bg-muted rounded animate-pulse"></div>
+                    <div className="h-4 w-24 bg-muted rounded animate-pulse"></div>
                   </div>
-                </div>
-                
-                {/* Loading skeleton for exchange status */}
-                <div className="space-y-4">
-                  <div className="h-6 bg-muted rounded animate-pulse"></div>
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="flex justify-between p-3">
-                      <div className="h-4 w-20 bg-muted rounded animate-pulse"></div>
-                      <div className="h-4 w-16 bg-muted rounded animate-pulse"></div>
-                    </div>
-                  ))}
-                </div>
+                ))}
+              </div>
+              
+              {/* Loading skeleton for exchange status - Full Width */}
+              <div className="space-y-4">
+                <div className="h-6 bg-muted rounded animate-pulse"></div>
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="flex justify-between p-3">
+                    <div className="h-4 w-20 bg-muted rounded animate-pulse"></div>
+                    <div className="h-4 w-16 bg-muted rounded animate-pulse"></div>
+                  </div>
+                ))}
               </div>
             </div>
           </DataSection>
@@ -87,16 +83,14 @@ const ArbitragePage = () => {
             {/* Key Metrics */}
             <StatsGrid stats={statsData} />
             
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Live Opportunities Table */}
-              <OpportunitiesSection 
-                formattedData={formattedOpportunityData}
-                columns={opportunityColumns}
-              />
+            {/* Live Opportunities Table - Full Width */}
+            <OpportunitiesSection 
+              formattedData={formattedOpportunityData}
+              columns={opportunityColumns}
+            />
 
-              {/* Exchange Status */}
-              <ExchangeStatusSection exchangeData={exchangeData} />
-            </div>
+            {/* Exchange Status - Full Width Below */}
+            <ExchangeStatusSection exchangeData={exchangeData} />
           </div>
         </DataSection>
       </div>
