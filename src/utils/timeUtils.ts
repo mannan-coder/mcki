@@ -1,6 +1,12 @@
 export const getTimeAgo = (timestamp: string) => {
+  if (!timestamp) return 'Just now';
+  
   const now = new Date();
   const past = new Date(timestamp);
+  
+  // Check if the date is valid
+  if (isNaN(past.getTime())) return 'Just now';
+  
   const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
   
   if (diffInSeconds < 60) {
