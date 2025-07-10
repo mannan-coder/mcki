@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { BarChart3, Activity } from 'lucide-react';
 import { ResponsiveCard } from '@/components/common/ResponsiveCard';
 import { DataSection } from '@/components/common/DataSection';
+import { toast } from 'sonner';
 
 interface Coin {
   id: string;
@@ -81,15 +82,13 @@ export const TopVolumeSection = ({ coins, loading = false }: TopVolumeSectionPro
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.1 }}
       whileHover={{ y: -2 }}
+      className="cursor-pointer"
+      onClick={() => {
+        window.location.href = `/coin/${coin.id}`;
+        toast.success(`Opening ${coin.name} details`);
+      }}
     >
-      <ResponsiveCard 
-        size="sm" 
-        className="h-full cursor-pointer hover:shadow-lg transition-all"
-        onClick={() => {
-          window.location.href = `/coin/${coin.id}`;
-          toast.success(`Opening ${coin.name} details`);
-        }}
-      >
+      <ResponsiveCard size="sm" className="h-full hover:shadow-lg transition-all">
         <div className="space-y-3">
           <div className="flex items-center space-x-3">
             <div className="relative">
