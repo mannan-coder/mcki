@@ -20,7 +20,8 @@ import {
   Globe,
   DollarSign,
   X,
-  ChevronUp
+  ChevronUp,
+  RefreshCw
 } from 'lucide-react';
 import Layout from '@/components/Layout';
 import { ResponsiveCard } from '@/components/common/ResponsiveCard';
@@ -312,7 +313,7 @@ const EventsPage = ({}: EventsPageProps) => {
   const [displayCount, setDisplayCount] = useState(9); // Start with 9 events
   const [isLoading, setIsLoading] = useState(false);
   
-  const { data: liveEventsData, loading: eventsLoading, refetch } = useLiveEvents();
+  const { data: liveEventsData, loading: eventsLoading, error: eventsError, refetch } = useLiveEvents();
   const { data: marketData, isLoading: marketLoading } = useOptimizedCryptoData();
   const { toast } = useToast();
 
@@ -540,13 +541,17 @@ const EventsPage = ({}: EventsPageProps) => {
           </div>
           
           <div className="flex items-center space-x-3">
+            <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+              <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
+              <span>Live Data</span>
+            </div>
             <Button
               variant="outline"
               size="sm"
               onClick={handleRefresh}
               className="flex items-center space-x-2"
             >
-              <Activity className="h-4 w-4" />
+              <RefreshCw className="h-4 w-4" />
               <span>Refresh</span>
             </Button>
           </div>
@@ -735,8 +740,24 @@ const EventsPage = ({}: EventsPageProps) => {
             {filteredAndSortedEvents.length === 0 ? (
               <div className="text-center py-12">
                 <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-foreground mb-2">No events found</h3>
-                <p className="text-muted-foreground">Try adjusting your filters to see more events.</p>
+                <h3 className="text-lg font-medium text-foreground mb-2">
+                  {eventsError ? 'Failed to Load Events' : 'No events found'}
+                </h3>
+                <p className="text-muted-foreground mb-4">
+                  {eventsError 
+                    ? 'Unable to fetch live events. Please try refreshing or check your connection.' 
+                    : 'Try adjusting your filters to see more events.'
+                  }
+                </p>
+                {eventsError && (
+                  <Button
+                    onClick={handleRefresh}
+                    className="bg-primary text-primary-foreground hover:bg-primary/90"
+                  >
+                    <RefreshCw className="h-4 w-4 mr-2" />
+                    Try Again
+                  </Button>
+                )}
               </div>
             ) : hasMoreEvents ? (
               <div className="text-center">
