@@ -29,7 +29,7 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
             <img 
-              src="/lovable-uploads/d6658ee2-33a2-450b-8b0b-2ce291e45dd6.png"
+              src="/lovable-uploads/620785b2-17ba-4248-823a-88525d9470d2.png"
               alt="MCKI Logo" 
               className="w-10 h-10 object-contain group-hover:scale-110 transition-transform duration-300"
               style={{
