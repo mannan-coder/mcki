@@ -147,163 +147,197 @@ const Blog = () => {
         {loading && !blogData && <BlogSkeleton />}
 
         {/* Content */}
-        {selectedArticle ? (
-          <div className="max-w-4xl mx-auto">
-            <Button 
-              variant="outline" 
-              onClick={() => setSelectedArticle(null)}
-              className="mb-8 gap-2"
-            >
-              ← Back to Blog
-            </Button>
-            
-            <article className="prose prose-lg max-w-none dark:prose-invert">
-              {selectedArticle.image_url && (
-                <img 
-                  src={selectedArticle.image_url} 
-                  alt={selectedArticle.title}
-                  className="w-full h-64 md:h-80 object-cover rounded-lg mb-8"
-                />
-              )}
-              
-              <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-muted-foreground">
-                <Badge variant="secondary">{selectedArticle.category}</Badge>
-                <span>{formatDate(selectedArticle.published_at)}</span>
-                <span>•</span>
-                <span>{selectedArticle.read_time}</span>
-                <span>•</span>
-                <span>By {selectedArticle.source_name}</span>
-              </div>
-              
-              <h1 className="text-3xl md:text-4xl font-bold mb-6">{selectedArticle.title}</h1>
-              
-              <div className="text-lg text-muted-foreground mb-8 leading-relaxed">
-                {selectedArticle.description}
-              </div>
-              
-              <div className="prose-content" dangerouslySetInnerHTML={{ 
-                __html: selectedArticle.content.replace(/\n/g, '<br>') 
-              }} />
-              
-              <div className="mt-8 p-4 bg-muted/50 rounded-lg">
-                <p className="text-sm text-muted-foreground mb-2">Read the full article at:</p>
-                <a 
-                  href={selectedArticle.source_url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="text-primary hover:underline font-semibold"
-                >
-                  {selectedArticle.source_name} <ExternalLink className="inline h-4 w-4" />
-                </a>
-              </div>
-            </article>
-          </div>
-        ) : (
+        {blogData && (
           <>
-            {/* Featured Posts */}
-            {blogData.posts.filter(post => post.featured).map((post) => (
-              <Card key={post.id} className="mb-12 overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group" onClick={() => openArticle(post)}>
-                <div className="grid grid-cols-1 lg:grid-cols-2">
-                  <div className="relative bg-gradient-to-br from-primary/10 to-accent/10 p-8 flex items-center justify-center overflow-hidden">
-                    {post.image_url ? (
-                      <img 
-                        src={post.image_url} 
-                        alt={post.title}
-                        className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                        }}
-                      />
-                    ) : null}
-                    <div className="text-center relative z-10">
-                      <Badge className="mb-4">Featured Article</Badge>
-                      <h2 className="text-2xl font-bold mb-4 line-clamp-3">{post.title}</h2>
-                    </div>
-                  </div>
-                  <CardContent className="p-8">
-                    <div className="flex flex-wrap items-center gap-4 mb-4 text-sm text-muted-foreground">
-                      <span className="flex items-center gap-1">
-                        <User className="h-4 w-4" />
-                        {post.source_name}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="h-4 w-4" />
-                        {post.read_time}
-                      </span>
-                      <Badge variant="secondary">{post.category}</Badge>
-                      <span className="text-xs">{formatDate(post.published_at)}</span>
-                    </div>
-                    <p className="text-muted-foreground mb-6 leading-relaxed line-clamp-4">
-                      {truncateText(post.description)}
-                    </p>
-                    <Button className="gap-2 group-hover:bg-primary/90 transition-colors">
-                      Read Full Article <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </CardContent>
-                </div>
-              </Card>
-            ))}
-
-            {/* Blog Posts Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {blogData.posts.filter(post => !post.featured).map((post) => (
-                <Card 
-                  key={post.id} 
-                  className="hover:shadow-lg transition-all duration-300 cursor-pointer group h-full flex flex-col" 
-                  onClick={() => openArticle(post)}
+            {selectedArticle ? (
+              <div className="max-w-4xl mx-auto">
+                <Button 
+                  variant="outline" 
+                  onClick={() => setSelectedArticle(null)}
+                  className="mb-8 gap-2"
                 >
-                  {post.image_url && (
-                    <div className="relative h-48 overflow-hidden">
-                      <img 
-                        src={post.image_url} 
-                        alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        onError={(e) => {
-                          e.currentTarget.parentElement?.remove();
-                        }}
-                      />
-                    </div>
+                  ← Back to Blog
+                </Button>
+                
+                <article className="prose prose-lg max-w-none dark:prose-invert">
+                  {selectedArticle.image_url && (
+                    <img 
+                      src={selectedArticle.image_url} 
+                      alt={selectedArticle.title}
+                      className="w-full h-64 md:h-80 object-cover rounded-lg mb-8"
+                    />
                   )}
                   
-                  <CardHeader className="flex-shrink-0">
-                    <div className="flex items-center justify-between mb-2">
-                      <Badge variant="secondary">{post.category}</Badge>
-                      <span className="text-xs text-muted-foreground">{formatDate(post.published_at)}</span>
-                    </div>
-                    <CardTitle className="text-lg leading-tight line-clamp-2 group-hover:text-primary transition-colors">
-                      {post.title}
-                    </CardTitle>
-                  </CardHeader>
+                  <div className="flex flex-wrap items-center gap-4 mb-6 text-sm text-muted-foreground">
+                    <Badge variant="secondary">{selectedArticle.category}</Badge>
+                    <span>{formatDate(selectedArticle.published_at)}</span>
+                    <span>•</span>
+                    <span>{selectedArticle.read_time}</span>
+                    <span>•</span>
+                    <span>By {selectedArticle.source_name}</span>
+                  </div>
                   
-                  <CardContent className="flex-1 flex flex-col">
-                    <p className="text-muted-foreground mb-4 text-sm leading-relaxed line-clamp-3 flex-1">
-                      {truncateText(post.description)}
-                    </p>
-                    
-                    <div className="flex items-center justify-between mt-auto">
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                        <span className="flex items-center gap-1">
-                          <User className="h-3 w-3" />
-                          {post.source_name}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
-                          {post.read_time}
-                        </span>
+                  <h1 className="text-3xl md:text-4xl font-bold mb-6">{selectedArticle.title}</h1>
+                  
+                  <div className="text-lg text-muted-foreground mb-8 leading-relaxed">
+                    {selectedArticle.description}
+                  </div>
+                  
+                  <div className="prose-content" dangerouslySetInnerHTML={{ 
+                    __html: selectedArticle.content.replace(/\n/g, '<br>') 
+                  }} />
+                  
+                  <div className="mt-8 p-4 bg-muted/50 rounded-lg">
+                    <p className="text-sm text-muted-foreground mb-2">Read the full article at:</p>
+                    <a 
+                      href={selectedArticle.source_url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline font-semibold"
+                    >
+                      {selectedArticle.source_name} <ExternalLink className="inline h-4 w-4" />
+                    </a>
+                  </div>
+                </article>
+              </div>
+            ) : (
+              <>
+                {/* Featured Posts */}
+                {blogData.posts?.filter(post => post.featured).map((post) => (
+                  <Card key={post.id} className="mb-12 overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group" onClick={() => openArticle(post)}>
+                    <div className="grid grid-cols-1 lg:grid-cols-2">
+                      <div className="relative bg-gradient-to-br from-primary/10 to-accent/10 p-8 flex items-center justify-center overflow-hidden">
+                        {post.image_url ? (
+                          <img 
+                            src={post.image_url} 
+                            alt={post.title}
+                            className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-105 transition-transform duration-300"
+                            onError={(e) => {
+                              e.currentTarget.style.display = 'none';
+                            }}
+                          />
+                        ) : null}
+                        <div className="text-center relative z-10">
+                          <Badge className="mb-4">Featured Article</Badge>
+                          <h2 className="text-2xl font-bold mb-4 line-clamp-3">{post.title}</h2>
+                        </div>
                       </div>
-                      <Button variant="ghost" size="sm" className="gap-1 group-hover:text-primary">
-                        Read <ArrowRight className="h-3 w-3" />
-                      </Button>
+                      <CardContent className="p-8">
+                        <div className="flex flex-wrap items-center gap-4 mb-4 text-sm text-muted-foreground">
+                          <span className="flex items-center gap-1">
+                            <User className="h-4 w-4" />
+                            {post.source_name}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Clock className="h-4 w-4" />
+                            {post.read_time}
+                          </span>
+                          <Badge variant="secondary">{post.category}</Badge>
+                          <span className="text-xs">{formatDate(post.published_at)}</span>
+                        </div>
+                        <p className="text-muted-foreground mb-6 leading-relaxed line-clamp-4">
+                          {truncateText(post.description)}
+                        </p>
+                        <Button className="gap-2 group-hover:bg-primary/90 transition-colors">
+                          Read Full Article <ArrowRight className="h-4 w-4" />
+                        </Button>
+                      </CardContent>
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+                  </Card>
+                ))}
+
+                {/* Blog Posts Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {blogData.posts?.filter(post => !post.featured).map((post) => (
+                    <Card 
+                      key={post.id} 
+                      className="hover:shadow-lg transition-all duration-300 cursor-pointer group h-full flex flex-col" 
+                      onClick={() => openArticle(post)}
+                    >
+                      {post.image_url && (
+                        <div className="relative h-48 overflow-hidden">
+                          <img 
+                            src={post.image_url} 
+                            alt={post.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            onError={(e) => {
+                              e.currentTarget.parentElement?.remove();
+                            }}
+                          />
+                        </div>
+                      )}
+                      
+                      <CardHeader className="flex-shrink-0">
+                        <div className="flex items-center justify-between mb-2">
+                          <Badge variant="secondary">{post.category}</Badge>
+                          <span className="text-xs text-muted-foreground">{formatDate(post.published_at)}</span>
+                        </div>
+                        <CardTitle className="text-lg leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+                          {post.title}
+                        </CardTitle>
+                      </CardHeader>
+                      
+                      <CardContent className="flex-1 flex flex-col">
+                        <p className="text-muted-foreground mb-4 text-sm leading-relaxed line-clamp-3 flex-1">
+                          {truncateText(post.description)}
+                        </p>
+                        
+                        <div className="flex items-center justify-between mt-auto">
+                          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                            <span className="flex items-center gap-1">
+                              <User className="h-3 w-3" />
+                              {post.source_name}
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <Clock className="h-3 w-3" />
+                              {post.read_time}
+                            </span>
+                          </div>
+                          <Button variant="ghost" size="sm" className="gap-1 group-hover:text-primary">
+                            Read <ArrowRight className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                {/* Load More */}
+                {hasMore && (
+                  <div className="text-center mt-12">
+                    <Button 
+                      variant="outline" 
+                      size="lg"
+                      onClick={loadMore}
+                      disabled={loadingMore}
+                      className="gap-2"
+                    >
+                      {loadingMore ? (
+                        <>
+                          <RefreshCw className="h-4 w-4 animate-spin" />
+                          Loading...
+                        </>
+                      ) : (
+                        <>
+                          Load More Posts
+                          <ArrowRight className="h-4 w-4" />
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
+
+                {/* Stats */}
+                <div className="text-center mt-8 text-sm text-muted-foreground">
+                  Showing {blogData.posts?.length || 0} of {blogData.total || 0} articles
+                </div>
+              </>
+            )}
           </>
         )}
 
         {/* Empty State */}
-        {blogData && blogData.posts.length === 0 && !loading && (
+        {blogData && blogData.posts?.length === 0 && !loading && (
           <div className="text-center py-12">
             <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">No articles found</h3>
