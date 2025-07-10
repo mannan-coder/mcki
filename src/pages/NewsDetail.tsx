@@ -136,10 +136,10 @@ const NewsDetail = () => {
                 <User size={16} />
                 <span>{article.author}</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <Calendar size={16} />
-                <span>{article.time}</span>
-              </div>
+            <div className="flex items-center space-x-2">
+              <Calendar size={16} />
+              <span>{new Date(article.time).toLocaleDateString()}</span>
+            </div>
               <div className="flex items-center space-x-2">
                 <Clock size={16} />
                 <span>{article.readTime}</span>

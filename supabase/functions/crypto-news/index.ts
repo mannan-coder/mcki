@@ -1,18 +1,111 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+// Simple sentiment analysis function
+function analyzeSentiment(text: string): { score: number; label: string } {
+  const bullishWords = ['surge', 'soar', 'rally', 'bullish', 'breakthrough', 'adoption', 'approval', 'growth', 'gain', 'rise', 'positive', 'upgrade', 'success', 'milestone', 'record', 'high', 'partnership', 'launch', 'expansion'];
+  const bearishWords = ['crash', 'plunge', 'drop', 'fall', 'bearish', 'decline', 'loss', 'hack', 'exploit', 'vulnerability', 'ban', 'regulation', 'concern', 'warning', 'low', 'risk', 'threat', 'issue', 'problem'];
+  
+  const lowerText = text.toLowerCase();
+  let bullishCount = 0;
+  let bearishCount = 0;
+  
+  bullishWords.forEach(word => {
+    if (lowerText.includes(word)) bullishCount++;
+  });
+  
+  bearishWords.forEach(word => {
+    if (lowerText.includes(word)) bearishCount++;
+  });
+  
+  const score = (bullishCount - bearishCount) / Math.max(bullishCount + bearishCount, 1);
+  
+  if (score > 0.2) return { score, label: 'bullish' };
+  if (score < -0.2) return { score, label: 'bearish' };
+  return { score, label: 'neutral' };
+}
+
+function getNewsImage(category: string): string {
+  const categoryImages: { [key: string]: string } = {
+    'bitcoin': 'https://images.unsplash.com/photo-1518544866330-4e4815fbbcc3?w=800&h=400&fit=crop',
+    'ethereum': 'https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&h=400&fit=crop',
+    'regulation': 'https://images.unsplash.com/photo-1559526324-593bc54d86b4?w=800&h=400&fit=crop',
+    'defi': 'https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=400&fit=crop',
+    'nft': 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=400&fit=crop',
+    'blockchain': 'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=800&h=400&fit=crop',
+    'default': 'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=400&fit=crop'
+  };
+  
+  const key = category.toLowerCase();
+  return categoryImages[key] || categoryImages['default'];
 }
 
 serve(async (req) => {
+  // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    // Enhanced news data with comprehensive articles and content
-    const newsData = [
+    console.log('Fetching crypto news from NewsData.io...');
+    
+    // First try to fetch from NewsData.io API
+    let news = [];
+    
+    try {
+      const newsApiKey = Deno.env.get('NEWSDATA_API_KEY');
+      
+      if (newsApiKey) {
+        const newsResponse = await fetch(
+          `https://newsdata.io/api/1/crypto?apikey=${newsApiKey}&language=en&size=20`,
+          {
+            headers: {
+              'Accept': 'application/json',
+            },
+          }
+        );
+
+        if (newsResponse.ok) {
+          const newsData = await newsResponse.json();
+          console.log(`Fetched ${newsData.results?.length || 0} articles from NewsData.io`);
+          
+          news = newsData.results?.map((article: any, index: number) => {
+            const sentiment = analyzeSentiment(`${article.title} ${article.description || ''}`);
+            const category = article.category?.[0] || 'Crypto';
+            
+            return {
+              id: index + 1,
+              title: article.title,
+              summary: article.description || article.title,
+              content: article.content || article.description || `Full article content for: ${article.title}. This article provides comprehensive coverage of the latest developments in the cryptocurrency space. Stay informed with the latest trends, market movements, and regulatory updates that shape the digital asset landscape.`,
+              category: category.charAt(0).toUpperCase() + category.slice(1),
+              time: article.pubDate,
+              impact: sentiment.label,
+              sentiment: sentiment.score,
+              source: article.source_id || 'CryptoNews',
+              author: article.creator?.[0] || 'Crypto Reporter',
+              readTime: `${Math.max(2, Math.floor(Math.random() * 8) + 1)} min read`,
+              tags: article.keywords || ['crypto', 'blockchain', 'news'],
+              url: article.link,
+              image: article.image_url || getNewsImage(category),
+              views: Math.floor(Math.random() * 10000) + 500,
+              featured: index < 3
+            };
+          }) || [];
+        }
+      }
+    } catch (apiError) {
+      console.log('NewsData.io API error, using fallback news:', apiError.message);
+    }
+    
+    // Fallback to static news if API fails or no API key
+    if (news.length === 0) {
+      console.log('Using fallback news data');
+      news = [
       {
         id: 1,
         title: "Bitcoin ETF Approval Drives Institutional Adoption to New Heights",
@@ -395,20 +488,16 @@ The frameworks balance consumer protection with innovation support, creating reg
 Additional countries are expected to announce comprehensive cryptocurrency regulations in the coming months, furthering global harmonization of digital asset oversight.`
       }
     ];
+    }
 
-    return new Response(
-      JSON.stringify({ news: newsData }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
-
+    return new Response(JSON.stringify({ news }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   } catch (error) {
-    console.error('Error fetching news:', error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { 
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      }
-    );
+    console.error('Error in crypto-news function:', error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   }
 });

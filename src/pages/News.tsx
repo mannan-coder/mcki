@@ -394,10 +394,10 @@ const News = () => {
                           
                           <div className="flex items-center justify-between text-xs text-muted-foreground pt-2 border-t border-border/20">
                             <div className="flex items-center space-x-3">
-                              <div className="flex items-center space-x-1">
-                                <Clock size={12} />
-                                <span>{item.time}</span>
-                              </div>
+                               <div className="flex items-center space-x-1">
+                                 <Clock size={12} />
+                                 <span>{typeof item.time === 'string' && item.time.includes('ago') ? item.time : new Date(item.time).toLocaleDateString()}</span>
+                               </div>
                               <div className="flex items-center space-x-1">
                                 <span>👁️</span>
                                 <span>{item.views.toLocaleString()}</span>

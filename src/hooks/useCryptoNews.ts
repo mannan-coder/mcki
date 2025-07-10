@@ -5,12 +5,19 @@ interface NewsItem {
   id: number;
   title: string;
   summary: string;
+  content?: string;
   category: string;
   time: string;
   impact: string;
+  sentiment?: number;
   source: string;
+  author?: string;
+  readTime?: string;
+  tags?: string[];
   url?: string;
   image?: string;
+  views?: number;
+  featured?: boolean;
 }
 
 export const useCryptoNews = () => {
@@ -23,13 +30,19 @@ export const useCryptoNews = () => {
       // Only set loading on initial fetch
       if (news.length === 0) setLoading(true);
       
+      console.log('Fetching crypto news...');
       const { data: result, error } = await supabase.functions.invoke('crypto-news');
       
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
       
+      console.log('News fetched successfully:', result?.news?.length || 0, 'articles');
       setNews(result.news || []);
       setError(null);
     } catch (err) {
+      console.error('Failed to fetch news:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch news');
     } finally {
       setLoading(false);
@@ -39,8 +52,8 @@ export const useCryptoNews = () => {
   useEffect(() => {
     fetchNews();
     
-    // Refresh news every 5 minutes
-    const interval = setInterval(fetchNews, 5 * 60 * 1000);
+    // Refresh news every 10 minutes for better performance
+    const interval = setInterval(fetchNews, 10 * 60 * 1000);
     
     return () => clearInterval(interval);
   }, []);
