@@ -6,11 +6,10 @@ import { TopGainersLosers } from '@/components/sections/TopGainersLosers';
 import { LiveMarketSignalsSection } from '@/components/sections/LiveMarketSignalsSection';
 import { TopVolumeSection } from '@/components/sections/TopVolumeSection';
 import { NewsAlertsSection } from '@/components/sections/NewsAlertsSection';
-import { InsightsAlertsSection } from '@/components/sections/InsightsAlertsSection';
+import { InsightsEventsSection } from '@/components/sections/InsightsEventsSection';
 import { CalculatorsSuiteSection } from '@/components/sections/CalculatorsSuiteSection';
 import { WhaleMovementsSection } from '@/components/sections/WhaleMovementsSection';
 import { MarketSentimentSection } from '@/components/sections/MarketSentimentSection';
-import { UpcomingEventsSection } from '@/components/sections/UpcomingEventsSection';
 import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 
 // Lazy load heavy components for better performance
@@ -80,11 +79,8 @@ const Index = () => {
           {/* News & Market Alerts Section */}
           <NewsAlertsSection loading={isLoading && !marketData} />
           
-          {/* Insights & Alerts Section */}
-          <InsightsAlertsSection loading={isLoading && !marketData} />
-          
-          {/* Upcoming Events Section */}
-          <UpcomingEventsSection loading={isLoading && !marketData} />
+          {/* Merged Insights, Alerts & Events Section */}
+          <InsightsEventsSection loading={isLoading && !marketData} />
           
           {/* Finance Calculators Suite Section */}
           <CalculatorsSuiteSection loading={isLoading && !marketData} />
