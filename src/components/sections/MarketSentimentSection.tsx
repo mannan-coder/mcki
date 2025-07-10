@@ -255,7 +255,7 @@ export const MarketSentimentSection = ({ loading = false }: MarketSentimentSecti
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.05 }}
                     onClick={() => {
-                      navigate(`/trending-detail/${topic.symbol || index}`);
+                      navigate(`/trending-detail/${topic.rank}`);
                       toast.success(`Opening ${topic.name} trend analysis`);
                     }}
                   >
