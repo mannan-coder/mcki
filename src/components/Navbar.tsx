@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Menu, X, Sun, MoonIcon } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { MCKILogo } from '@/components/ui/mcki-logo';
 
 interface NavbarProps {
   isDarkMode: boolean;
@@ -26,24 +27,10 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3">
-            <div className={`p-2 rounded-lg transition-colors shadow-sm ${isDarkMode ? 'bg-gray-800/60 border border-gray-700/50' : 'bg-white/90 border border-gray-200/50'}`}>
-              <img 
-                src="/src/assets/mcki-crypto-logo.png" 
-                alt="MCKI Logo" 
-                className="w-8 h-8 object-contain"
-                onError={(e) => {
-                  // Fallback to letter if image fails
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                }}
-              />
-              <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/70 rounded-lg flex items-center justify-center hidden">
-                <span className="text-primary-foreground font-bold text-sm">M</span>
-              </div>
-            </div>
+          <Link to="/" className="flex items-center space-x-3 group">
+            <MCKILogo size="md" className="group-hover:scale-110 transition-transform duration-300" />
             <div>
-              <h1 className="text-xl font-bold text-foreground">
+              <h1 className="text-xl font-bold text-foreground group-hover:text-primary transition-colors">
                 MCKI
               </h1>
               <p className="text-xs text-muted-foreground">
