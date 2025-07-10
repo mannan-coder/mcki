@@ -10,6 +10,7 @@ import { InsightsAlertsSection } from '@/components/sections/InsightsAlertsSecti
 import { CalculatorsSuiteSection } from '@/components/sections/CalculatorsSuiteSection';
 import { WhaleMovementsSection } from '@/components/sections/WhaleMovementsSection';
 import { MarketSentimentSection } from '@/components/sections/MarketSentimentSection';
+import { UpcomingEventsSection } from '@/components/sections/UpcomingEventsSection';
 import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 
 // Lazy load heavy components for better performance
@@ -81,6 +82,9 @@ const Index = () => {
           
           {/* Insights & Alerts Section */}
           <InsightsAlertsSection loading={isLoading && !marketData} />
+          
+          {/* Upcoming Events Section */}
+          <UpcomingEventsSection loading={isLoading && !marketData} />
           
           {/* Finance Calculators Suite Section */}
           <CalculatorsSuiteSection loading={isLoading && !marketData} />
