@@ -4,6 +4,7 @@ import { ResponsiveCard } from '@/components/common/ResponsiveCard';
 import { DataSection } from '@/components/common/DataSection';
 import { useCryptoNews } from '@/hooks/useCryptoNews';
 import { motion } from 'framer-motion';
+import { getTimeAgo } from '@/utils/timeUtils';
 
 interface NewsAlertsSectionProps {
   loading?: boolean;
@@ -164,11 +165,7 @@ export const NewsAlertsSection = ({ loading = false }: NewsAlertsSectionProps) =
                           </span>
                           <div className="flex items-center text-xs text-muted-foreground">
                             <Clock className="h-3 w-3 mr-1" />
-                            {new Date(news.time).toLocaleTimeString([], { 
-                              hour: '2-digit', 
-                              minute: '2-digit',
-                              hour12: true 
-                            })} • {new Date(news.time).toLocaleDateString()}
+                            {getTimeAgo(news.time)}
                           </div>
                         </div>
                         
