@@ -68,6 +68,11 @@ function App() {
           <Route path="/events/:eventId" element={<Events />} />
           <Route path="/alerts" element={<Alerts />} />
           
+          {/* Detail pages */}
+          <Route path="/trending-detail/:id" element={<TrendingDetail />} />
+          <Route path="/whale-detail/:id" element={<WhaleDetail />} />
+          <Route path="/alert-detail/:id" element={<AlertDetail />} />
+          
           {/* New pages */}
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<Blog />} />
