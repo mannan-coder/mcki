@@ -27,18 +27,20 @@ const Navbar = ({ isDarkMode, setIsDarkMode }: NavbarProps) => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-3">
-            <img 
-              src="/src/assets/mcki-logo.png" 
-              alt="MCKI Logo" 
-              className="w-10 h-10 object-contain"
-              onError={(e) => {
-                // Fallback to letter if image fails
-                e.currentTarget.style.display = 'none';
-                e.currentTarget.nextElementSibling?.classList.remove('hidden');
-              }}
-            />
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center hidden">
-              <span className="text-primary-foreground font-bold text-lg">M</span>
+            <div className={`p-2 rounded-lg transition-colors shadow-sm ${isDarkMode ? 'bg-gray-800/60 border border-gray-700/50' : 'bg-white/90 border border-gray-200/50'}`}>
+              <img 
+                src="/src/assets/mcki-crypto-logo.png" 
+                alt="MCKI Logo" 
+                className="w-8 h-8 object-contain"
+                onError={(e) => {
+                  // Fallback to letter if image fails
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+              <div className="w-8 h-8 bg-gradient-to-br from-primary to-primary/70 rounded-lg flex items-center justify-center hidden">
+                <span className="text-primary-foreground font-bold text-sm">M</span>
+              </div>
             </div>
             <div>
               <h1 className="text-xl font-bold text-foreground">

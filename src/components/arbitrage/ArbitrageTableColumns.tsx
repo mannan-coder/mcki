@@ -116,9 +116,10 @@ const TradeDropdown = ({ buyExchange, sellExchange, pair }: { buyExchange: strin
     <div className="relative" ref={dropdownRef}>
       <button 
         onClick={() => setIsOpen(!isOpen)}
-        className="px-3 py-1.5 bg-primary text-primary-foreground rounded-md text-xs font-medium hover:bg-primary/90 transition-colors flex items-center gap-1 whitespace-nowrap"
+        className="px-2 sm:px-3 py-1 sm:py-1.5 bg-primary text-primary-foreground rounded-md text-[10px] sm:text-xs font-medium hover:bg-primary/90 transition-colors flex items-center gap-1 whitespace-nowrap"
       >
-        Trade
+        <span className="hidden sm:inline">Trade</span>
+        <span className="sm:hidden">$</span>
         <ExternalLink className="h-3 w-3" />
       </button>
       
@@ -167,31 +168,25 @@ export const getArbitrageTableColumns = () => [
       const coinLogo = getCoinLogoById(coinId);
       
       return (
-        <div className="flex items-center space-x-3">
-          <div className="relative w-8 h-8 flex-shrink-0">
+        <div className="flex items-center space-x-2 sm:space-x-3">
+          <div className="relative w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0">
             <img 
               src={coinLogo} 
               alt={row.pair ? row.pair.split('-')[0] : 'Coin'}
-              className="w-8 h-8 rounded-full border border-border/20 bg-background shadow-sm object-cover"
+              className="w-full h-full rounded-full border border-border/20 bg-background shadow-sm object-cover transition-opacity duration-200"
+              loading="lazy"
               onError={(e) => {
                 const target = e.target as HTMLImageElement;
-                // Try alternative URL first
-                if (!target.src.includes('placeholder')) {
-                  target.src = `https://assets.coingecko.com/coins/images/1/large/${coinSymbol}.png`;
-                  return;
-                }
-                // Final fallback to a styled placeholder
-                target.style.display = 'none';
                 const parent = target.parentElement;
                 if (parent && !parent.querySelector('.coin-placeholder')) {
+                  target.style.display = 'none';
                   const placeholder = document.createElement('div');
-                  placeholder.className = 'coin-placeholder w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-xs border border-border/20';
+                  placeholder.className = 'coin-placeholder w-full h-full rounded-full bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center text-primary font-bold text-xs border border-primary/20 shadow-inner';
                   placeholder.textContent = (row.pair ? row.pair.split('-')[0] : 'C').charAt(0).toUpperCase();
                   parent.appendChild(placeholder);
                 }
               }}
               onLoad={(e) => {
-                // Remove any placeholder if image loads successfully
                 const target = e.target as HTMLImageElement;
                 const parent = target.parentElement;
                 const placeholder = parent?.querySelector('.coin-placeholder');
@@ -203,10 +198,10 @@ export const getArbitrageTableColumns = () => [
             />
           </div>
           <div className="flex-1 min-w-0">
-            <div className="font-semibold text-foreground text-sm truncate">
+            <div className="font-semibold text-foreground text-xs sm:text-sm truncate">
               {row.pair ? row.pair.split('-')[0] : 'Unknown'}
             </div>
-            <div className="text-xs text-muted-foreground truncate">
+            <div className="text-[10px] sm:text-xs text-muted-foreground truncate">
               {row.pair || 'N/A'}
             </div>
           </div>
@@ -217,23 +212,35 @@ export const getArbitrageTableColumns = () => [
   {
     key: 'buyExchange',
     header: 'Buy From',
-    className: 'text-center',
+    className: 'text-center hidden sm:table-cell',
     render: (value: any, row: any) => (
-      <div className="text-sm font-medium text-success">{row.buyExchange}</div>
+      <div className="text-xs sm:text-sm font-medium text-success truncate px-1">{row.buyExchange}</div>
     )
   },
   {
     key: 'arrow',
     header: '→',
-    className: 'text-center',
+    className: 'text-center hidden sm:table-cell',
     render: () => <span className="text-muted-foreground">→</span>
   },
   {
     key: 'sellExchange',
     header: 'Sell To',
-    className: 'text-center',
+    className: 'text-center hidden sm:table-cell',
     render: (value: any, row: any) => (
-      <div className="text-sm font-medium text-destructive">{row.sellExchange}</div>
+      <div className="text-xs sm:text-sm font-medium text-destructive truncate px-1">{row.sellExchange}</div>
+    )
+  },
+  {
+    key: 'exchanges',
+    header: 'Route',
+    className: 'text-center sm:hidden',
+    render: (value: any, row: any) => (
+      <div className="text-[10px] space-y-1">
+        <div className="text-success font-medium">{row.buyExchange}</div>
+        <div className="text-muted-foreground">↓</div>
+        <div className="text-destructive font-medium">{row.sellExchange}</div>
+      </div>
     )
   },
   {
@@ -241,7 +248,7 @@ export const getArbitrageTableColumns = () => [
     header: 'Spread',
     className: 'text-center',
     render: (value: any, row: any) => (
-      <div className="text-sm font-bold text-warning">{row.spread.toFixed(2)}%</div>
+      <div className="text-xs sm:text-sm font-bold text-warning">{row.spread.toFixed(2)}%</div>
     )
   },
   {
@@ -249,13 +256,13 @@ export const getArbitrageTableColumns = () => [
     header: 'Profit',
     className: 'text-center',
     render: (value: any, row: any) => (
-      <div className="text-sm font-bold text-success">${row.profitPotential?.toFixed(2) || 'N/A'}</div>
+      <div className="text-xs sm:text-sm font-bold text-success">${row.profitPotential?.toFixed(2) || 'N/A'}</div>
     )
   },
   {
     key: 'lastUpdated',
     header: 'Updated',
-    className: 'text-center',
+    className: 'text-center hidden lg:table-cell',
     render: (value: any, row: any) => (
       <div className="text-xs text-muted-foreground">
         {getTimeAgo(row.addedAt || row.lastUpdated)}

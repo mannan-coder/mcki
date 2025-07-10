@@ -15,11 +15,15 @@ export const ArbitrageDashboardHeader = ({
       <div className="flex items-center space-x-3 text-xs">
         <div className="flex items-center space-x-1">
           <div className="w-2 h-2 bg-success rounded-full animate-pulse"></div>
-          <span className="text-success font-medium">{opportunitiesCount} Active</span>
+          <span className="text-foreground font-medium">
+            <span className="text-success">{opportunitiesCount}</span> Active
+          </span>
         </div>
         <div className="flex items-center space-x-1">
-          <div className="w-2 h-2 bg-primary rounded-full"></div>
-          <span className="text-primary font-medium">Avg: {avgSpread?.toFixed(2)}%</span>
+          <div className="w-2 h-2 bg-warning rounded-full"></div>
+          <span className="text-foreground font-medium">
+            Avg: <span className="text-warning">{avgSpread?.toFixed(2)}%</span>
+          </span>
         </div>
       </div>
       <Link 

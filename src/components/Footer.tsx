@@ -68,17 +68,19 @@ const Footer = ({ isDarkMode }: FooterProps) => {
           {/* Brand Section */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center space-x-3 mb-6">
-              <img 
-                src="/src/assets/mcki-logo.png" 
-                alt="MCKI Logo" 
-                className="w-10 h-10 object-contain"
-                onError={(e) => {
-                  e.currentTarget.style.display = 'none';
-                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                }}
-              />
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center hidden">
-                <span className="text-primary-foreground font-bold text-lg">M</span>
+              <div className={`p-3 rounded-xl transition-colors shadow-sm ${isDarkMode ? 'bg-gray-800/60 border border-gray-700/50' : 'bg-white/90 border border-gray-200/50'}`}>
+                <img 
+                  src="/src/assets/mcki-crypto-logo.png" 
+                  alt="MCKI Logo" 
+                  className="w-10 h-10 object-contain"
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                  }}
+                />
+                <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/70 rounded-xl flex items-center justify-center hidden">
+                  <span className="text-primary-foreground font-bold text-lg">M</span>
+                </div>
               </div>
               <div>
                 <h3 className="text-2xl font-bold text-foreground">MCKI</h3>
