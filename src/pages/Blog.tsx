@@ -3,169 +3,296 @@ import SEOHead from '@/components/SEOHead';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Clock, User, ArrowRight } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Clock, User, ArrowRight, RefreshCw, ExternalLink, AlertCircle } from 'lucide-react';
+import { useBlogData } from '@/hooks/useBlogData';
+import { formatDistanceToNow, parseISO } from 'date-fns';
 
 const Blog = () => {
-  const posts = [
-    {
-      id: 1,
-      title: "Understanding Cryptocurrency Arbitrage: A Comprehensive Guide",
-      excerpt: "Learn the fundamentals of crypto arbitrage trading and how to identify profitable opportunities across exchanges.",
-      author: "MCKI Team",
-      date: "2024-01-15",
-      readTime: "8 min read",
-      category: "Education",
-      featured: true
-    },
-    {
-      id: 2,
-      title: "Market Analysis: Q4 2024 Crypto Arbitrage Trends",
-      excerpt: "Deep dive into the latest arbitrage trends and market opportunities in the cryptocurrency space.",
-      author: "Research Team",
-      date: "2024-01-10",
-      readTime: "12 min read",
-      category: "Analysis"
-    },
-    {
-      id: 3,
-      title: "How AI is Revolutionizing Crypto Trading",
-      excerpt: "Exploring the role of artificial intelligence in modern cryptocurrency trading and arbitrage strategies.",
-      author: "Tech Team",
-      date: "2024-01-05",
-      readTime: "6 min read",
-      category: "Technology"
-    },
-    {
-      id: 4,
-      title: "Risk Management in Arbitrage Trading",
-      excerpt: "Essential strategies for managing risk while maximizing profits in cryptocurrency arbitrage.",
-      author: "MCKI Team",
-      date: "2023-12-28",
-      readTime: "10 min read",
-      category: "Strategy"
-    },
-    {
-      id: 5,
-      title: "Exchange Integration Best Practices",
-      excerpt: "Technical insights into integrating with multiple exchanges for optimal arbitrage performance.",
-      author: "Engineering Team",
-      date: "2023-12-20",
-      readTime: "15 min read",
-      category: "Technical"
-    },
-    {
-      id: 6,
-      title: "DeFi Arbitrage Opportunities in 2024",
-      excerpt: "Exploring the growing opportunities in decentralized finance arbitrage trading.",
-      author: "DeFi Team",
-      date: "2023-12-15",
-      readTime: "9 min read",
-      category: "DeFi"
-    }
-  ];
+  const {
+    blogData,
+    loading,
+    loadingMore,
+    error,
+    selectedCategory,
+    loadMore,
+    changeCategory,
+    refresh,
+    hasMore
+  } = useBlogData();
 
-  const categories = ["All", "Education", "Analysis", "Technology", "Strategy", "Technical", "DeFi"];
+  const formatDate = (dateString: string) => {
+    try {
+      const date = parseISO(dateString);
+      return formatDistanceToNow(date, { addSuffix: true });
+    } catch {
+      return 'Recently';
+    }
+  };
+
+  const truncateText = (text: string, maxLength: number = 150) => {
+    if (text.length <= maxLength) return text;
+    return text.slice(0, maxLength).trim() + '...';
+  };
+
+  const openArticle = (url: string) => {
+    if (url && url !== '#') {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  // Loading skeleton component
+  const BlogSkeleton = () => (
+    <div className="space-y-8">
+      {/* Featured post skeleton */}
+      <Card className="overflow-hidden">
+        <div className="grid grid-cols-1 lg:grid-cols-2">
+          <Skeleton className="h-64 w-full" />
+          <div className="p-8 space-y-4">
+            <Skeleton className="h-4 w-24" />
+            <Skeleton className="h-8 w-full" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+            <Skeleton className="h-10 w-32" />
+          </div>
+        </div>
+      </Card>
+
+      {/* Grid posts skeleton */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Array.from({ length: 6 }).map((_, index) => (
+          <Card key={index}>
+            <CardHeader className="space-y-3">
+              <div className="flex justify-between">
+                <Skeleton className="h-6 w-20" />
+                <Skeleton className="h-4 w-16" />
+              </div>
+              <Skeleton className="h-6 w-full" />
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-2/3" />
+              <div className="flex justify-between items-center">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-8 w-16" />
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
 
   return (
     <Layout>
       <SEOHead 
-        title="Blog - Crypto Trading Insights"
-        description="Latest insights, analysis, and educational content about cryptocurrency arbitrage trading, market trends, and blockchain technology."
-        keywords={["crypto blog", "arbitrage insights", "trading analysis", "blockchain education", "cryptocurrency market"]}
+        title="Blog - Live Crypto Trading Insights & News"
+        description="Latest real-time insights, analysis, and educational content about cryptocurrency arbitrage trading, market trends, and blockchain technology."
+        keywords={["crypto news", "live crypto blog", "arbitrage insights", "trading analysis", "blockchain education", "cryptocurrency market"]}
       />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold mb-4">MCKI Blog</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            MCKI Live Blog
+          </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Insights, analysis, and educational content about cryptocurrency arbitrage trading and market intelligence.
+            Real-time insights, analysis, and educational content about cryptocurrency arbitrage trading and market intelligence.
           </p>
+          
+          {/* Refresh button */}
+          <div className="mt-6">
+            <Button 
+              variant="outline" 
+              onClick={refresh}
+              disabled={loading}
+              className="gap-2"
+            >
+              <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
+              Refresh
+            </Button>
+          </div>
         </div>
+
+        {/* Error Alert */}
+        {error && (
+          <Alert className="mb-8 border-destructive/50 bg-destructive/10">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>
+              {error} - Showing available content.
+            </AlertDescription>
+          </Alert>
+        )}
 
         {/* Categories Filter */}
-        <div className="flex flex-wrap gap-2 mb-8 justify-center">
-          {categories.map((category) => (
-            <Badge 
-              key={category} 
-              variant="outline" 
-              className="cursor-pointer hover:bg-primary hover:text-primary-foreground"
-            >
-              {category}
-            </Badge>
-          ))}
-        </div>
+        {blogData?.categories && (
+          <div className="flex flex-wrap gap-2 mb-8 justify-center">
+            {blogData.categories.map((category) => (
+              <Badge 
+                key={category} 
+                variant={selectedCategory === category ? "default" : "outline"}
+                className="cursor-pointer hover:bg-primary hover:text-primary-foreground transition-colors"
+                onClick={() => changeCategory(category)}
+              >
+                {category}
+              </Badge>
+            ))}
+          </div>
+        )}
 
-        {/* Featured Post */}
-        {posts.filter(post => post.featured).map((post) => (
-          <Card key={post.id} className="mb-12 overflow-hidden">
-            <div className="grid grid-cols-1 lg:grid-cols-2">
-              <div className="bg-gradient-to-br from-primary/10 to-accent/10 p-8 flex items-center justify-center">
-                <div className="text-center">
-                  <Badge className="mb-4">Featured Post</Badge>
-                  <h2 className="text-2xl font-bold mb-4">{post.title}</h2>
-                </div>
-              </div>
-              <CardContent className="p-8">
-                <div className="flex items-center gap-4 mb-4 text-sm text-muted-foreground">
-                  <span className="flex items-center gap-1">
-                    <User className="h-4 w-4" />
-                    {post.author}
-                  </span>
-                  <span className="flex items-center gap-1">
-                    <Clock className="h-4 w-4" />
-                    {post.readTime}
-                  </span>
-                  <Badge variant="secondary">{post.category}</Badge>
-                </div>
-                <p className="text-muted-foreground mb-6">{post.excerpt}</p>
-                <Button>
-                  Read More <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </CardContent>
-            </div>
-          </Card>
-        ))}
+        {/* Loading State */}
+        {loading && !blogData && <BlogSkeleton />}
 
-        {/* Blog Posts Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {posts.filter(post => !post.featured).map((post) => (
-            <Card key={post.id} className="hover:shadow-lg transition-shadow">
-              <CardHeader>
-                <div className="flex items-center justify-between mb-2">
-                  <Badge variant="secondary">{post.category}</Badge>
-                  <span className="text-sm text-muted-foreground">{post.date}</span>
-                </div>
-                <CardTitle className="text-lg leading-tight">{post.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-muted-foreground mb-4 text-sm">{post.excerpt}</p>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <span className="flex items-center gap-1">
-                      <User className="h-3 w-3" />
-                      {post.author}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="h-3 w-3" />
-                      {post.readTime}
-                    </span>
+        {/* Content */}
+        {blogData && (
+          <>
+            {/* Featured Posts */}
+            {blogData.posts.filter(post => post.featured).map((post) => (
+              <Card key={post.id} className="mb-12 overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group" onClick={() => openArticle(post.source_url)}>
+                <div className="grid grid-cols-1 lg:grid-cols-2">
+                  <div className="relative bg-gradient-to-br from-primary/10 to-accent/10 p-8 flex items-center justify-center overflow-hidden">
+                    {post.image_url ? (
+                      <img 
+                        src={post.image_url} 
+                        alt={post.title}
+                        className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    ) : null}
+                    <div className="text-center relative z-10">
+                      <Badge className="mb-4">Featured Article</Badge>
+                      <h2 className="text-2xl font-bold mb-4 line-clamp-3">{post.title}</h2>
+                    </div>
                   </div>
-                  <Button variant="ghost" size="sm">
-                    Read <ArrowRight className="h-3 w-3 ml-1" />
-                  </Button>
+                  <CardContent className="p-8">
+                    <div className="flex flex-wrap items-center gap-4 mb-4 text-sm text-muted-foreground">
+                      <span className="flex items-center gap-1">
+                        <User className="h-4 w-4" />
+                        {post.source_name}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Clock className="h-4 w-4" />
+                        {post.read_time}
+                      </span>
+                      <Badge variant="secondary">{post.category}</Badge>
+                      <span className="text-xs">{formatDate(post.published_at)}</span>
+                    </div>
+                    <p className="text-muted-foreground mb-6 leading-relaxed line-clamp-4">
+                      {truncateText(post.description)}
+                    </p>
+                    <Button className="gap-2 group-hover:bg-primary/90 transition-colors">
+                      Read Full Article <ExternalLink className="h-4 w-4" />
+                    </Button>
+                  </CardContent>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+              </Card>
+            ))}
 
-        {/* Load More */}
-        <div className="text-center mt-12">
-          <Button variant="outline" size="lg">
-            Load More Posts
-          </Button>
-        </div>
+            {/* Blog Posts Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {blogData.posts.filter(post => !post.featured).map((post) => (
+                <Card 
+                  key={post.id} 
+                  className="hover:shadow-lg transition-all duration-300 cursor-pointer group h-full flex flex-col" 
+                  onClick={() => openArticle(post.source_url)}
+                >
+                  {post.image_url && (
+                    <div className="relative h-48 overflow-hidden">
+                      <img 
+                        src={post.image_url} 
+                        alt={post.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                        onError={(e) => {
+                          e.currentTarget.parentElement?.remove();
+                        }}
+                      />
+                    </div>
+                  )}
+                  
+                  <CardHeader className="flex-shrink-0">
+                    <div className="flex items-center justify-between mb-2">
+                      <Badge variant="secondary">{post.category}</Badge>
+                      <span className="text-xs text-muted-foreground">{formatDate(post.published_at)}</span>
+                    </div>
+                    <CardTitle className="text-lg leading-tight line-clamp-2 group-hover:text-primary transition-colors">
+                      {post.title}
+                    </CardTitle>
+                  </CardHeader>
+                  
+                  <CardContent className="flex-1 flex flex-col">
+                    <p className="text-muted-foreground mb-4 text-sm leading-relaxed line-clamp-3 flex-1">
+                      {truncateText(post.description)}
+                    </p>
+                    
+                    <div className="flex items-center justify-between mt-auto">
+                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                        <span className="flex items-center gap-1">
+                          <User className="h-3 w-3" />
+                          {post.source_name}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {post.read_time}
+                        </span>
+                      </div>
+                      <Button variant="ghost" size="sm" className="gap-1 group-hover:text-primary">
+                        Read <ExternalLink className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+
+            {/* Load More */}
+            {hasMore && (
+              <div className="text-center mt-12">
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  onClick={loadMore}
+                  disabled={loadingMore}
+                  className="gap-2"
+                >
+                  {loadingMore ? (
+                    <>
+                      <RefreshCw className="h-4 w-4 animate-spin" />
+                      Loading...
+                    </>
+                  ) : (
+                    <>
+                      Load More Posts
+                      <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
+                </Button>
+              </div>
+            )}
+
+            {/* Stats */}
+            <div className="text-center mt-8 text-sm text-muted-foreground">
+              Showing {blogData.posts.length} of {blogData.total} articles
+            </div>
+          </>
+        )}
+
+        {/* Empty State */}
+        {blogData && blogData.posts.length === 0 && !loading && (
+          <div className="text-center py-12">
+            <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">No articles found</h3>
+            <p className="text-muted-foreground mb-4">
+              Try selecting a different category or refreshing the page.
+            </p>
+            <Button onClick={refresh} variant="outline">
+              Refresh Articles
+            </Button>
+          </div>
+        )}
       </div>
     </Layout>
   );
