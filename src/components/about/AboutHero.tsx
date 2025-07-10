@@ -21,14 +21,31 @@ export const AboutHero = ({ achievements }: AboutHeroProps) => {
         About MCKI
       </motion.h1>
       
+      <motion.div 
+        className="text-xl md:text-2xl font-semibold text-primary mb-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.05 }}
+      >
+        Monitor Coins. Know Instantly.
+      </motion.div>
+      
       <motion.p 
         className="text-lg md:text-xl text-muted-foreground max-w-4xl mx-auto mb-8 leading-relaxed"
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.1 }}
       >
-        We're revolutionizing cryptocurrency trading with intelligent arbitrage detection, 
-        advanced analytics, and professional-grade tools for traders and investors worldwide.
+        Welcome to MCKI, a next-generation crypto intelligence platform designed to empower traders and investors with real-time market insights, arbitrage data, trading signals, and financial tools — all in one place.
+      </motion.p>
+      
+      <motion.p 
+        className="text-base md:text-lg text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.15 }}
+      >
+        In today's volatile and fast-moving crypto markets, seconds matter. MCKI helps you move with clarity, speed, and confidence by delivering the data you need to act on opportunities the moment they appear.
       </motion.p>
       
       <motion.div 
@@ -60,13 +77,13 @@ export const AboutHero = ({ achievements }: AboutHeroProps) => {
         transition={{ duration: 0.6, delay: 0.4 }}
       >
         <Badge variant="outline" className="text-primary border-primary px-4 py-2">
-          🏆 Established 2019
+          ⚡ Real-Time Data
         </Badge>
         <Badge variant="outline" className="text-success border-success px-4 py-2">
-          🌟 Industry Leader
+          🎯 Arbitrage Intelligence
         </Badge>
         <Badge variant="outline" className="text-accent border-accent px-4 py-2">
-          🌍 Global Platform
+          🌍 Global Exchanges
         </Badge>
       </motion.div>
     </div>
