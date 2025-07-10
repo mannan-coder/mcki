@@ -42,12 +42,6 @@ const Index = () => {
           {/* Market Overview Section */}
           <MarketOverviewSection isDarkMode={false} />
           
-          {/* Whale Movements Section */}
-          <WhaleMovementsSection loading={isLoading && !marketData} />
-          
-          {/* Market Sentiment Section */}
-          <MarketSentimentSection loading={isLoading && !marketData} />
-          
           {/* Top Gainers & Losers Section */}
           <TopGainersLosers 
             coins={marketData?.coins || []} 
@@ -70,6 +64,12 @@ const Index = () => {
           <Suspense fallback={<div className="h-96 animate-pulse bg-muted/20 rounded-lg" />}>
             <ArbitrageDashboard isDarkMode={false} />
           </Suspense>
+          
+          {/* Whale Movements Section */}
+          <WhaleMovementsSection loading={isLoading && !marketData} />
+          
+          {/* Market Sentiment Section */}
+          <MarketSentimentSection loading={isLoading && !marketData} />
           
           {/* On-Chain Analysis Section */}
           <Suspense fallback={<div className="h-96 animate-pulse bg-muted/20 rounded-lg" />}>
