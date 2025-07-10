@@ -91,7 +91,7 @@ export const MobileArbitrageCard = ({ opportunity, index }: MobileArbitrageCardP
   const [isExpanded, setIsExpanded] = useState(false);
   const [imageError, setImageError] = useState(false);
   
-  const coinSymbol = opportunity.pair ? opportunity.pair.split('-')[0].toLowerCase() : 'bitcoin';
+  const coinSymbol = opportunity.pair ? opportunity.pair.split('/')[0].toLowerCase() : 'bitcoin';
   const coinId = getCoinIdFromSymbol(coinSymbol);
   const coinLogo = getCoinLogoById(coinId);
 
@@ -116,21 +116,21 @@ export const MobileArbitrageCard = ({ opportunity, index }: MobileArbitrageCardP
               {!imageError ? (
                 <img 
                   src={coinLogo} 
-                  alt={opportunity.pair ? opportunity.pair.split('-')[0] : 'Coin'}
+                  alt={opportunity.pair ? opportunity.pair.split('/')[0] : 'Coin'}
                   className="w-8 h-8 rounded-full border border-border/20 bg-background shadow-sm object-cover transition-opacity duration-200"
                   loading="lazy"
                   onError={() => setImageError(true)}
                 />
               ) : (
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center text-primary font-bold text-xs border border-primary/20 shadow-inner">
-                  {(opportunity.pair ? opportunity.pair.split('-')[0] : 'C').charAt(0).toUpperCase()}
+                  {(opportunity.pair ? opportunity.pair.split('/')[0] : 'C').charAt(0).toUpperCase()}
                 </div>
               )}
             </div>
             
             <div>
               <div className="font-semibold text-foreground text-sm">
-                {opportunity.pair ? opportunity.pair.split('-')[0] : 'Unknown'}
+                {opportunity.pair ? opportunity.pair.split('/')[0] : 'Unknown'}
               </div>
               <div className="text-xs text-muted-foreground">
                 {opportunity.pair || 'N/A'}

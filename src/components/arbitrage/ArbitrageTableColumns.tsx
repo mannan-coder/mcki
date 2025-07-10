@@ -162,8 +162,8 @@ export const getArbitrageTableColumns = () => [
     key: 'asset',
     header: 'Asset',
     render: (value: any, row: any) => {
-      // Extract coin symbol from pair (e.g., "BTC-USDT" -> "bitcoin")
-      const coinSymbol = row.pair ? row.pair.split('-')[0].toLowerCase() : 'bitcoin';
+      // Extract coin symbol from pair (e.g., "BTC/USDT" -> "bitcoin")
+      const coinSymbol = row.pair ? row.pair.split('/')[0].toLowerCase() : 'bitcoin';
       const coinId = getCoinIdFromSymbol(coinSymbol);
       const coinLogo = getCoinLogoById(coinId);
       
@@ -172,7 +172,7 @@ export const getArbitrageTableColumns = () => [
           <div className="relative w-6 h-6 sm:w-8 sm:h-8 flex-shrink-0">
             <img 
               src={coinLogo} 
-              alt={row.pair ? row.pair.split('-')[0] : 'Coin'}
+              alt={row.pair ? row.pair.split('/')[0] : 'Coin'}
               className="w-full h-full rounded-full border border-border/20 bg-background shadow-sm object-cover transition-opacity duration-200"
               loading="lazy"
               onError={(e) => {
@@ -182,7 +182,7 @@ export const getArbitrageTableColumns = () => [
                   target.style.display = 'none';
                   const placeholder = document.createElement('div');
                   placeholder.className = 'coin-placeholder w-full h-full rounded-full bg-gradient-to-br from-primary/30 to-primary/10 flex items-center justify-center text-primary font-bold text-xs border border-primary/20 shadow-inner';
-                  placeholder.textContent = (row.pair ? row.pair.split('-')[0] : 'C').charAt(0).toUpperCase();
+                  placeholder.textContent = (row.pair ? row.pair.split('/')[0] : 'C').charAt(0).toUpperCase();
                   parent.appendChild(placeholder);
                 }
               }}
@@ -199,7 +199,7 @@ export const getArbitrageTableColumns = () => [
           </div>
           <div className="flex-1 min-w-0">
             <div className="font-semibold text-foreground text-xs sm:text-sm truncate">
-              {row.pair ? row.pair.split('-')[0] : 'Unknown'}
+              {row.pair ? row.pair.split('/')[0] : 'Unknown'}
             </div>
             <div className="text-[10px] sm:text-xs text-muted-foreground truncate">
               {row.pair || 'N/A'}

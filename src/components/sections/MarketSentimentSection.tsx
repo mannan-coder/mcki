@@ -163,6 +163,51 @@ export const MarketSentimentSection = ({ loading = false }: MarketSentimentSecti
                   </div>
                 </div>
 
+                {/* Key Factors Section */}
+                <div className="p-4 bg-muted/20 rounded-lg">
+                  <h4 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-primary" />
+                    Key Sentiment Factors
+                  </h4>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between py-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-success rounded-full"></div>
+                        <span className="text-xs text-foreground">Bitcoin Dominance</span>
+                      </div>
+                      <span className="text-xs font-medium text-success">Bullish</span>
+                    </div>
+                    <div className="flex items-center justify-between py-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-warning rounded-full"></div>
+                        <span className="text-xs text-foreground">Institutional Flow</span>
+                      </div>
+                      <span className="text-xs font-medium text-warning">Neutral</span>
+                    </div>
+                    <div className="flex items-center justify-between py-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-success rounded-full"></div>
+                        <span className="text-xs text-foreground">DeFi TVL Growth</span>
+                      </div>
+                      <span className="text-xs font-medium text-success">Positive</span>
+                    </div>
+                    <div className="flex items-center justify-between py-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-primary rounded-full"></div>
+                        <span className="text-xs text-foreground">Whale Activity</span>
+                      </div>
+                      <span className="text-xs font-medium text-primary">Active</span>
+                    </div>
+                    <div className="flex items-center justify-between py-1">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-success rounded-full"></div>
+                        <span className="text-xs text-foreground">Market Volatility</span>
+                      </div>
+                      <span className="text-xs font-medium text-success">Low</span>
+                    </div>
+                  </div>
+                </div>
+
                 {/* Sentiment Indicators */}
                 <div className="grid grid-cols-3 gap-3">
                   <div className="p-3 bg-muted/30 rounded-lg text-center">
