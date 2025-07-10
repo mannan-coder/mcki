@@ -61,7 +61,7 @@ serve(async (req) => {
       console.log('Using provided NewsData.io API endpoint');
       
       const newsResponse = await fetch(
-        'https://newsdata.io/api/1/latest?apikey=pub_a19aad2b782c4a91ad05bd34e0bdfcb1&q=crypto',
+        'https://newsdata.io/api/1/latest?apikey=pub_a19aad2b782c4a91ad05bd34e0bdfcb1&q=crypto%20OR%20bitcoin%20OR%20ethereum%20OR%20blockchain&language=en&category=business,technology&size=50',
         {
           headers: {
             'Accept': 'application/json',
@@ -78,18 +78,24 @@ serve(async (req) => {
             const sentiment = analyzeSentiment(`${article.title} ${article.description || ''}`);
             const category = article.category?.[0] || 'Crypto';
             
+            // Generate a consistent ID based on article content
+            const articleId = Math.abs(article.title.split('').reduce((a, b) => {
+              a = ((a << 5) - a) + b.charCodeAt(0);
+              return a & a;
+            }, 0));
+            
             return {
-              id: index + 1,
+              id: articleId,
               title: article.title,
               summary: article.description || article.title,
-              content: article.content || article.description || `Full article content for: ${article.title}. This article provides comprehensive coverage of the latest developments in the cryptocurrency space. Stay informed with the latest trends, market movements, and regulatory updates that shape the digital asset landscape.`,
+              content: article.content || article.description || `${article.title}\n\n${article.description || ''}\n\nThis article covers important developments in the cryptocurrency and blockchain space. For the full article, please visit the original source.\n\nThe cryptocurrency market continues to evolve rapidly with new technologies, regulations, and adoption patterns emerging regularly. Stay informed about these changes as they may significantly impact digital asset values and market dynamics.`,
               category: category.charAt(0).toUpperCase() + category.slice(1),
               time: article.pubDate,
               impact: sentiment.label,
               sentiment: sentiment.score,
               source: article.source_id || 'CryptoNews',
               author: article.creator?.[0] || 'Crypto Reporter',
-              readTime: `${Math.max(2, Math.floor(Math.random() * 8) + 1)} min read`,
+              readTime: `${Math.max(2, Math.floor((article.content || article.description || '').length / 200)) + 1} min read`,
               tags: article.keywords || ['crypto', 'blockchain', 'news'],
               url: article.link,
               image: article.image_url || getNewsImage(category),
