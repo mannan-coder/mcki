@@ -40,6 +40,15 @@ export const CalculatorsSuiteSection = ({ loading = false }: CalculatorsSuiteSec
     stakingPeriod: ''
   });
 
+  const [feesInputs, setFeesInputs] = useState({
+    tradeAmount: '',
+    makerFee: '0.1',
+    takerFee: '0.1',
+    exchange1Fee: '0.1',
+    exchange2Fee: '0.15',
+    exchange3Fee: '0.25'
+  });
+
   const calculators = [
     { id: 'arbitrage', name: 'Arbitrage Profit', icon: TrendingUp, description: 'Calculate profit potential between exchanges' },
     { id: 'roi', name: 'ROI Calculator', icon: Percent, description: 'Return on investment analysis' },
@@ -123,6 +132,47 @@ export const CalculatorsSuiteSection = ({ loading = false }: CalculatorsSuiteSec
     
     return { finalAmount, totalRewards: rewards, monthlyRewards };
   }, [stakingInputs]);
+
+  const feesResults = useMemo(() => {
+    const amount = parseFloat(feesInputs.tradeAmount) || 0;
+    const makerFee = parseFloat(feesInputs.makerFee) / 100;
+    const takerFee = parseFloat(feesInputs.takerFee) / 100;
+    const ex1Fee = parseFloat(feesInputs.exchange1Fee) / 100;
+    const ex2Fee = parseFloat(feesInputs.exchange2Fee) / 100;
+    const ex3Fee = parseFloat(feesInputs.exchange3Fee) / 100;
+    
+    if (amount <= 0) {
+      return { 
+        makerCost: 0, takerCost: 0, 
+        exchange1Cost: 0, exchange2Cost: 0, exchange3Cost: 0,
+        bestExchange: 'Exchange 1', savingsVsWorst: 0
+      };
+    }
+    
+    const makerCost = amount * makerFee;
+    const takerCost = amount * takerFee;
+    const ex1Cost = amount * ex1Fee;
+    const ex2Cost = amount * ex2Fee;
+    const ex3Cost = amount * ex3Fee;
+    
+    const exchangeCosts = [
+      { name: 'Exchange 1', cost: ex1Cost },
+      { name: 'Exchange 2', cost: ex2Cost },
+      { name: 'Exchange 3', cost: ex3Cost }
+    ];
+    
+    const sortedCosts = exchangeCosts.sort((a, b) => a.cost - b.cost);
+    const bestExchange = sortedCosts[0].name;
+    const worstCost = sortedCosts[2].cost;
+    const bestCost = sortedCosts[0].cost;
+    const savingsVsWorst = worstCost - bestCost;
+    
+    return { 
+      makerCost, takerCost, 
+      exchange1Cost: ex1Cost, exchange2Cost: ex2Cost, exchange3Cost: ex3Cost,
+      bestExchange, savingsVsWorst
+    };
+  }, [feesInputs]);
 
   if (loading) {
     return (
@@ -629,26 +679,135 @@ export const CalculatorsSuiteSection = ({ loading = false }: CalculatorsSuiteSec
               </motion.div>
             )}
 
-            {/* Coming Soon for Fees Calculator */}
+            {/* Trading Fees Calculator */}
             {activeCalculator === 'fees' && (
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.3 }}
-                className="text-center py-12"
               >
-                <div className="text-6xl mb-4">🚧</div>
-                <h3 className="text-xl font-semibold text-foreground mb-2">Trading Fees Calculator</h3>
-                <p className="text-muted-foreground mb-4">
-                  Compare trading costs across multiple exchanges with our comprehensive fee calculator.
-                </p>
-                <Link 
-                  to="/tools"
-                  className="inline-flex items-center space-x-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
-                >
-                  <span>View All Tools</span>
-                  <Calculator className="h-4 w-4" />
-                </Link>
+                <div className="flex items-center space-x-3 mb-6">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <DollarSign className="h-5 w-5 text-primary" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-foreground">Trading Fees Calculator</h3>
+                </div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="block text-sm font-medium text-foreground">Trade Amount ($)</label>
+                      <input
+                        type="number"
+                        placeholder="Enter trade amount"
+                        value={feesInputs.tradeAmount}
+                        onChange={(e) => setFeesInputs({...feesInputs, tradeAmount: e.target.value})}
+                        className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="block text-sm font-medium text-foreground">Maker Fee (%)</label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={feesInputs.makerFee}
+                          onChange={(e) => setFeesInputs({...feesInputs, makerFee: e.target.value})}
+                          className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="block text-sm font-medium text-foreground">Taker Fee (%)</label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={feesInputs.takerFee}
+                          onChange={(e) => setFeesInputs({...feesInputs, takerFee: e.target.value})}
+                          className="w-full px-4 py-2 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="space-y-3">
+                      <h4 className="text-sm font-semibold text-foreground">Exchange Comparison</h4>
+                      <div className="space-y-2">
+                        <label className="block text-xs font-medium text-muted-foreground">Binance Fee (%)</label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={feesInputs.exchange1Fee}
+                          onChange={(e) => setFeesInputs({...feesInputs, exchange1Fee: e.target.value})}
+                          className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-colors text-sm"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="block text-xs font-medium text-muted-foreground">Coinbase Fee (%)</label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={feesInputs.exchange2Fee}
+                          onChange={(e) => setFeesInputs({...feesInputs, exchange2Fee: e.target.value})}
+                          className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-colors text-sm"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="block text-xs font-medium text-muted-foreground">Kraken Fee (%)</label>
+                        <input
+                          type="number"
+                          step="0.01"
+                          value={feesInputs.exchange3Fee}
+                          onChange={(e) => setFeesInputs({...feesInputs, exchange3Fee: e.target.value})}
+                          className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-colors text-sm"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-6 bg-muted/30 rounded-lg">
+                    <h4 className="text-lg font-semibold text-foreground mb-4">Fee Comparison</h4>
+                    
+                    <div className="space-y-4">
+                      <div className="space-y-3">
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-muted-foreground">Maker Cost:</span>
+                          <span className="font-semibold text-foreground">${feesResults.makerCost.toFixed(2)}</span>
+                        </div>
+                        
+                        <div className="flex justify-between items-center">
+                          <span className="text-sm text-muted-foreground">Taker Cost:</span>
+                          <span className="font-semibold text-foreground">${feesResults.takerCost.toFixed(2)}</span>
+                        </div>
+                        
+                        <div className="border-t border-border pt-3">
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs text-muted-foreground">Binance:</span>
+                              <span className="font-semibold text-sm">${feesResults.exchange1Cost.toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs text-muted-foreground">Coinbase:</span>
+                              <span className="font-semibold text-sm">${feesResults.exchange2Cost.toFixed(2)}</span>
+                            </div>
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs text-muted-foreground">Kraken:</span>
+                              <span className="font-semibold text-sm">${feesResults.exchange3Cost.toFixed(2)}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="bg-success/10 border border-success/20 p-3 rounded-lg">
+                        <div className="text-sm font-medium text-success mb-1">
+                          Best Exchange: {feesResults.bestExchange}
+                        </div>
+                        <div className="text-xs text-muted-foreground">
+                          Save ${feesResults.savingsVsWorst.toFixed(2)} vs worst option
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </motion.div>
             )}
           </ResponsiveCard>
