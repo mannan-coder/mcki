@@ -63,8 +63,8 @@ export const useCryptoData = () => {
   useEffect(() => {
     fetchCryptoData();
     
-    // Refresh data every 30 seconds for live updates
-    const interval = setInterval(() => fetchCryptoData(), 30000);
+    // Refresh data every 45 seconds to avoid rate limits
+    const interval = setInterval(() => fetchCryptoData(), 45000);
     
     return () => clearInterval(interval);
   }, []);

@@ -5,24 +5,91 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+// In-memory cache with TTL
+const cache = new Map();
+const CACHE_TTL = 30000; // 30 seconds
+
+// Rate limiting
+const requestTracker = new Map();
+const RATE_LIMIT_WINDOW = 60000; // 1 minute
+const MAX_REQUESTS_PER_WINDOW = 20;
+
+// Retry logic with exponential backoff
+async function fetchWithRetry(url: string, retries = 3, delay = 1000): Promise<Response> {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const response = await fetch(url);
+      if (response.ok) return response;
+      
+      if (response.status === 429) {
+        // Rate limited, wait longer
+        await new Promise(resolve => setTimeout(resolve, delay * (i + 1) * 2));
+        continue;
+      }
+      
+      throw new Error(`HTTP ${response.status}`);
+    } catch (error) {
+      if (i === retries - 1) throw error;
+      await new Promise(resolve => setTimeout(resolve, delay * (i + 1)));
+    }
+  }
+  throw new Error('Max retries exceeded');
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
   }
 
   try {
+    // Rate limiting check
+    const clientIP = req.headers.get('x-forwarded-for') || 'anonymous';
+    const now = Date.now();
+    
+    if (!requestTracker.has(clientIP)) {
+      requestTracker.set(clientIP, []);
+    }
+    
+    const requests = requestTracker.get(clientIP);
+    const recentRequests = requests.filter((time: number) => now - time < RATE_LIMIT_WINDOW);
+    
+    if (recentRequests.length >= MAX_REQUESTS_PER_WINDOW) {
+      return new Response(
+        JSON.stringify({ error: 'Rate limit exceeded. Please try again later.' }),
+        { 
+          status: 429,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+    
+    recentRequests.push(now);
+    requestTracker.set(clientIP, recentRequests);
+
     const url = new URL(req.url);
-    const limit = url.searchParams.get('limit') || '250'; // Default to top 250 coins
+    const limit = Math.min(parseInt(url.searchParams.get('limit') || '100'), 250); // Cap at 250
     const category = url.searchParams.get('category') || '';
     
-    // Fetch comprehensive market data from CoinGecko
+    // Check cache first
+    const cacheKey = `${limit}-${category}`;
+    const cached = cache.get(cacheKey);
+    
+    if (cached && (now - cached.timestamp) < CACHE_TTL) {
+      console.log('Returning cached data');
+      return new Response(
+        JSON.stringify(cached.data),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+    
+    // Fetch comprehensive market data from CoinGecko with retry logic
     let apiUrl = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${limit}&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d%2C30d`;
     
     if (category) {
       apiUrl += `&category=${category}`;
     }
 
-    const response = await fetch(apiUrl);
+    const response = await fetchWithRetry(apiUrl);
 
     if (!response.ok) {
       throw new Error(`CoinGecko API error: ${response.status}`);
@@ -30,8 +97,8 @@ serve(async (req) => {
 
     const coinData = await response.json();
 
-    // Fetch global market data
-    const globalResponse = await fetch('https://api.coingecko.com/api/v3/global');
+    // Fetch global market data with retry
+    const globalResponse = await fetchWithRetry('https://api.coingecko.com/api/v3/global');
     const globalData = await globalResponse.json();
 
     // Calculate additional metrics
@@ -107,6 +174,14 @@ serve(async (req) => {
       coins: enrichedCoins,
       lastUpdated: new Date().toISOString()
     };
+
+    // Cache the result
+    cache.set(cacheKey, {
+      data: marketData,
+      timestamp: now
+    });
+
+    console.log(`Fetched fresh data for ${enrichedCoins.length} coins`);
 
     return new Response(
       JSON.stringify(marketData),

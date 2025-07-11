@@ -60,8 +60,8 @@ export const useArbitrageData = () => {
   useEffect(() => {
     fetchArbitrageData();
     
-    // Refresh arbitrage data every 15 seconds for more live opportunities
-    const interval = setInterval(fetchArbitrageData, 15000);
+    // Refresh arbitrage data every 30 seconds to avoid rate limits
+    const interval = setInterval(fetchArbitrageData, 30000);
     
     return () => clearInterval(interval);
   }, []);

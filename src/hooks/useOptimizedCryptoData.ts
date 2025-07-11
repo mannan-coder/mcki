@@ -115,32 +115,35 @@ const usePriceChangeNotifications = (data: CryptoData | undefined, isEnabled: bo
   }, [data, isEnabled]);
 };
 
-export const useOptimizedCryptoData = (limit: number = 500, enableNotifications: boolean = true) => {
+export const useOptimizedCryptoData = (limit: number = 100, enableNotifications: boolean = true) => {
   const queryClient = useQueryClient();
   
   const query = useQuery({
     queryKey: ['crypto-data', limit],
     queryFn: () => fetchCryptoData(limit),
-    staleTime: 15 * 1000, // 15 seconds - more aggressive for real-time feel
-    refetchInterval: 15 * 1000, // Refetch every 15 seconds for real-time updates
-    refetchOnWindowFocus: true, // Re-enable for fresh data when user returns
+    staleTime: 30 * 1000, // 30 seconds - matches server cache
+    refetchInterval: 45 * 1000, // Refetch every 45 seconds to avoid rate limits
+    refetchOnWindowFocus: false, // Disable to prevent excessive API calls
     refetchOnMount: true,
     placeholderData: (previousData: CryptoData | undefined) => previousData,
     retry: (failureCount, error) => {
-      // Smart retry logic
-      if (failureCount < 3 && !error?.message?.includes('rate limit')) {
-        return true;
+      // Smart retry logic with rate limit handling
+      if (error?.message?.includes('429') || error?.message?.includes('rate limit')) {
+        return failureCount < 2; // Only retry once for rate limits
       }
-      return false;
+      return failureCount < 3;
     },
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 10000),
+    retryDelay: (attemptIndex) => {
+      // Exponential backoff with longer delays for rate limits
+      return Math.min(5000 * 2 ** attemptIndex, 30000);
+    },
     meta: {
       errorMessage: 'Failed to fetch market data'
     },
-    // Add background refetch for seamless updates
-    refetchIntervalInBackground: true,
-    // Force updates to trigger re-renders
-    structuralSharing: false,
+    // Reduce background refetch to prevent rate limits
+    refetchIntervalInBackground: false,
+    // Keep structural sharing for better performance
+    structuralSharing: true,
   });
 
   // Enable price change notifications

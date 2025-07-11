@@ -1,4 +1,15 @@
-# Welcome to your Lovable project
+# MCKI Crypto Analytics Platform
+
+A comprehensive cryptocurrency analytics platform built with React, TypeScript, and Supabase, featuring real-time market data, arbitrage opportunities, news aggregation, and advanced analytics.
+
+## 🚀 Features
+
+- **Real-time Market Data**: Live cryptocurrency prices and market analytics
+- **Arbitrage Opportunities**: Real-time arbitrage detection across exchanges  
+- **News & Blog**: Latest crypto news and educational content
+- **Advanced Analytics**: On-chain analysis and market insights
+- **Responsive Design**: Mobile-first design with dark/light theme support
+- **Performance Optimized**: Lazy loading, caching, and error boundaries
 
 ## Project info
 
@@ -54,11 +65,32 @@ npm run dev
 
 This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Frontend**: React 18, TypeScript, Tailwind CSS
+- **Backend**: Supabase (PostgreSQL, Edge Functions)  
+- **State Management**: TanStack Query (React Query)
+- **UI Components**: Shadcn/ui, Radix UI
+- **Charts**: Recharts
+- **Build Tool**: Vite
+
+## 🔧 Production Optimizations
+
+### API Rate Limiting & Caching
+- 30-second server-side caching for API responses
+- Intelligent retry logic with exponential backoff
+- Rate limiting to prevent quota exhaustion
+- Optimized query intervals (45s vs 15s)
+
+### Performance Features  
+- Lazy loading for all route components
+- Error boundaries for graceful error handling
+- Query optimization with TanStack Query
+- Reduced bundle size through code splitting
+
+### Error Handling
+- Global error boundary component
+- Comprehensive API error recovery
+- Fallback UI for failed states
+- Development vs production error displays
 
 ## How can I deploy this project?
 

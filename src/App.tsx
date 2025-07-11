@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { Toaster } from '@/components/ui/sonner';
 import { lazy, Suspense } from 'react';
+import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { Skeleton } from '@/components/ui/skeleton';
 
 // Lazy load pages for better performance
@@ -49,7 +50,7 @@ const PageLoader = () => (
 
 function App() {
   return (
-    <>
+    <ErrorBoundary>
       <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<Index />} />
@@ -92,7 +93,7 @@ function App() {
         richColors
         closeButton
       />
-    </>
+    </ErrorBoundary>
   );
 }
 
