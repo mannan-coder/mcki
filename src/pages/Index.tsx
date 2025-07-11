@@ -18,7 +18,7 @@ const OnChainAnalysis = lazy(() => import('@/components/OnChainAnalysis'));
 const LivePricesAcrossExchanges = lazy(() => import('@/components/arbitrage/LivePricesAcrossExchanges'));
 
 const Index = () => {
-  const { data: marketData, isLoading } = useOptimizedCryptoData();
+  const { data: marketData, isLoading } = useOptimizedCryptoData(30, false); // Minimal data for homepage
 
   return (
     <Layout showFooter={true}>

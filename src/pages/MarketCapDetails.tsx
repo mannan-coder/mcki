@@ -12,7 +12,7 @@ const MarketCapDetails = () => {
   const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [timeframe, setTimeframe] = useState('7d');
-  const { data: marketData, isRealTime } = useOptimizedCryptoData(250, false);
+  const { data: marketData, isRealTime } = useOptimizedCryptoData(100, false); // Reduced limit
 
   if (!marketData) {
     return (

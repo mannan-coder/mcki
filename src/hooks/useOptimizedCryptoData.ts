@@ -121,10 +121,10 @@ export const useOptimizedCryptoData = (limit: number = 100, enableNotifications:
   const query = useQuery({
     queryKey: ['crypto-data', limit],
     queryFn: () => fetchCryptoData(limit),
-    staleTime: 30 * 1000, // 30 seconds - matches server cache
-    refetchInterval: 45 * 1000, // Refetch every 45 seconds to avoid rate limits
+    staleTime: 10 * 60 * 1000, // 10 minutes - very long for production
+    refetchInterval: false, // Disable automatic refetch completely
     refetchOnWindowFocus: false, // Disable to prevent excessive API calls
-    refetchOnMount: true,
+    refetchOnMount: false, // Disable to prevent crashes on load
     placeholderData: (previousData: CryptoData | undefined) => previousData,
     retry: (failureCount, error) => {
       // Smart retry logic with rate limit handling
@@ -140,7 +140,7 @@ export const useOptimizedCryptoData = (limit: number = 100, enableNotifications:
     meta: {
       errorMessage: 'Failed to fetch market data'
     },
-    // Reduce background refetch to prevent rate limits
+    // Completely disable background refetch to prevent crashes
     refetchIntervalInBackground: false,
     // Keep structural sharing for better performance
     structuralSharing: true,
@@ -149,21 +149,19 @@ export const useOptimizedCryptoData = (limit: number = 100, enableNotifications:
   // Enable price change notifications
   usePriceChangeNotifications(query.data, enableNotifications);
 
-  // Smart background updates - prefetch next batch
-  useEffect(() => {
-    if (query.data && !query.isFetching) {
-      // Prefetch with slightly more data for smooth transitions
-      const prefetchTimer = setTimeout(() => {
-        queryClient.prefetchQuery({
-          queryKey: ['crypto-data', limit + 50],
-          queryFn: () => fetchCryptoData(limit + 50),
-          staleTime: 30 * 1000,
-        });
-      }, 10000); // Prefetch after 10 seconds
-
-      return () => clearTimeout(prefetchTimer);
-    }
-  }, [query.data, query.isFetching, queryClient, limit]);
+  // Disable prefetch for production to prevent crashes
+  // useEffect(() => {
+  //   if (query.data && !query.isFetching) {
+  //     const prefetchTimer = setTimeout(() => {
+  //       queryClient.prefetchQuery({
+  //         queryKey: ['crypto-data', limit + 50],
+  //         queryFn: () => fetchCryptoData(limit + 50),
+  //         staleTime: 30 * 1000,
+  //       });
+  //     }, 10000);
+  //     return () => clearTimeout(prefetchTimer);
+  //   }
+  // }, [query.data, query.isFetching, queryClient, limit]);
 
   // Enhanced refetch with optimistic updates
   const enhancedRefetch = async () => {

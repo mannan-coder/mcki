@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
 const MarketPage = () => {
-  const { data: cryptoData, isLoading, refetch, isRealTime, lastUpdateTime } = useOptimizedCryptoData(500, true);
+  const { data: cryptoData, isLoading, refetch, isRealTime, lastUpdateTime } = useOptimizedCryptoData(100, false); // Reduced limit and disabled notifications for performance
   
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');

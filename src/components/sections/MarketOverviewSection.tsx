@@ -15,7 +15,7 @@ interface MarketOverviewSectionProps {
 }
 
 export const MarketOverviewSection = ({ isDarkMode }: MarketOverviewSectionProps) => {
-  const { data: marketData, isLoading, error, refetch } = useOptimizedCryptoData();
+  const { data: marketData, isLoading, error, refetch } = useOptimizedCryptoData(50, false); // Reduced for performance
   const { data: sentimentData } = useSentimentData();
 
   // Show skeleton loaders only on initial load

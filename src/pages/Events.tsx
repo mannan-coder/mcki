@@ -314,7 +314,7 @@ const EventsPage = ({}: EventsPageProps) => {
   const [isLoading, setIsLoading] = useState(false);
   
   const { data: liveEventsData, loading: eventsLoading, error: eventsError, refetch } = useLiveEvents();
-  const { data: marketData, isLoading: marketLoading } = useOptimizedCryptoData();
+  const { data: marketData, isLoading: marketLoading } = useOptimizedCryptoData(30, false); // Minimal data needed
   const { toast } = useToast();
 
   const upcomingEvents = liveEventsData?.upcomingEvents || [];

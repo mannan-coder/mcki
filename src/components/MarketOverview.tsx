@@ -19,7 +19,7 @@ interface MarketOverviewProps {
 const MarketOverview = ({ isDarkMode }: MarketOverviewProps) => {
   const [showMarketCapModal, setShowMarketCapModal] = useState(false);
   const [showVolumeModal, setShowVolumeModal] = useState(false);
-  const { data: marketData, isLoading, error, refetch } = useOptimizedCryptoData();
+  const { data: marketData, isLoading, error, refetch } = useOptimizedCryptoData(50, false); // Reduced for performance
   const { data: sentimentData } = useSentimentData();
 
   // Show skeleton loaders only on initial load

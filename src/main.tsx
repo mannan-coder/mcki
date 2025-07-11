@@ -6,19 +6,20 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import App from './App.tsx'
 import './index.css'
 
-// Optimized React Query configuration
+// Production-optimized React Query configuration for Hostinger
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 2,
-      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000),
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes
+      retry: 1, // Reduce retries
+      retryDelay: attemptIndex => Math.min(3000 * 2 ** attemptIndex, 60000),
+      staleTime: 10 * 60 * 1000, // 10 minutes - longer cache
+      gcTime: 30 * 60 * 1000, // 30 minutes - keep data longer
       refetchOnWindowFocus: false,
-      refetchOnReconnect: 'always',
+      refetchOnReconnect: false, // Disable to prevent crashes
+      refetchOnMount: false, // Only fetch when absolutely necessary
     },
     mutations: {
-      retry: 1,
+      retry: 0, // No retries for mutations
     },
   },
 })
