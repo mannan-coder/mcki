@@ -1,24 +1,22 @@
-
 import { Suspense, lazy } from 'react';
 import Layout from '@/components/Layout';
-import { MarketOverviewSection } from '@/components/sections/MarketOverviewSection';
-import { TopGainersLosers } from '@/components/sections/TopGainersLosers';
-import { LiveMarketSignalsSection } from '@/components/sections/LiveMarketSignalsSection';
+import { OptimizedMarketOverviewSection } from '@/components/sections/OptimizedMarketOverviewSection';
+import { OptimizedTopGainersLosers } from '@/components/sections/OptimizedTopGainersLosers';
+import { OptimizedLiveMarketSignalsSection } from '@/components/sections/OptimizedLiveMarketSignalsSection';
 import { TopVolumeSection } from '@/components/sections/TopVolumeSection';
 import { NewsAlertsSection } from '@/components/sections/NewsAlertsSection';
 import { InsightsEventsSection } from '@/components/sections/InsightsEventsSection';
 import { CalculatorsSuiteSection } from '@/components/sections/CalculatorsSuiteSection';
 import { WhaleMovementsSection } from '@/components/sections/WhaleMovementsSection';
 import { MarketSentimentSection } from '@/components/sections/MarketSentimentSection';
-import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
+import { useOptimizedMarketOverview } from '@/hooks/useOptimizedMarketOverview';
 
 // Lazy load heavy components for better performance
 const ArbitrageDashboard = lazy(() => import('@/components/ArbitrageDashboard'));
 const OnChainAnalysis = lazy(() => import('@/components/OnChainAnalysis'));
-const LivePricesAcrossExchanges = lazy(() => import('@/components/arbitrage/LivePricesAcrossExchanges'));
 
 const Index = () => {
-  const { data: marketData, isLoading } = useOptimizedCryptoData(30, false); // Minimal data for homepage
+  const { data: marketData, isLoading } = useOptimizedMarketOverview();
 
   return (
     <Layout showFooter={true}>
@@ -39,20 +37,14 @@ const Index = () => {
 
         {/* Main Content Sections */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 pb-8">
-          {/* Market Overview Section */}
-          <MarketOverviewSection isDarkMode={false} />
+          {/* Optimized Market Overview Section */}
+          <OptimizedMarketOverviewSection isDarkMode={false} />
           
-          {/* Top Gainers & Losers Section */}
-          <TopGainersLosers 
-            coins={marketData?.coins || []} 
-            loading={isLoading && !marketData}
-          />
+          {/* Optimized Top Gainers & Losers Section */}
+          <OptimizedTopGainersLosers loading={isLoading && !marketData} />
           
-          {/* Live Market Signals Section */}
-          <LiveMarketSignalsSection 
-            coins={marketData?.coins || []} 
-            loading={isLoading && !marketData}
-          />
+          {/* Optimized Live Market Signals Section */}
+          <OptimizedLiveMarketSignalsSection loading={isLoading && !marketData} />
           
           {/* Top Volume Section */}
           <TopVolumeSection 

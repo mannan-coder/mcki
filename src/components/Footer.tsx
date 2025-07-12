@@ -1,3 +1,4 @@
+
 import { Link } from 'react-router-dom';
 import { 
   Twitter, 
@@ -13,7 +14,6 @@ import {
   Briefcase,
   BookOpen
 } from 'lucide-react';
-// import logoHD from '@/assets/mcki-logo-new.png';
 
 interface FooterProps {
   isDarkMode: boolean;
@@ -40,7 +40,7 @@ const Footer = ({ isDarkMode }: FooterProps) => {
         { name: 'About Us', href: '/about', icon: Users },
         { name: 'Contact', href: '/contact', icon: Mail },
         { name: 'Blog', href: '/blog', icon: BookOpen },
-        { name: 'Careers', href: '/careers', icon: Briefcase },
+        // Removed careers link as requested
       ]
     },
     legal: {
