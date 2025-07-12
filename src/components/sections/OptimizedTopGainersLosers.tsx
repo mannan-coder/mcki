@@ -1,6 +1,7 @@
 
 import { motion } from 'framer-motion';
 import { TrendingUp, TrendingDown, Activity } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { ResponsiveCard } from '@/components/common/ResponsiveCard';
 import { DataSection } from '@/components/common/DataSection';
 import { useOptimizedMarketOverview } from '@/hooks/useOptimizedMarketOverview';
@@ -11,6 +12,7 @@ interface OptimizedTopGainersLosersProps {
 
 export const OptimizedTopGainersLosers = ({ loading = false }: OptimizedTopGainersLosersProps) => {
   const { data: marketData, isLoading } = useOptimizedMarketOverview();
+  const navigate = useNavigate();
 
   if (isLoading || loading) {
     return (
@@ -67,7 +69,7 @@ export const OptimizedTopGainersLosers = ({ loading = false }: OptimizedTopGaine
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.1 }}
       whileHover={{ x: 4 }}
-      onClick={() => window.location.href = `/coin/${coin.id}`}
+      onClick={() => navigate(`/coin/${coin.id}`)}
     >
       <div className="flex items-center space-x-3 flex-1 min-w-0">
         <div className="flex items-center justify-center w-6 h-6 rounded-full bg-muted text-xs font-bold text-muted-foreground">
