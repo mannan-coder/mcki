@@ -58,10 +58,10 @@ serve(async (req) => {
     let news = [];
     
     try {
-      console.log('Using provided NewsData.io API endpoint');
+      console.log('Using NewsData.io API for live news...');
       
       const newsResponse = await fetch(
-        'https://newsdata.io/api/1/latest?apikey=pub_a19aad2b782c4a91ad05bd34e0bdfcb1&q=crypto%20OR%20bitcoin%20OR%20ethereum%20OR%20blockchain&language=en&category=business,technology&size=50',
+        'https://newsdata.io/api/1/latest?apikey=pub_a19aad2b782c4a91ad05bd34e0bdfcb1&q=crypto%20OR%20bitcoin%20OR%20ethereum%20OR%20blockchain&language=en&category=business,technology&size=80',
         {
           headers: {
             'Accept': 'application/json',
@@ -69,46 +69,85 @@ serve(async (req) => {
         }
       );
 
-        if (newsResponse.ok) {
-          const newsData = await newsResponse.json();
-          console.log(`Fetched ${newsData.results?.length || 0} articles from NewsData.io`);
-          console.log('API Response status:', newsResponse.status);
+      if (newsResponse.ok) {
+        const newsData = await newsResponse.json();
+        console.log(`Fetched ${newsData.results?.length || 0} articles from NewsData.io`);
+        
+        // Enhanced news processing with better categorization
+        news = newsData.results?.map((article: any, index: number) => {
+          const sentiment = analyzeSentiment(`${article.title} ${article.description || ''}`);
           
-          news = newsData.results?.map((article: any, index: number) => {
-            const sentiment = analyzeSentiment(`${article.title} ${article.description || ''}`);
-            const category = article.category?.[0] || 'Crypto';
-            
-            // Generate a consistent ID based on article content
-            const articleId = Math.abs(article.title.split('').reduce((a, b) => {
-              a = ((a << 5) - a) + b.charCodeAt(0);
-              return a & a;
-            }, 0));
-            
-            return {
-              id: articleId,
-              title: article.title,
-              summary: article.description || article.title,
-              content: article.content || article.description || `${article.title}\n\n${article.description || ''}\n\nThis article covers important developments in the cryptocurrency and blockchain space. For the full article, please visit the original source.\n\nThe cryptocurrency market continues to evolve rapidly with new technologies, regulations, and adoption patterns emerging regularly. Stay informed about these changes as they may significantly impact digital asset values and market dynamics.`,
-              category: category.charAt(0).toUpperCase() + category.slice(1),
-              time: article.pubDate,
-              impact: sentiment.label,
-              sentiment: sentiment.score,
-              source: article.source_id || 'CryptoNews',
-              author: article.creator?.[0] || 'Crypto Reporter',
-              readTime: `${Math.max(2, Math.floor((article.content || article.description || '').length / 200)) + 1} min read`,
-              tags: article.keywords || ['crypto', 'blockchain', 'news'],
-              url: article.link,
-              image: article.image_url || getNewsImage(category),
-              views: Math.floor(Math.random() * 10000) + 500,
-              featured: index < 3
-            };
-          }) || [];
-        } else {
-          console.log('NewsData.io API failed with status:', newsResponse.status);
-        }
+          // Better category detection
+          let category = 'Crypto';
+          const titleLower = article.title.toLowerCase();
+          if (titleLower.includes('bitcoin') || titleLower.includes('btc')) category = 'Bitcoin';
+          else if (titleLower.includes('ethereum') || titleLower.includes('eth')) category = 'Ethereum';
+          else if (titleLower.includes('regulation') || titleLower.includes('sec') || titleLower.includes('law')) category = 'Regulation';
+          else if (titleLower.includes('defi') || titleLower.includes('uniswap') || titleLower.includes('compound')) category = 'DeFi';
+          else if (titleLower.includes('nft') || titleLower.includes('opensea')) category = 'NFT';
+          else if (titleLower.includes('technology') || titleLower.includes('blockchain')) category = 'Technology';
+          else if (titleLower.includes('adoption') || titleLower.includes('paypal') || titleLower.includes('tesla')) category = 'Adoption';
+          else if (titleLower.includes('market') || titleLower.includes('price') || titleLower.includes('trading')) category = 'Market Analysis';
+          
+          // Generate consistent ID
+          const articleId = Math.abs(article.title.split('').reduce((a, b) => {
+            a = ((a << 5) - a) + b.charCodeAt(0);
+            return a & a;
+          }, 0));
+          
+          return {
+            id: articleId,
+            title: article.title,
+            summary: article.description || article.title,
+            content: article.content || generateEnhancedContent(article),
+            category,
+            time: article.pubDate,
+            impact: sentiment.label,
+            sentiment: Math.round((sentiment.score + 1) * 50), // Convert to 0-100 scale
+            source: article.source_id || 'CryptoNews',
+            author: article.creator?.[0] || getRandomAuthor(),
+            readTime: `${Math.max(2, Math.floor((article.content || article.description || '').length / 200) + 1)} min read`,
+            tags: article.keywords || generateTags(category, article.title),
+            url: article.link,
+            image: article.image_url || getNewsImage(category),
+            views: Math.floor(Math.random() * 25000) + 1000, // Increased view counts
+            featured: index < 4 // More featured articles
+          };
+        })?.filter(article => article.title && article.summary) || [];
+        
+        console.log(`Processed ${news.length} news articles successfully`);
+      } else {
+        console.log('NewsData.io API failed with status:', newsResponse.status);
+      }
     } catch (apiError) {
-      console.log('=== API ERROR ===');
-      console.log('NewsData.io API error, using fallback news:', apiError.message);
+      console.log('NewsData.io API error, using enhanced fallback news:', apiError.message);
+    }
+    
+    // Helper functions for enhanced content generation
+    function generateEnhancedContent(article: any): string {
+      return article.content || `${article.title}\n\n${article.description || ''}\n\nThis article covers important developments in the cryptocurrency and blockchain space. For comprehensive analysis and market insights, please visit the original source.\n\nThe cryptocurrency market continues to evolve with new technologies, regulations, and adoption patterns. Stay informed about these changes as they may significantly impact digital asset values and market dynamics.\n\n**Key Market Factors:**\n- Regulatory developments and policy changes\n- Institutional adoption and investment flows\n- Technological innovations and network upgrades\n- Global economic conditions and market sentiment\n\nFor real-time updates and detailed analysis, monitor official sources and verified cryptocurrency news platforms.`;
+    }
+    
+    function getRandomAuthor(): string {
+      const authors = ['Sarah Johnson', 'Michael Chen', 'Emily Rodriguez', 'David Kim', 'Lisa Zhang', 'Robert Taylor', 'Maria Santos', 'Alex Thompson'];
+      return authors[Math.floor(Math.random() * authors.length)];
+    }
+    
+    function generateTags(category: string, title: string): string[] {
+      const baseTags = ['crypto', 'blockchain', 'news'];
+      const categoryTags: { [key: string]: string[] } = {
+        'Bitcoin': ['bitcoin', 'btc', 'digital gold'],
+        'Ethereum': ['ethereum', 'eth', 'smart contracts'],
+        'Regulation': ['regulation', 'compliance', 'legal'],
+        'DeFi': ['defi', 'yield farming', 'liquidity'],
+        'NFT': ['nft', 'digital art', 'collectibles'],
+        'Technology': ['technology', 'innovation', 'development'],
+        'Adoption': ['adoption', 'mainstream', 'institutional'],
+        'Market Analysis': ['market', 'analysis', 'trading']
+      };
+      
+      const specificTags = categoryTags[category] || ['general'];
+      return [...baseTags, ...specificTags.slice(0, 3)];
     }
     
     // Fallback to static news if API fails or no API key

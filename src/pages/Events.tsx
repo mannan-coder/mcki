@@ -32,7 +32,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useLiveEvents } from '@/hooks/useLiveEvents';
+import { useEnhancedLiveEvents } from '@/hooks/useEnhancedLiveEvents';
 import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 import { getTimeAgo } from '@/utils/timeUtils';
 import { useToast } from '@/hooks/use-toast';
@@ -313,7 +313,7 @@ const EventsPage = ({}: EventsPageProps) => {
   const [displayCount, setDisplayCount] = useState(9); // Start with 9 events
   const [isLoading, setIsLoading] = useState(false);
   
-  const { data: liveEventsData, loading: eventsLoading, error: eventsError, refetch } = useLiveEvents();
+  const { data: liveEventsData, loading: eventsLoading, error: eventsError, refetch } = useEnhancedLiveEvents();
   const { data: marketData, isLoading: marketLoading } = useOptimizedCryptoData(30, false); // Minimal data needed
   const { toast } = useToast();
 

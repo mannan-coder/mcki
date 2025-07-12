@@ -5,7 +5,7 @@ import Layout from '@/components/Layout';
 import { ResponsiveCard } from '@/components/common/ResponsiveCard';
 import { DataSection } from '@/components/common/DataSection';
 import { StatsGrid } from '@/components/common/StatsGrid';
-import { useCryptoNews } from '@/hooks/useCryptoNews';
+import { useEnhancedCryptoNews } from '@/hooks/useEnhancedCryptoNews';
 import { motion } from 'framer-motion';
 
 interface NewsItem {
@@ -29,7 +29,7 @@ interface NewsItem {
 }
 
 const News = () => {
-  const { news: apiNews, loading: newsLoading, error, refetch } = useCryptoNews();
+  const { news: apiNews, loading: newsLoading, error, refetch } = useEnhancedCryptoNews();
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedImpact, setSelectedImpact] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
