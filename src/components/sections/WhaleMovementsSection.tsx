@@ -13,7 +13,7 @@ interface WhaleMovementsSectionProps {
 }
 
 export const WhaleMovementsSection = ({ loading = false }: WhaleMovementsSectionProps) => {
-  const { data: whaleData, loading: whaleLoading } = useWhaleData();
+  const { data: whaleData, loading: whaleLoading, refetch } = useWhaleData();
   const navigate = useNavigate();
 
   const whaleStats = [
@@ -107,6 +107,8 @@ export const WhaleMovementsSection = ({ loading = false }: WhaleMovementsSection
       title="Whale Movements"
       subtitle="Track large cryptocurrency transfers and exchange flows"
       icon={<Activity className="h-6 w-6 text-primary" />}
+      onRefresh={refetch}
+      isLoading={whaleLoading}
     >
       <div className="space-y-6">
         <StatsGrid stats={whaleStats} />

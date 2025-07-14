@@ -2,7 +2,8 @@ import { Newspaper, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ResponsiveCard } from '@/components/common/ResponsiveCard';
 import { DataSection } from '@/components/common/DataSection';
-import { useCryptoNews } from '@/hooks/useCryptoNews';
+import { useEnhancedCryptoNews } from '@/hooks/useEnhancedCryptoNews';
+import { useLiveEvents } from '@/hooks/useLiveEvents';
 import { motion } from 'framer-motion';
 import { getTimeAgo } from '@/utils/timeUtils';
 
@@ -11,7 +12,8 @@ interface NewsAlertsSectionProps {
 }
 
 export const NewsAlertsSection = ({ loading = false }: NewsAlertsSectionProps) => {
-  const { news: newsItems, loading: newsLoading, error } = useCryptoNews();
+  const { news: newsItems, loading: newsLoading, error, refetch: refetchNews } = useEnhancedCryptoNews();
+  const { data: eventsData, loading: eventsLoading, refetch: refetchEvents } = useLiveEvents();
 
 
   const getImpactColor = (impact: string) => {
@@ -30,7 +32,7 @@ export const NewsAlertsSection = ({ loading = false }: NewsAlertsSectionProps) =
     }
   };
 
-  if (loading || newsLoading) {
+  if (loading || newsLoading || eventsLoading) {
     return (
       <DataSection
         title="News & Market Alerts"
@@ -69,6 +71,11 @@ export const NewsAlertsSection = ({ loading = false }: NewsAlertsSectionProps) =
       title="News & Market Alerts"
       subtitle="Latest cryptocurrency news and market updates"
       icon={<Newspaper className="h-6 w-6 text-primary" />}
+      onRefresh={() => {
+        refetchNews();
+        refetchEvents();
+      }}
+      isLoading={newsLoading || eventsLoading}
       headerActions={
         <Link 
           to="/news"
@@ -152,6 +159,58 @@ export const NewsAlertsSection = ({ loading = false }: NewsAlertsSectionProps) =
                   </div>
                 </motion.div>
               ))}
+            </div>
+          )}
+        </div>
+      </ResponsiveCard>
+
+      {/* Next Events */}
+      <ResponsiveCard>
+        <div className="space-y-4">
+          <div className="flex items-center space-x-3">
+            <div className="p-2 bg-warning/10 rounded-lg">
+              <Clock className="h-5 w-5 text-warning" />
+            </div>
+            <h3 className="text-lg font-semibold text-foreground">Next Events</h3>
+          </div>
+
+          {eventsData?.upcomingEvents && eventsData.upcomingEvents.length > 0 ? (
+            <div className="space-y-3">
+              {eventsData.upcomingEvents.slice(0, 5).map((event, index) => (
+                <motion.div
+                  key={event.id}
+                  className="flex items-center justify-between p-3 border border-border/50 rounded-lg hover:bg-muted/30 transition-colors"
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <div className="flex-1">
+                    <div className="flex items-center space-x-2 mb-1">
+                      <span className={`px-2 py-1 rounded text-xs font-medium border ${
+                        event.impact === 'high' ? 'bg-destructive/10 text-destructive border-destructive/20' :
+                        event.impact === 'medium' ? 'bg-warning/10 text-warning border-warning/20' :
+                        'bg-success/10 text-success border-success/20'
+                      }`}>
+                        {event.impact?.toUpperCase()}
+                      </span>
+                      <span className="text-xs text-muted-foreground">{event.type}</span>
+                    </div>
+                    <h4 className="font-medium text-sm text-foreground line-clamp-1">
+                      {event.title}
+                    </h4>
+                    <p className="text-xs text-muted-foreground line-clamp-1">
+                      {event.description}
+                    </p>
+                  </div>
+                  <div className="text-xs text-muted-foreground ml-3">
+                    {event.time}
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-4">
+              <p className="text-muted-foreground text-sm">No upcoming events</p>
             </div>
           )}
         </div>
