@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { TrendingUp, RefreshCw } from 'lucide-react';
 import { getCoinLogoById } from '@/utils/coinLogos';
+import { useToast } from '@/hooks/use-toast';
 
 interface Opportunity {
   pair?: string;
@@ -32,6 +33,15 @@ const LiveArbitrageOpportunitiesTable = ({
   stats 
 }: LiveArbitrageOpportunitiesTableProps) => {
   const [sortBy, setSortBy] = useState('spread');
+  const { toast } = useToast();
+
+  const handleRefresh = () => {
+    onRefresh();
+    toast({
+      title: "Arbitrage Data Refreshed",
+      description: "Live arbitrage opportunities have been updated.",
+    });
+  };
 
   const sortedOpportunities = [...opportunities].sort((a, b) => {
     switch (sortBy) {
@@ -134,7 +144,7 @@ const LiveArbitrageOpportunitiesTable = ({
             <option value="profit">Sort by Profit</option>
           </select>
           <button
-            onClick={onRefresh}
+            onClick={handleRefresh}
             disabled={loading}
             className="flex items-center space-x-1 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all duration-200 disabled:opacity-50 text-sm"
           >

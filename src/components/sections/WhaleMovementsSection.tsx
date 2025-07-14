@@ -1,12 +1,12 @@
-import { TrendingUp, TrendingDown, ArrowUpRight, ArrowDownLeft, Activity } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Activity, TrendingUp, TrendingDown, DollarSign, ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import { ResponsiveCard } from '@/components/common/ResponsiveCard';
 import { DataSection } from '@/components/common/DataSection';
 import { StatsGrid } from '@/components/common/StatsGrid';
 import { motion } from 'framer-motion';
 import { useWhaleData } from '@/hooks/useWhaleData';
 import { getTimeAgo } from '@/utils/timeUtils';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface WhaleMovementsSectionProps {
   loading?: boolean;
@@ -15,6 +15,15 @@ interface WhaleMovementsSectionProps {
 export const WhaleMovementsSection = ({ loading = false }: WhaleMovementsSectionProps) => {
   const { data: whaleData, loading: whaleLoading, refetch } = useWhaleData();
   const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleRefresh = () => {
+    refetch();
+    toast({
+      title: "Whale Data Refreshed",
+      description: "Latest whale movement data has been updated.",
+    });
+  };
 
   const whaleStats = [
     {
@@ -107,7 +116,7 @@ export const WhaleMovementsSection = ({ loading = false }: WhaleMovementsSection
       title="Whale Movements"
       subtitle="Track large cryptocurrency transfers and exchange flows"
       icon={<Activity className="h-6 w-6 text-primary" />}
-      onRefresh={refetch}
+      onRefresh={handleRefresh}
       isLoading={whaleLoading}
     >
       <div className="space-y-6">
@@ -134,7 +143,10 @@ export const WhaleMovementsSection = ({ loading = false }: WhaleMovementsSection
                     transition={{ delay: index * 0.1 }}
                     onClick={() => {
                       navigate(`/whale-detail/${transaction.id}`);
-                      toast.success(`Opening whale transaction details`);
+                      toast({
+                        title: "Whale Transaction",
+                        description: "Opening whale transaction details",
+                      });
                     }}
                   >
                     <div className="flex items-center space-x-3">

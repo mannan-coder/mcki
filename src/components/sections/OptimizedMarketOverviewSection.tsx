@@ -8,6 +8,7 @@ import { MarketCapCard } from '../market/MarketCapCard';
 import { VolumeCard } from '../market/VolumeCard';
 import { FearGreedIndex } from '../market/FearGreedIndex';
 import { useOptimizedMarketOverview } from '@/hooks/useOptimizedMarketOverview';
+import { useToast } from '@/hooks/use-toast';
 
 interface OptimizedMarketOverviewSectionProps {
   isDarkMode: boolean;
@@ -15,6 +16,15 @@ interface OptimizedMarketOverviewSectionProps {
 
 export const OptimizedMarketOverviewSection = ({ isDarkMode }: OptimizedMarketOverviewSectionProps) => {
   const { data: marketData, isLoading, error, refetch } = useOptimizedMarketOverview();
+  const { toast } = useToast();
+
+  const handleRefresh = () => {
+    refetch();
+    toast({
+      title: "Market Overview Refreshed",
+      description: "Latest market data has been updated successfully.",
+    });
+  };
 
   if (isLoading && !marketData) {
     return (
@@ -124,7 +134,7 @@ export const OptimizedMarketOverviewSection = ({ isDarkMode }: OptimizedMarketOv
         title="Market Overview"
         subtitle="Real-time cryptocurrency market data and comprehensive analytics"
         icon={<Activity className="h-6 w-6 text-primary" />}
-        onRefresh={refetch}
+        onRefresh={handleRefresh}
         isLoading={isLoading}
         className="space-y-6"
       >

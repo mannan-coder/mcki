@@ -6,6 +6,7 @@ import { useEnhancedCryptoNews } from '@/hooks/useEnhancedCryptoNews';
 import { useLiveEvents } from '@/hooks/useLiveEvents';
 import { motion } from 'framer-motion';
 import { getTimeAgo } from '@/utils/timeUtils';
+import { useToast } from '@/hooks/use-toast';
 
 interface NewsAlertsSectionProps {
   loading?: boolean;
@@ -14,6 +15,16 @@ interface NewsAlertsSectionProps {
 export const NewsAlertsSection = ({ loading = false }: NewsAlertsSectionProps) => {
   const { news: newsItems, loading: newsLoading, error, refetch: refetchNews } = useEnhancedCryptoNews();
   const { data: eventsData, loading: eventsLoading, refetch: refetchEvents } = useLiveEvents();
+  const { toast } = useToast();
+
+  const handleRefresh = () => {
+    refetchNews();
+    refetchEvents();
+    toast({
+      title: "News & Events Refreshed",
+      description: "Latest news and events have been updated successfully.",
+    });
+  };
 
 
   const getImpactColor = (impact: string) => {
@@ -71,10 +82,7 @@ export const NewsAlertsSection = ({ loading = false }: NewsAlertsSectionProps) =
       title="News & Market Alerts"
       subtitle="Latest cryptocurrency news and market updates"
       icon={<Newspaper className="h-6 w-6 text-primary" />}
-      onRefresh={() => {
-        refetchNews();
-        refetchEvents();
-      }}
+      onRefresh={handleRefresh}
       isLoading={newsLoading || eventsLoading}
       headerActions={
         <Link 
