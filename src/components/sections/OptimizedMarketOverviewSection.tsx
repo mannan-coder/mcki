@@ -9,6 +9,7 @@ import { VolumeCard } from '../market/VolumeCard';
 import { FearGreedIndex } from '../market/FearGreedIndex';
 import { useOptimizedMarketOverview } from '@/hooks/useOptimizedMarketOverview';
 import { useToast } from '@/hooks/use-toast';
+import { LastUpdated } from '@/components/common/LastUpdated';
 
 interface OptimizedMarketOverviewSectionProps {
   isDarkMode: boolean;
@@ -132,7 +133,12 @@ export const OptimizedMarketOverviewSection = ({ isDarkMode }: OptimizedMarketOv
     >
       <DataSection
         title="Market Overview"
-        subtitle="Real-time cryptocurrency market data and comprehensive analytics"
+        subtitle={
+          <div className="flex items-center space-x-4">
+            <span>Real-time cryptocurrency market data and comprehensive analytics</span>
+            {marketData && <LastUpdated timestamp={new Date().toISOString()} />}
+          </div>
+        }
         icon={<Activity className="h-6 w-6 text-primary" />}
         onRefresh={handleRefresh}
         isLoading={isLoading}

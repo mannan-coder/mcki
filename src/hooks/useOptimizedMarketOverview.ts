@@ -1,5 +1,5 @@
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 
 interface OptimizedMarketData {
@@ -56,7 +56,9 @@ interface OptimizedMarketData {
 }
 
 export const useOptimizedMarketOverview = () => {
-  return useQuery({
+  const queryClient = useQueryClient();
+  
+  const query = useQuery({
     queryKey: ['optimized-market-overview'],
     queryFn: async (): Promise<OptimizedMarketData> => {
       console.log('Fetching optimized market overview data...');
@@ -77,4 +79,15 @@ export const useOptimizedMarketOverview = () => {
     retry: 2,
     retryDelay: 1000,
   });
+
+  const refetch = async () => {
+    // Invalidate and refetch the query to get fresh data
+    await queryClient.invalidateQueries({ queryKey: ['optimized-market-overview'] });
+    return query.refetch();
+  };
+
+  return {
+    ...query,
+    refetch
+  };
 };

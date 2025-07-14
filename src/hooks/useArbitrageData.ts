@@ -44,13 +44,16 @@ export const useArbitrageData = () => {
       // Only set loading on initial fetch
       if (!data) setLoading(true);
       
+      console.log('Fetching arbitrage data...');
       const { data: result, error } = await supabase.functions.invoke('crypto-arbitrage');
       
       if (error) throw error;
       
+      console.log('Arbitrage data fetched successfully');
       setData(result);
       setError(null);
     } catch (err) {
+      console.error('Failed to fetch arbitrage data:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch arbitrage data');
     } finally {
       setLoading(false);

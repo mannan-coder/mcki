@@ -48,14 +48,19 @@ export const DataSection = ({
         <div className="flex items-center space-x-2">
           {headerActions}
           {onRefresh && (
-            <button
-              onClick={onRefresh}
-              disabled={isLoading}
-              className="flex items-center space-x-2 px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg transition-colors disabled:opacity-50 text-sm"
-            >
-              <RefreshCw size={14} className={isLoading ? 'animate-spin' : ''} />
-              <span>Refresh</span>
-            </button>
+            <>
+              <div className="text-xs text-muted-foreground">
+                Updated: {new Date().toLocaleTimeString()}
+              </div>
+              <button
+                onClick={onRefresh}
+                disabled={isLoading}
+                className="flex items-center space-x-2 px-3 py-1.5 bg-primary/10 hover:bg-primary/20 text-primary rounded-lg transition-colors disabled:opacity-50 text-sm"
+              >
+                <RefreshCw size={14} className={isLoading ? 'animate-spin' : ''} />
+                <span>Refresh</span>
+              </button>
+            </>
           )}
         </div>
       </div>
