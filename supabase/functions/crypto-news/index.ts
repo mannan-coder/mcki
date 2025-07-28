@@ -60,11 +60,15 @@ serve(async (req) => {
     try {
       console.log('Using NewsData.io API for live news...');
       
+      // Add timestamp to prevent caching and ensure fresh data
+      const timestamp = Date.now();
       const newsResponse = await fetch(
-        'https://newsdata.io/api/1/latest?apikey=pub_a19aad2b782c4a91ad05bd34e0bdfcb1&q=crypto%20OR%20bitcoin%20OR%20ethereum%20OR%20blockchain&language=en&category=business,technology&size=80',
+        `https://newsdata.io/api/1/latest?apikey=pub_a19aad2b782c4a91ad05bd34e0bdfcb1&q=crypto%20OR%20bitcoin%20OR%20ethereum%20OR%20blockchain&language=en&category=business,technology&size=100&_t=${timestamp}`,
         {
           headers: {
             'Accept': 'application/json',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
           },
         }
       );

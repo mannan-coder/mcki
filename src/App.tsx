@@ -3,8 +3,6 @@ import { Toaster } from '@/components/ui/sonner';
 import { lazy, Suspense, useEffect } from 'react';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { Skeleton } from '@/components/ui/skeleton';
-import { memoryCleanup, performanceMonitor } from '@/utils/performanceUtils';
-import { isProduction } from '@/config/production';
 
 // Lazy load pages for better performance
 const Index = lazy(() => import('@/pages/Index'));
@@ -51,20 +49,6 @@ const PageLoader = () => (
 );
 
 function App() {
-  // Performance monitoring for production
-  useEffect(() => {
-    if (isProduction()) {
-      performanceMonitor.measurePageLoad();
-      
-      // Periodic memory cleanup
-      const cleanupInterval = setInterval(() => {
-        memoryCleanup();
-        performanceMonitor.logMemoryUsage();
-      }, 5 * 60 * 1000); // Every 5 minutes
-      
-      return () => clearInterval(cleanupInterval);
-    }
-  }, []);
 
   return (
     <ErrorBoundary>
