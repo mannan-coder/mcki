@@ -446,3 +446,5 @@ export const UpcomingEventsSection = ({ loading = false }: UpcomingEventsSection
     </>
   );
 };
+
+export default UpcomingEventsSection;

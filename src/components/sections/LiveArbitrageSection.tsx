@@ -2,11 +2,11 @@
 import { motion } from 'framer-motion';
 import { TrendingUp } from 'lucide-react';
 import { DataSection } from '@/components/common/DataSection';
-import { LiveArbitrageOpportunitiesTable } from '@/components/arbitrage/LiveArbitrageOpportunitiesTable';
+import LiveArbitrageOpportunitiesTable from '@/components/arbitrage/LiveArbitrageOpportunitiesTable';
 import { useArbitrageData } from '@/hooks/useArbitrageData';
 
 const LiveArbitrageSection = () => {
-  const { data: arbitrageData, isLoading, error, refetch } = useArbitrageData();
+  const { data: arbitrageData, loading, error, refetch } = useArbitrageData();
 
   if (error) return null;
 
@@ -25,7 +25,7 @@ const LiveArbitrageSection = () => {
         <LiveArbitrageOpportunitiesTable
           isDarkMode={true}
           opportunities={arbitrageData?.arbitrageOpportunities || []}
-          loading={isLoading}
+          loading={loading}
           onRefresh={refetch}
           stats={{
             avgSpread: arbitrageData?.marketMaking?.avgSpread || 0

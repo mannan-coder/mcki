@@ -1,7 +1,7 @@
 
 import { Suspense, lazy } from 'react';
 import Layout from '@/components/Layout';
-import { TopMetricsBanner } from '@/components/TopMetricsBanner';
+import TopMetricsBanner from '@/components/TopMetricsBanner';
 import { OptimizedMarketOverviewSection } from '@/components/sections/OptimizedMarketOverviewSection';
 import { OptimizedLiveMarketSignalsSection } from '@/components/sections/OptimizedLiveMarketSignalsSection';
 import { OptimizedTopGainersLosers } from '@/components/sections/OptimizedTopGainersLosers';
@@ -65,7 +65,7 @@ const Index = () => {
         {/* Top Metrics Banner */}
         <section className="border-b border-border/40 bg-card/50 backdrop-blur-sm">
           <div className="container mx-auto px-4 py-2">
-            <TopMetricsBanner />
+            <TopMetricsBanner isDarkMode={true} />
           </div>
         </section>
 

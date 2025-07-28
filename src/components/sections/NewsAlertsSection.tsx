@@ -226,3 +226,5 @@ export const NewsAlertsSection = ({ loading = false }: NewsAlertsSectionProps) =
     </DataSection>
   );
 };
+
+export default NewsAlertsSection;

@@ -15,7 +15,7 @@ export const useOptimizedAPI = ({
   queryKey,
   queryFn,
   staleTime = 5 * 60 * 1000, // 5 minutes
-  refetchInterval = false,
+  refetchInterval,
   retry = 3,
   retryDelay = 1000,
   enabled = true

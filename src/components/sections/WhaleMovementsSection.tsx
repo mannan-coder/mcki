@@ -242,3 +242,5 @@ export const WhaleMovementsSection = ({ loading = false }: WhaleMovementsSection
     </DataSection>
   );
 };
+
+export default WhaleMovementsSection;
