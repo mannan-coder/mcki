@@ -70,7 +70,7 @@ const Layout = ({ children, showFooter = true, seoProps = {} }: LayoutProps) => 
   return (
     <ErrorBoundary>
       <EnhancedSEO {...seoProps} />
-      <AdSenseScript publisherId="ca-pub-YOUR_PUBLISHER_ID" />
+      <AdSenseScript />
       
       <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
         <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />

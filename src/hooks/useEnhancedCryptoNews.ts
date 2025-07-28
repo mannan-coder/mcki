@@ -5,12 +5,11 @@ interface EnhancedNewsItem {
   id: number;
   title: string;
   summary: string;
-  content?: string;
   category: string;
   time: string;
   impact: string;
-  sentiment?: number;
   source: string;
+  content?: string;
   author?: string;
   readTime?: string;
   tags?: string[];
@@ -18,6 +17,7 @@ interface EnhancedNewsItem {
   image?: string;
   views?: number;
   featured?: boolean;
+  sentiment?: number;
 }
 
 export const useEnhancedCryptoNews = () => {
@@ -27,155 +27,174 @@ export const useEnhancedCryptoNews = () => {
 
   const fetchNews = async () => {
     try {
-      // Only set loading on initial fetch for better UX
+      // Only show loading on initial fetch
       if (news.length === 0) setLoading(true);
       
       console.log('Fetching enhanced crypto news...');
-      const { data: result, error } = await supabase.functions.invoke('crypto-news');
+      
+      // Add timestamp to prevent caching and force fresh data
+      const timestamp = Date.now();
+      const { data: result, error } = await supabase.functions.invoke('crypto-news', {
+        body: { timestamp, forceRefresh: true }
+      });
       
       if (error) {
         console.error('Supabase function error:', error);
         throw error;
       }
       
-      console.log('Enhanced news fetched successfully:', result?.news?.length || 0, 'articles');
-      setNews(result.news || []);
-      setError(null);
+      if (result && Array.isArray(result)) {
+        console.log(`Enhanced news fetched successfully: ${result.length} articles`);
+        // Sort by time to get most recent first
+        const sortedNews = result.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
+        setNews(sortedNews);
+        setError(null);
+      } else {
+        console.log('No news data received, using fallback');
+        // Enhanced fallback data with more variety
+        const fallbackNews: EnhancedNewsItem[] = [
+          {
+            id: Date.now() + 1,
+            title: "Bitcoin Surges Past $70K as Institutional Adoption Accelerates",
+            summary: "Major financial institutions continue to embrace Bitcoin, driving unprecedented demand and price appreciation across global markets.",
+            category: "Bitcoin",
+            time: new Date(Date.now() - 30 * 60 * 1000).toISOString(), // 30 minutes ago
+            impact: "bullish",
+            source: "CryptoNews Today",
+            author: "Sarah Johnson",
+            readTime: "3 min read",
+            tags: ["Bitcoin", "Institutional", "Price", "Bullish"],
+            featured: true,
+            views: 15420,
+            sentiment: 85
+          },
+          {
+            id: Date.now() + 2,
+            title: "Ethereum Layer 2 Solutions See Record Transaction Volume",
+            summary: "Layer 2 scaling solutions process over 5 million transactions daily, significantly reducing costs and improving user experience.",
+            category: "Ethereum",
+            time: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(), // 1 hour ago
+            impact: "bullish",
+            source: "DeFi Weekly",
+            author: "Michael Chen",
+            readTime: "4 min read",
+            tags: ["Ethereum", "Layer 2", "Scaling", "DeFi"],
+            featured: true,
+            views: 12750,
+            sentiment: 78
+          },
+          {
+            id: Date.now() + 3,
+            title: "DeFi Protocol Launches Revolutionary Yield Farming Strategy",
+            summary: "New automated yield optimization protocol promises up to 25% APY while maintaining security through advanced smart contract architecture.",
+            category: "DeFi",
+            time: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
+            impact: "bullish",
+            source: "DeFi Pulse",
+            author: "Emily Rodriguez",
+            readTime: "5 min read",
+            tags: ["DeFi", "Yield Farming", "Innovation", "Smart Contracts"],
+            featured: false,
+            views: 8930,
+            sentiment: 82
+          },
+          {
+            id: Date.now() + 4,
+            title: "Central Bank Digital Currency Pilots Show Promising Results",
+            summary: "Multiple central banks report successful CBDC trials with improved transaction speeds and reduced costs compared to traditional systems.",
+            category: "Regulation",
+            time: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), // 3 hours ago
+            impact: "neutral",
+            source: "Financial Times",
+            author: "David Kim",
+            readTime: "6 min read",
+            tags: ["CBDC", "Central Banks", "Digital Currency", "Government"],
+            featured: false,
+            views: 11200,
+            sentiment: 65
+          },
+          {
+            id: Date.now() + 5,
+            title: "NFT Marketplace Introduces Utility-Based Trading Features",
+            summary: "Leading NFT platform launches new features allowing collectors to earn passive income through staking and governance participation.",
+            category: "NFT",
+            time: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(), // 4 hours ago
+            impact: "bullish",
+            source: "NFT Today",
+            author: "Lisa Zhang",
+            readTime: "4 min read",
+            tags: ["NFT", "Marketplace", "Utility", "Staking"],
+            featured: false,
+            views: 6780,
+            sentiment: 71
+          },
+          {
+            id: Date.now() + 6,
+            title: "Cryptocurrency Market Cap Reaches New All-Time High",
+            summary: "Total cryptocurrency market capitalization surpasses $3 trillion as altcoins experience significant growth alongside Bitcoin and Ethereum.",
+            category: "Market",
+            time: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // 5 hours ago
+            impact: "bullish",
+            source: "CoinMarketCap",
+            author: "Robert Taylor",
+            readTime: "3 min read",
+            tags: ["Market Cap", "Altcoins", "Growth", "ATH"],
+            featured: false,
+            views: 9450,
+            sentiment: 88
+          },
+          {
+            id: Date.now() + 7,
+            title: "Blockchain Technology Adoption Grows in Traditional Finance",
+            summary: "Major banks and financial institutions increasingly integrate blockchain solutions for faster settlements and improved transparency.",
+            category: "Adoption",
+            time: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(), // 6 hours ago
+            impact: "bullish",
+            source: "Bloomberg Crypto",
+            author: "Maria Santos",
+            readTime: "5 min read",
+            tags: ["Blockchain", "Traditional Finance", "Adoption", "Banks"],
+            featured: false,
+            views: 7320,
+            sentiment: 76
+          },
+          {
+            id: Date.now() + 8,
+            title: "Crypto Mining Efficiency Improves with Green Energy Initiatives",
+            summary: "Mining operations increasingly adopt renewable energy sources, reducing environmental impact while maintaining network security.",
+            category: "Mining",
+            time: new Date(Date.now() - 7 * 60 * 60 * 1000).toISOString(), // 7 hours ago
+            impact: "neutral",
+            source: "Green Mining Report",
+            author: "Alex Thompson",
+            readTime: "4 min read",
+            tags: ["Mining", "Green Energy", "Sustainability", "Environment"],
+            featured: false,
+            views: 5610,
+            sentiment: 68
+          }
+        ];
+        
+        setNews(fallbackNews);
+      }
     } catch (err) {
       console.error('Failed to fetch enhanced news:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch news');
       
-      // Enhanced fallback news data with more comprehensive content
-      setNews([
-        {
-          id: 1,
-          title: "Bitcoin ETF Drives Unprecedented Institutional Adoption Wave",
-          summary: "Financial institutions are accelerating Bitcoin adoption with ETF inflows exceeding $3B this month, marking a new era of mainstream acceptance.",
-          category: "Bitcoin",
-          time: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-          impact: "bullish",
-          source: "Financial Times",
-          image: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=400&h=300&fit=crop&auto=format",
-          author: "Sarah Johnson",
-          readTime: "6 min read",
-          tags: ["Bitcoin", "ETF", "Institutional", "Adoption"],
-          views: 15420,
-          featured: true,
-          sentiment: 85
-        },
-        {
-          id: 2,
-          title: "Ethereum Layer 2 Solutions Process Record 10M Daily Transactions",
-          summary: "Arbitrum and Polygon reach new milestones as Layer 2 adoption surges, with transaction costs falling below $0.001 per transaction.",
-          category: "Ethereum",
-          time: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-          impact: "bullish",
-          source: "The Block",
-          image: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=400&h=300&fit=crop&auto=format",
-          author: "Michael Chen",
-          readTime: "5 min read",
-          tags: ["Ethereum", "Layer 2", "Scaling", "Technology"],
-          views: 12350,
-          featured: true,
-          sentiment: 80
-        },
-        {
-          id: 3,
-          title: "Global Regulators Unite on Comprehensive Crypto Framework",
-          summary: "G20 nations announce coordinated cryptocurrency regulation approach, providing clarity for institutions and fostering innovation.",
-          category: "Regulation",
-          time: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
-          impact: "bullish",
-          source: "Reuters",
-          image: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400&h=300&fit=crop&auto=format",
-          author: "Emily Rodriguez",
-          readTime: "7 min read",
-          tags: ["Regulation", "G20", "Framework", "Compliance"],
-          views: 18750,
-          featured: true,
-          sentiment: 75
-        },
-        {
-          id: 4,
-          title: "DeFi Total Value Locked Surpasses $100 Billion Milestone",
-          summary: "Decentralized finance protocols achieve historic TVL milestone as yield farming and liquidity provision reach new peaks.",
-          category: "DeFi",
-          time: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
-          impact: "bullish",
-          source: "DeFi Pulse",
-          image: "https://images.unsplash.com/photo-1642790551116-18e150f248e3?w=400&h=300&fit=crop&auto=format",
-          author: "Alex Kim",
-          readTime: "4 min read",
-          tags: ["DeFi", "TVL", "Milestone", "Liquidity"],
-          views: 9850,
-          featured: false,
-          sentiment: 78
-        },
-        {
-          id: 5,
-          title: "NFT Gaming Revolution: Play-to-Earn Economy Tops $5 Billion",
-          summary: "Blockchain gaming reaches new heights with players earning significant income through NFT-based play-to-earn mechanisms.",
-          category: "NFT",
-          time: new Date(Date.now() - 10 * 60 * 60 * 1000).toISOString(),
-          impact: "bullish",
-          source: "GameFi Today",
-          image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&h=300&fit=crop&auto=format",
-          author: "Lisa Zhang",
-          readTime: "5 min read",
-          tags: ["NFT", "Gaming", "Play-to-Earn", "Blockchain"],
-          views: 11200,
-          featured: false,
-          sentiment: 82
-        },
-        {
-          id: 6,
-          title: "Central Bank Digital Currencies Gain Momentum Globally",
-          summary: "Over 100 countries exploring CBDCs as digital payment infrastructure evolves, with pilot programs showing promising results.",
-          category: "Technology",
-          time: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
-          impact: "neutral",
-          source: "Bank for International Settlements",
-          image: "https://images.unsplash.com/photo-1559526324-593bc073d938?w=400&h=300&fit=crop&auto=format",
-          author: "Roberto Silva",
-          readTime: "6 min read",
-          tags: ["CBDC", "Central Banks", "Digital Currency", "Payments"],
-          views: 7650,
-          featured: false,
-          sentiment: 65
-        },
-        {
-          id: 7,
-          title: "Web3 Social Media Platforms See 300% User Growth",
-          summary: "Decentralized social networks attract millions of users seeking censorship resistance and data ownership control.",
-          category: "Technology",
-          time: new Date(Date.now() - 14 * 60 * 60 * 1000).toISOString(),
-          impact: "bullish",
-          source: "Web3 Insights",
-          image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=300&fit=crop&auto=format",
-          author: "David Park",
-          readTime: "4 min read",
-          tags: ["Web3", "Social Media", "Decentralization", "Users"],
-          views: 8900,
-          featured: false,
-          sentiment: 73
-        },
-        {
-          id: 8,
-          title: "Cryptocurrency Mining Transitions to Renewable Energy",
-          summary: "Bitcoin mining operations report 58% renewable energy usage as industry addresses environmental concerns.",
-          category: "Technology",
-          time: new Date(Date.now() - 16 * 60 * 60 * 1000).toISOString(),
-          impact: "bullish",
-          source: "Green Crypto Report",
-          image: "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=400&h=300&fit=crop&auto=format",
-          author: "Maria Thompson",
-          readTime: "5 min read",
-          tags: ["Mining", "Renewable Energy", "Environment", "Sustainability"],
-          views: 6750,
-          featured: false,
-          sentiment: 70
-        }
-      ]);
+      // Provide minimal fallback
+      if (news.length === 0) {
+        setNews([
+          {
+            id: 1,
+            title: "Cryptocurrency Market Update",
+            summary: "Stay tuned for the latest cryptocurrency market developments and analysis.",
+            category: "Market",
+            time: new Date().toISOString(),
+            impact: "neutral",
+            source: "MCKI News"
+          }
+        ]);
+      }
     } finally {
       setLoading(false);
     }
@@ -184,8 +203,8 @@ export const useEnhancedCryptoNews = () => {
   useEffect(() => {
     fetchNews();
     
-    // Refresh news every 5 minutes for better performance while maintaining freshness
-    const interval = setInterval(fetchNews, 5 * 60 * 1000);
+    // Refresh news every 2 minutes for fresher content
+    const interval = setInterval(fetchNews, 2 * 60 * 1000);
     
     return () => clearInterval(interval);
   }, []);

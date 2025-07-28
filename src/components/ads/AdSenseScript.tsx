@@ -1,36 +1,53 @@
 
 import { useEffect } from 'react';
 
-interface AdSenseScriptProps {
-  publisherId: string;
+declare global {
+  interface Window {
+    adsbygoogle: any[];
+  }
 }
 
-const AdSenseScript = ({ publisherId }: AdSenseScriptProps) => {
+const AdSenseScript = () => {
   useEffect(() => {
-    // Only load in production
-    if (process.env.NODE_ENV !== 'production') return;
-    
-    const script = document.createElement('script');
-    script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${publisherId}`;
-    script.async = true;
-    script.crossOrigin = 'anonymous';
-    
-    // Add error handling
-    script.onerror = () => {
-      console.error('Failed to load AdSense script');
-    };
-    
-    document.head.appendChild(script);
-    
-    // Initialize adsbygoogle array
-    if (!window.adsbygoogle) {
-      window.adsbygoogle = [];
+    // Only load AdSense script once
+    if (document.querySelector('script[src*="adsbygoogle.js"]')) {
+      return;
     }
-    
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, [publisherId]);
+
+    try {
+      // Create and load Google AdSense script
+      const script = document.createElement('script');
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID';
+      document.head.appendChild(script);
+
+      // Initialize adsbygoogle array
+      window.adsbygoogle = window.adsbygoogle || [];
+
+      // Initialize Auto Ads
+      script.onload = () => {
+        try {
+          // Enable Auto Ads - this will automatically place ads throughout the site
+          window.adsbygoogle.push({
+            google_ad_client: "ca-pub-YOUR_PUBLISHER_ID",
+            enable_page_level_ads: true,
+            overlays: {bottom: true}
+          });
+          console.log('Google Auto Ads initialized');
+        } catch (error) {
+          console.error('Auto Ads initialization error:', error);
+        }
+      };
+
+      script.onerror = () => {
+        console.error('Failed to load AdSense script');
+      };
+
+    } catch (error) {
+      console.error('AdSense script loading error:', error);
+    }
+  }, []);
 
   return null;
 };

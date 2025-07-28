@@ -77,8 +77,13 @@ serve(async (req) => {
         const newsData = await newsResponse.json();
         console.log(`Fetched ${newsData.results?.length || 0} articles from NewsData.io`);
         
+        // Sort by date to get most recent first
+        const sortedResults = newsData.results?.sort((a: any, b: any) => 
+          new Date(b.pubDate || Date.now()).getTime() - new Date(a.pubDate || Date.now()).getTime()
+        ) || [];
+        
         // Enhanced news processing with better categorization
-        news = newsData.results?.map((article: any, index: number) => {
+        news = sortedResults?.map((article: any, index: number) => {
           const sentiment = analyzeSentiment(`${article.title} ${article.description || ''}`);
           
           // Better category detection

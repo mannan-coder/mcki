@@ -6,7 +6,7 @@ import { OptimizedMarketOverviewSection } from '@/components/sections/OptimizedM
 import { OptimizedLiveMarketSignalsSection } from '@/components/sections/OptimizedLiveMarketSignalsSection';
 import { OptimizedTopGainersLosers } from '@/components/sections/OptimizedTopGainersLosers';
 import { Toaster } from '@/components/ui/sonner';
-import AdPlacement from '@/components/ads/AdPlacement';
+import AutoAdPlacement from '@/components/ads/AutoAdPlacement';
 
 // Lazy load heavy components
 const LazyArbitrageSection = lazy(() => import('@/components/sections/LiveArbitrageSection'));
@@ -57,11 +57,6 @@ const Index = () => {
   return (
     <Layout seoProps={seoProps}>
       <div className="min-h-screen">
-        {/* Header Ad */}
-        <div className="container mx-auto px-4 py-2">
-          <AdPlacement position="header" className="mb-4" />
-        </div>
-
         {/* Top Metrics Banner */}
         <section className="border-b border-border/40 bg-card/50 backdrop-blur-sm">
           <div className="container mx-auto px-4 py-2">
@@ -69,57 +64,50 @@ const Index = () => {
           </div>
         </section>
 
-        <div className="container mx-auto px-4 py-6">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Main Content */}
-            <div className="lg:col-span-8 space-y-8">
-              {/* Market Overview */}
-              <OptimizedMarketOverviewSection isDarkMode={true} />
+        <section className="container mx-auto px-4 py-8">
+          <OptimizedMarketOverviewSection isDarkMode={true} />
+        </section>
 
-              {/* Content Ad */}
-              <AdPlacement position="content" className="my-8" />
+        {/* Auto Ad Placement after Market Overview */}
+        <AutoAdPlacement position="after-section" sectionName="market-overview" className="container mx-auto px-4 py-4" />
 
-              {/* Live Market Signals */}
-              <OptimizedLiveMarketSignalsSection />
+        {/* Live Market Signals Section */}
+        <section className="container mx-auto px-4 py-8">
+          <OptimizedLiveMarketSignalsSection />
+        </section>
 
-              {/* Top Gainers & Losers */}
-              <OptimizedTopGainersLosers />
+        {/* Auto Ad Placement after Market Signals */}
+        <AutoAdPlacement position="after-section" sectionName="market-signals" className="container mx-auto px-4 py-4" />
 
-              {/* Lazy loaded sections */}
-              <Suspense fallback={<div className="h-64 bg-muted animate-pulse rounded-lg" />}>
-                <LazyArbitrageSection />
-              </Suspense>
+        {/* Top Gainers/Losers Section */}
+        <section className="container mx-auto px-4 py-8 border-t border-border/40">
+          <OptimizedTopGainersLosers />
+        </section>
 
-              <Suspense fallback={<div className="h-64 bg-muted animate-pulse rounded-lg" />}>
-                <LazyNewsSection />
-              </Suspense>
+        {/* Lazy loaded sections */}
+        <section className="container mx-auto px-4 py-8 border-t border-border/40">
+          <Suspense fallback={<div className="h-64 bg-muted animate-pulse rounded-lg" />}>
+            <LazyNewsSection />
+          </Suspense>
+        </section>
 
-              <Suspense fallback={<div className="h-64 bg-muted animate-pulse rounded-lg" />}>
-                <LazyWhaleSection />
-              </Suspense>
+        {/* Auto Ad Placement after News */}
+        <AutoAdPlacement position="after-section" sectionName="news-alerts" className="container mx-auto px-4 py-4" />
 
-              <Suspense fallback={<div className="h-64 bg-muted animate-pulse rounded-lg" />}>
-                <LazyEventsSection />
-              </Suspense>
-            </div>
+        <section className="container mx-auto px-4 py-8 border-t border-border/40">
+          <Suspense fallback={<div className="h-64 bg-muted animate-pulse rounded-lg" />}>
+            <LazyWhaleSection />
+          </Suspense>
+        </section>
 
-            {/* Sidebar */}
-            <div className="lg:col-span-4 space-y-6">
-              {/* Sidebar Ad */}
-              <AdPlacement position="sidebar" className="sticky top-4" />
-            </div>
-          </div>
-        </div>
+        <section className="container mx-auto px-4 py-8 border-t border-border/40">
+          <Suspense fallback={<div className="h-64 bg-muted animate-pulse rounded-lg" />}>
+            <LazyEventsSection />
+          </Suspense>
+        </section>
 
-        {/* Footer Ad */}
-        <div className="container mx-auto px-4 py-4 border-t border-border/40">
-          <AdPlacement position="footer" />
-        </div>
-
-        {/* Mobile Banner Ad */}
-        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border/40">
-          <AdPlacement position="mobile-banner" />
-        </div>
+        {/* Auto Ad Placement after Events */}
+        <AutoAdPlacement position="after-section" sectionName="events" className="container mx-auto px-4 py-4" />
       </div>
       
       <Toaster />
