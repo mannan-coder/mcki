@@ -1,3 +1,4 @@
+
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
@@ -6,23 +7,64 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import App from './App.tsx'
 import './index.css'
 
-// Production-optimized React Query configuration for Hostinger
+// Production-optimized React Query configuration
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 1, // Reduce retries
-      retryDelay: attemptIndex => Math.min(3000 * 2 ** attemptIndex, 60000),
-      staleTime: 10 * 60 * 1000, // 10 minutes - longer cache
-      gcTime: 30 * 60 * 1000, // 30 minutes - keep data longer
+      retry: (failureCount, error) => {
+        // Don't retry on 429 (rate limit) errors
+        if (error?.message?.includes('429')) return false;
+        return failureCount < 2;
+      },
+      retryDelay: attemptIndex => Math.min(2000 * Math.pow(2, attemptIndex), 30000),
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
       refetchOnWindowFocus: false,
-      refetchOnReconnect: false, // Disable to prevent crashes
-      refetchOnMount: false, // Only fetch when absolutely necessary
+      refetchOnReconnect: true,
+      refetchOnMount: true,
+      // Enable structural sharing for better performance
+      structuralSharing: true,
     },
     mutations: {
-      retry: 0, // No retries for mutations
+      retry: 1,
+      retryDelay: 1000,
     },
   },
 })
+
+// Preload critical resources
+const preloadCriticalResources = () => {
+  // Preload fonts
+  const fontLink = document.createElement('link');
+  fontLink.rel = 'preload';
+  fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
+  fontLink.as = 'style';
+  document.head.appendChild(fontLink);
+  
+  // Preload critical API endpoints
+  const apiPreload = document.createElement('link');
+  apiPreload.rel = 'dns-prefetch';
+  apiPreload.href = 'https://api.coingecko.com';
+  document.head.appendChild(apiPreload);
+};
+
+// Initialize performance monitoring
+const initPerformanceMonitoring = () => {
+  // Web Vitals reporting
+  if ('web-vitals' in window) {
+    import('web-vitals').then(({ getCLS, getFID, getFCP, getLCP, getTTFB }) => {
+      getCLS(console.log);
+      getFID(console.log);
+      getFCP(console.log);
+      getLCP(console.log);
+      getTTFB(console.log);
+    });
+  }
+};
+
+// Initialize app
+preloadCriticalResources();
+initPerformanceMonitoring();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

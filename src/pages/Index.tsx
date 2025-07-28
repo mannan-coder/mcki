@@ -1,83 +1,128 @@
+
 import { Suspense, lazy } from 'react';
 import Layout from '@/components/Layout';
+import { TopMetricsBanner } from '@/components/TopMetricsBanner';
 import { OptimizedMarketOverviewSection } from '@/components/sections/OptimizedMarketOverviewSection';
-import { OptimizedTopGainersLosers } from '@/components/sections/OptimizedTopGainersLosers';
 import { OptimizedLiveMarketSignalsSection } from '@/components/sections/OptimizedLiveMarketSignalsSection';
-import { TopVolumeSection } from '@/components/sections/TopVolumeSection';
-import { NewsAlertsSection } from '@/components/sections/NewsAlertsSection';
-import { InsightsEventsSection } from '@/components/sections/InsightsEventsSection';
-import { CalculatorsSuiteSection } from '@/components/sections/CalculatorsSuiteSection';
-import { WhaleMovementsSection } from '@/components/sections/WhaleMovementsSection';
-import { MarketSentimentSection } from '@/components/sections/MarketSentimentSection';
-import { useOptimizedMarketOverview } from '@/hooks/useOptimizedMarketOverview';
+import { OptimizedTopGainersLosers } from '@/components/sections/OptimizedTopGainersLosers';
+import { Toaster } from '@/components/ui/sonner';
+import AdPlacement from '@/components/ads/AdPlacement';
 
-// Lazy load heavy components for better performance
-const ArbitrageDashboard = lazy(() => import('@/components/ArbitrageDashboard'));
-const OnChainAnalysis = lazy(() => import('@/components/OnChainAnalysis'));
+// Lazy load heavy components
+const LazyArbitrageSection = lazy(() => import('@/components/sections/LiveArbitrageSection'));
+const LazyNewsSection = lazy(() => import('@/components/sections/NewsAlertsSection'));
+const LazyWhaleSection = lazy(() => import('@/components/sections/WhaleMovementsSection'));
+const LazyEventsSection = lazy(() => import('@/components/sections/UpcomingEventsSection'));
 
 const Index = () => {
-  const { data: marketData, isLoading } = useOptimizedMarketOverview();
+  const seoProps = {
+    title: "MCKI - Professional Crypto Intelligence Platform",
+    description: "Real-time cryptocurrency market analysis, arbitrage opportunities, and trading intelligence. Get live crypto data, market insights, and professional trading tools.",
+    keywords: [
+      "cryptocurrency trading",
+      "crypto arbitrage",
+      "bitcoin analysis",
+      "ethereum trading",
+      "blockchain analytics",
+      "crypto market data",
+      "trading signals",
+      "crypto intelligence",
+      "market analysis tools",
+      "cryptocurrency insights"
+    ],
+    canonical: "https://mcki.online",
+    structuredData: {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "MCKI - Professional Crypto Intelligence",
+      "description": "Real-time cryptocurrency market analysis, arbitrage opportunities, and trading intelligence platform",
+      "url": "https://mcki.online",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Web Browser",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Real-time crypto market data",
+        "Arbitrage opportunity detection",
+        "Trading signal analysis",
+        "Market sentiment tracking",
+        "Portfolio management tools"
+      ]
+    }
+  };
 
   return (
-    <Layout showFooter={true}>
+    <Layout seoProps={seoProps}>
       <div className="min-h-screen">
-        {/* Hero Section - Minimal and Clean */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-4">
-          <div className="text-center">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 text-foreground">
-              <span className="bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-transparent">
-                Professional Crypto Analytics
-              </span>
-            </h1>
-            <p className="text-base sm:text-lg max-w-3xl mx-auto text-muted-foreground">
-              Real-time market data, arbitrage opportunities, and comprehensive cryptocurrency analytics
-            </p>
+        {/* Header Ad */}
+        <div className="container mx-auto px-4 py-2">
+          <AdPlacement position="header" className="mb-4" />
+        </div>
+
+        {/* Top Metrics Banner */}
+        <section className="border-b border-border/40 bg-card/50 backdrop-blur-sm">
+          <div className="container mx-auto px-4 py-2">
+            <TopMetricsBanner />
+          </div>
+        </section>
+
+        <div className="container mx-auto px-4 py-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* Main Content */}
+            <div className="lg:col-span-8 space-y-8">
+              {/* Market Overview */}
+              <OptimizedMarketOverviewSection isDarkMode={true} />
+
+              {/* Content Ad */}
+              <AdPlacement position="content" className="my-8" />
+
+              {/* Live Market Signals */}
+              <OptimizedLiveMarketSignalsSection />
+
+              {/* Top Gainers & Losers */}
+              <OptimizedTopGainersLosers />
+
+              {/* Lazy loaded sections */}
+              <Suspense fallback={<div className="h-64 bg-muted animate-pulse rounded-lg" />}>
+                <LazyArbitrageSection />
+              </Suspense>
+
+              <Suspense fallback={<div className="h-64 bg-muted animate-pulse rounded-lg" />}>
+                <LazyNewsSection />
+              </Suspense>
+
+              <Suspense fallback={<div className="h-64 bg-muted animate-pulse rounded-lg" />}>
+                <LazyWhaleSection />
+              </Suspense>
+
+              <Suspense fallback={<div className="h-64 bg-muted animate-pulse rounded-lg" />}>
+                <LazyEventsSection />
+              </Suspense>
+            </div>
+
+            {/* Sidebar */}
+            <div className="lg:col-span-4 space-y-6">
+              {/* Sidebar Ad */}
+              <AdPlacement position="sidebar" className="sticky top-4" />
+            </div>
           </div>
         </div>
 
-        {/* Main Content Sections */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 pb-8">
-          {/* Optimized Market Overview Section */}
-          <OptimizedMarketOverviewSection isDarkMode={false} />
-          
-          {/* Optimized Top Gainers & Losers Section */}
-          <OptimizedTopGainersLosers loading={isLoading && !marketData} />
-          
-          {/* Optimized Live Market Signals Section */}
-          <OptimizedLiveMarketSignalsSection loading={isLoading && !marketData} />
-          
-          {/* Top Volume Section */}
-          <TopVolumeSection 
-            coins={marketData?.coins || []} 
-            loading={isLoading && !marketData}
-          />
-          
-          {/* Arbitrage Opportunities Section */}
-          <Suspense fallback={<div className="h-96 animate-pulse bg-muted/20 rounded-lg" />}>
-            <ArbitrageDashboard isDarkMode={false} />
-          </Suspense>
-          
-          {/* Whale Movements Section */}
-          <WhaleMovementsSection loading={isLoading && !marketData} />
-          
-          {/* Market Sentiment Section */}
-          <MarketSentimentSection loading={isLoading && !marketData} />
-          
-          {/* On-Chain Analysis Section */}
-          <Suspense fallback={<div className="h-96 animate-pulse bg-muted/20 rounded-lg" />}>
-            <OnChainAnalysis loading={isLoading && !marketData} />
-          </Suspense>
-          
-          {/* News & Market Alerts Section */}
-          <NewsAlertsSection loading={isLoading && !marketData} />
-          
-          {/* Merged Insights, Alerts & Events Section */}
-          <InsightsEventsSection loading={isLoading && !marketData} />
-          
-          {/* Finance Calculators Suite Section */}
-          <CalculatorsSuiteSection loading={isLoading && !marketData} />
+        {/* Footer Ad */}
+        <div className="container mx-auto px-4 py-4 border-t border-border/40">
+          <AdPlacement position="footer" />
+        </div>
+
+        {/* Mobile Banner Ad */}
+        <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background border-t border-border/40">
+          <AdPlacement position="mobile-banner" />
         </div>
       </div>
+      
+      <Toaster />
     </Layout>
   );
 };

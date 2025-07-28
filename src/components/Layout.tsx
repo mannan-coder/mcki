@@ -1,21 +1,44 @@
-import { useState, useEffect } from 'react';
+
+import { useState, useEffect, Suspense } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import AdSenseScript from '@/components/ads/AdSenseScript';
+import EnhancedSEO from '@/components/seo/EnhancedSEO';
+import { ErrorBoundary } from '@/components/common/ErrorBoundary';
+import { performanceMonitor, preloadCriticalResources } from '@/utils/performanceOptimization';
 
 interface LayoutProps {
   children: React.ReactNode;
   showFooter?: boolean;
+  seoProps?: {
+    title?: string;
+    description?: string;
+    keywords?: string[];
+    canonical?: string;
+    structuredData?: object;
+    breadcrumbs?: Array<{
+      name: string;
+      url: string;
+    }>;
+  };
 }
 
-const Layout = ({ children, showFooter = true }: LayoutProps) => {
+const Layout = ({ children, showFooter = true, seoProps = {} }: LayoutProps) => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
     if (typeof window !== 'undefined') {
       return document.documentElement.classList.contains('dark');
     }
-    return true; // Default to dark mode
+    return true;
   });
 
   useEffect(() => {
+    // Performance monitoring
+    performanceMonitor.measurePageLoad();
+    performanceMonitor.measureLCP();
+    
+    // Preload critical resources
+    preloadCriticalResources();
+    
     // Set dark mode as default on first load
     if (!document.documentElement.classList.contains('dark') && !document.documentElement.classList.contains('light')) {
       document.documentElement.classList.add('dark');
@@ -45,17 +68,28 @@ const Layout = ({ children, showFooter = true }: LayoutProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
-      <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />
+    <ErrorBoundary>
+      <EnhancedSEO {...seoProps} />
+      <AdSenseScript publisherId="ca-pub-YOUR_PUBLISHER_ID" />
       
-      <Navbar isDarkMode={isDarkMode} setIsDarkMode={handleThemeToggle} />
-      
-      <main className="relative z-10">
-        {children}
-      </main>
-      
-      {showFooter && <Footer isDarkMode={isDarkMode} />}
-    </div>
+      <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
+        <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />
+        
+        <Navbar isDarkMode={isDarkMode} setIsDarkMode={handleThemeToggle} />
+        
+        <main className="relative z-10">
+          <Suspense fallback={
+            <div className="flex items-center justify-center min-h-screen">
+              <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary"></div>
+            </div>
+          }>
+            {children}
+          </Suspense>
+        </main>
+        
+        {showFooter && <Footer isDarkMode={isDarkMode} />}
+      </div>
+    </ErrorBoundary>
   );
 };
 

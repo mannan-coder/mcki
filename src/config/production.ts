@@ -1,27 +1,42 @@
-// Production configuration for Hostinger deployment
+
+// Production configuration for optimal performance
 export const PRODUCTION_CONFIG = {
-  // API settings
-  API_RATE_LIMIT_DELAY: 10000, // 10 seconds between API calls
-  MAX_CONCURRENT_REQUESTS: 2, // Limit concurrent requests
-  REQUEST_TIMEOUT: 30000, // 30 seconds timeout
+  // API settings - optimized for high traffic
+  API_RATE_LIMIT_DELAY: 2000, // 2 seconds between API calls
+  MAX_CONCURRENT_REQUESTS: 3, // Increased for better user experience
+  REQUEST_TIMEOUT: 15000, // 15 seconds timeout
   
-  // Data fetching limits
-  DEFAULT_COIN_LIMIT: 50, // Reduced from 100
-  MARKET_PAGE_LIMIT: 100, // Reduced from 500
-  HOMEPAGE_LIMIT: 20, // Minimal for homepage
+  // Data fetching limits - optimized for performance
+  DEFAULT_COIN_LIMIT: 100, // Increased for better UX
+  MARKET_PAGE_LIMIT: 250, // Balanced for performance
+  HOMEPAGE_LIMIT: 50, // Optimal for homepage
   
-  // Cache settings
-  CACHE_DURATION: 15 * 60 * 1000, // 15 minutes
-  STALE_TIME: 10 * 60 * 1000, // 10 minutes
+  // Cache settings - longer cache for better performance
+  CACHE_DURATION: 5 * 60 * 1000, // 5 minutes
+  STALE_TIME: 3 * 60 * 1000, // 3 minutes
   
   // Performance settings
-  DISABLE_PREFETCH: true,
-  DISABLE_BACKGROUND_REFETCH: true,
-  DISABLE_NOTIFICATIONS: true,
+  DISABLE_PREFETCH: false, // Enable prefetch for better UX
+  DISABLE_BACKGROUND_REFETCH: false, // Enable for fresh data
+  DISABLE_NOTIFICATIONS: false, // Enable for user engagement
   
   // Error handling
-  MAX_RETRIES: 1,
-  RETRY_DELAY: 5000,
+  MAX_RETRIES: 2, // Reduced for faster error handling
+  RETRY_DELAY: 2000, // 2 seconds
+  
+  // SEO and performance
+  ENABLE_SERVICE_WORKER: true,
+  ENABLE_LAZY_LOADING: true,
+  ENABLE_IMAGE_OPTIMIZATION: true,
+  ENABLE_COMPRESSION: true,
+  
+  // AdSense configuration
+  ADSENSE_CLIENT_ID: "ca-pub-YOUR_PUBLISHER_ID", // Replace with actual ID
+  ENABLE_ADS: true,
+  
+  // Analytics
+  ENABLE_ANALYTICS: true,
+  GOOGLE_ANALYTICS_ID: "GA_MEASUREMENT_ID", // Replace with actual ID
 };
 
 // Check if running in production
@@ -29,4 +44,23 @@ export const isProduction = () => {
   return window.location.hostname !== 'localhost' && 
          window.location.hostname !== '127.0.0.1' &&
          !window.location.hostname.includes('lovableproject.com');
+};
+
+// Performance optimization flags
+export const PERFORMANCE_CONFIG = {
+  // Lazy loading
+  INTERSECTION_OBSERVER_THRESHOLD: 0.1,
+  INTERSECTION_OBSERVER_ROOT_MARGIN: '50px',
+  
+  // Image optimization
+  WEBP_SUPPORT: true,
+  LAZY_LOAD_IMAGES: true,
+  
+  // Code splitting
+  CHUNK_SIZE_LIMIT: 500000, // 500KB
+  
+  // Bundle optimization
+  TREE_SHAKING: true,
+  MINIFICATION: true,
+  COMPRESSION: true,
 };
