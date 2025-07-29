@@ -31,7 +31,7 @@ export const PRODUCTION_CONFIG = {
   ENABLE_COMPRESSION: true,
   
   // AdSense configuration
-  ADSENSE_CLIENT_ID: "ca-pub-YOUR_PUBLISHER_ID", // Replace with actual ID
+  ADSENSE_CLIENT_ID: "ca-pub-5532318785992990",
   ENABLE_ADS: true,
   
   // Analytics

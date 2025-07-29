@@ -19,7 +19,7 @@ const AdSenseScript = () => {
       const script = document.createElement('script');
       script.async = true;
       script.crossOrigin = 'anonymous';
-      script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID';
+      script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5532318785992990';
       document.head.appendChild(script);
 
       // Initialize adsbygoogle array
@@ -30,7 +30,7 @@ const AdSenseScript = () => {
         try {
           // Enable Auto Ads - this will automatically place ads throughout the site
           window.adsbygoogle.push({
-            google_ad_client: "ca-pub-YOUR_PUBLISHER_ID",
+            google_ad_client: "ca-pub-5532318785992990",
             enable_page_level_ads: true,
             overlays: {bottom: true}
           });
