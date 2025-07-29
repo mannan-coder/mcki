@@ -1,8 +1,10 @@
+import { useMemo } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, ExternalLink } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { ChartContainer } from '@/components/ui/chart';
 import { AreaChart, Area } from 'recharts';
+import { generateUniqueId } from '@/utils/idGenerator';
 
 interface MarketCapCardProps {
   isDarkMode: boolean;
@@ -11,6 +13,7 @@ interface MarketCapCardProps {
 }
 
 export const MarketCapCard = ({ isDarkMode, totalMarketCap, marketCapValue }: MarketCapCardProps) => {
+  const gradientId = useMemo(() => generateUniqueId('marketCapGradient'), []);
   const navigate = useNavigate();
 
   const chartData = [
@@ -64,7 +67,7 @@ export const MarketCapCard = ({ isDarkMode, totalMarketCap, marketCapValue }: Ma
             margin={{ top: 2, right: 2, left: 2, bottom: 2 }}
           >
             <defs>
-              <linearGradient id="marketCapMiniGradient" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
                 <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
               </linearGradient>
@@ -74,7 +77,7 @@ export const MarketCapCard = ({ isDarkMode, totalMarketCap, marketCapValue }: Ma
               dataKey="value"
               stroke="#10b981"
               strokeWidth={2}
-              fill="url(#marketCapMiniGradient)"
+              fill={`url(#${gradientId})`}
               dot={false}
             />
           </AreaChart>

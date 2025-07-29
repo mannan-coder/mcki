@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { generateChartIds } from "@/utils/idGenerator";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, BarChart, Bar, ComposedChart } from 'recharts';
 import { TrendingUp, TrendingDown, Calendar, Download, ArrowLeft } from 'lucide-react';
@@ -9,6 +11,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 const VolumeDetails = () => {
+  const chartIds = useMemo(() => generateChartIds('volumeDetails'), []);
   const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [timeframe, setTimeframe] = useState('7d');
@@ -224,13 +227,13 @@ const VolumeDetails = () => {
                     dataKey="spotVolume" 
                     fill="#3b82f6"
                     name="Spot Volume"
-                    stackId="volume"
+                    stackId={chartIds.stack}
                   />
                   <Bar 
                     dataKey="derivativesVolume" 
                     fill="#8b5cf6"
                     name="Derivatives Volume"
-                    stackId="volume"
+                    stackId={chartIds.stack}
                   />
                   <Line 
                     type="monotone" 

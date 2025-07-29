@@ -21,6 +21,7 @@ import {
 } from 'recharts';
 import { formatPrice, formatVolume } from '@/utils/priceFormatters';
 import { usePriceHistory, TimeframeType } from '@/hooks/usePriceHistory';
+import { generateChartIds } from '@/utils/idGenerator';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -98,6 +99,7 @@ const Candlestick = (props: any) => {
 };
 
 export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChartProps) => {
+  const chartIds = useMemo(() => generateChartIds('tradingViewChart'), []);
   const [selectedTimeframe, setSelectedTimeframe] = useState<TimeframeType>('7d');
   const [chartType, setChartType] = useState<'line' | 'candlestick'>('line');
   const [showVolume, setShowVolume] = useState(true);
@@ -539,7 +541,7 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
                   />
                   
                   <YAxis 
-                    yAxisId="price"
+                    yAxisId={chartIds.priceAxis}
                     orientation="right"
                     domain={['dataMin * 0.999', 'dataMax * 1.001']}
                     tickFormatter={(value) => formatPrice(value, true)}
@@ -552,7 +554,7 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
                   
                   {showVolume && (
                     <YAxis 
-                      yAxisId="volume"
+                      yAxisId={chartIds.volumeAxis}
                       orientation="left"
                       domain={[0, 'dataMax * 1.2']}
                       tickFormatter={(value) => formatVolume(value).replace('$', '')}
@@ -575,7 +577,7 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
 
                   {/* Current Price Reference Line */}
                   <ReferenceLine 
-                    yAxisId="price"
+                    yAxisId={chartIds.priceAxis}
                     y={coin.currentPrice} 
                     stroke="hsl(var(--primary))" 
                     strokeDasharray="4 4" 
@@ -590,7 +592,7 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
                   {/* Volume Bars */}
                   {showVolume && (
                     <Bar
-                      yAxisId="volume"
+                      yAxisId={chartIds.volumeAxis}
                       dataKey="volume"
                       fill="hsl(var(--muted-foreground))"
                       opacity={0.3}
@@ -609,7 +611,7 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
                   {/* Moving Average */}
                   {showMA && (
                     <Line
-                      yAxisId="price"
+                      yAxisId={chartIds.priceAxis}
                       type="monotone"
                       dataKey="ma7"
                       stroke="hsl(var(--primary))"
@@ -623,7 +625,7 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
                   {/* Main Price Chart */}
                   {chartType === 'line' ? (
                     <Line
-                      yAxisId="price"
+                      yAxisId={chartIds.priceAxis}
                       type="monotone"
                       dataKey="price"
                       stroke={lineColor}
@@ -639,7 +641,7 @@ export const TradingViewChart = ({ coin, loading: coinLoading }: TradingViewChar
                   ) : (
                     // Candlestick representation using custom component
                     <Bar
-                      yAxisId="price"
+                      yAxisId={chartIds.priceAxis}
                       dataKey="high"
                       shape={<Candlestick />}
                     />

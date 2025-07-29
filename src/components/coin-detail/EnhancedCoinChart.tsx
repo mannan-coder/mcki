@@ -16,6 +16,7 @@ import {
 } from 'recharts';
 import { formatPrice, formatVolume } from '@/utils/priceFormatters';
 import { usePriceHistory, TimeframeType } from '@/hooks/usePriceHistory';
+import { generateChartIds } from '@/utils/idGenerator';
 import { TrendingUp, TrendingDown, BarChart3 } from 'lucide-react';
 
 interface EnhancedCoinChartProps {
@@ -41,6 +42,7 @@ const timeframes: { value: TimeframeType; label: string }[] = [
 ];
 
 export const EnhancedCoinChart = ({ coin, loading: coinLoading }: EnhancedCoinChartProps) => {
+  const chartIds = useMemo(() => generateChartIds('enhancedCoinChart'), []);
   const [selectedTimeframe, setSelectedTimeframe] = useState<TimeframeType>('7d');
   const [isMobile, setIsMobile] = useState(false);
   
@@ -263,7 +265,7 @@ export const EnhancedCoinChart = ({ coin, loading: coinLoading }: EnhancedCoinCh
                       interval="preserveStartEnd"
                     />
                     <YAxis 
-                      yAxisId="price"
+                      yAxisId={chartIds.priceAxis}
                       orientation="right"
                       tickFormatter={(value) => formatPrice(value, true)}
                       tick={{ fontSize: isMobile ? 10 : 12 }}
@@ -272,7 +274,7 @@ export const EnhancedCoinChart = ({ coin, loading: coinLoading }: EnhancedCoinCh
                       width={isMobile ? 60 : 80}
                     />
                     <YAxis 
-                      yAxisId="volume"
+                      yAxisId={chartIds.volumeAxis}
                       orientation="left"
                       tickFormatter={(value) => formatVolume(value).replace('$', '')}
                       tick={{ fontSize: isMobile ? 9 : 11 }}
@@ -293,7 +295,7 @@ export const EnhancedCoinChart = ({ coin, loading: coinLoading }: EnhancedCoinCh
 
                     {/* Current Price Reference Line */}
                     <ReferenceLine 
-                      yAxisId="price"
+                      yAxisId={chartIds.priceAxis}
                       y={coin.currentPrice} 
                       stroke="hsl(var(--primary))" 
                       strokeDasharray="4 4" 
@@ -302,7 +304,7 @@ export const EnhancedCoinChart = ({ coin, loading: coinLoading }: EnhancedCoinCh
 
                     {/* Volume Bars */}
                     <Bar
-                      yAxisId="volume"
+                      yAxisId={chartIds.volumeAxis}
                       dataKey="volume"
                       fill="hsl(var(--muted-foreground))"
                       opacity={0.3}
@@ -311,7 +313,7 @@ export const EnhancedCoinChart = ({ coin, loading: coinLoading }: EnhancedCoinCh
 
                     {/* Price Line */}
                     <Line
-                      yAxisId="price"
+                      yAxisId={chartIds.priceAxis}
                       type="monotone"
                       dataKey="price"
                       stroke={lineColor}

@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { generateChartIds } from "@/utils/idGenerator";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, AreaChart, Area, ComposedChart, Bar } from 'recharts';
 import { TrendingUp, TrendingDown, Calendar, Download, ArrowLeft } from 'lucide-react';
@@ -9,6 +11,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 const MarketCapDetails = () => {
+  const chartIds = useMemo(() => generateChartIds('marketCapDetails'), []);
   const navigate = useNavigate();
   const [isDarkMode, setIsDarkMode] = useState(true);
   const [timeframe, setTimeframe] = useState('7d');
@@ -205,7 +208,7 @@ const MarketCapDetails = () => {
               <ResponsiveContainer width="100%" height="100%">
                 <ComposedChart data={chartData}>
                   <defs>
-                    <linearGradient id="marketCapGradient" x1="0" y1="0" x2="0" y2="1">
+                    <linearGradient id={chartIds.gradient} x1="0" y1="0" x2="0" y2="1">
                       <stop offset="5%" stopColor="#10b981" stopOpacity={0.3}/>
                       <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                     </linearGradient>
@@ -219,14 +222,15 @@ const MarketCapDetails = () => {
                     }}
                   />
                   <YAxis 
-                    yAxisId="left"
+                    yAxisId={chartIds.leftAxis}
                     tickFormatter={formatValue}
                     domain={['dataMin * 0.95', 'dataMax * 1.05']}
                   />
                   <YAxis 
-                    yAxisId="right"
+                    yAxisId={chartIds.rightAxis}
                     orientation="right"
                     tickFormatter={formatValue}
+                    domain={[0, 'dataMax * 1.1']}
                   />
                   <ChartTooltip 
                     content={<ChartTooltipContent />}
@@ -234,16 +238,16 @@ const MarketCapDetails = () => {
                     formatter={(value: any, name: string) => [formatValue(value), name]}
                   />
                   <Area 
-                    yAxisId="left"
+                    yAxisId={chartIds.leftAxis}
                     type="monotone" 
                     dataKey="value" 
                     stroke="#10b981" 
                     strokeWidth={2}
-                    fill="url(#marketCapGradient)"
+                    fill={`url(#${chartIds.gradient})`}
                     name="Market Cap"
                   />
                   <Bar 
-                    yAxisId="right"
+                    yAxisId={chartIds.rightAxis}
                     dataKey="volume" 
                     fill="#3b82f6"
                     name="Volume"

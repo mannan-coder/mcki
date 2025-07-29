@@ -1,15 +1,18 @@
 
+import { useMemo } from 'react';
 import { Calendar, AlertTriangle, TrendingUp, Eye, Target, ArrowUpRight, ArrowDownRight, ExternalLink } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from '@/components/ui/chart';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
 import { useUpcomingEvents } from '@/hooks/useUpcomingEvents';
+import { generateChartIds } from '@/utils/idGenerator';
 
 interface InsightsAlertsProps {
   isDarkMode: boolean;
 }
 
 const InsightsAlerts = ({ isDarkMode }: InsightsAlertsProps) => {
+  const chartIds = useMemo(() => generateChartIds('insightsAlerts'), []);
   const { events: tomorrowEvents, loading: eventsLoading } = useUpcomingEvents();
 
   // Liquidation Alerts Data
@@ -456,11 +459,11 @@ const InsightsAlerts = ({ isDarkMode }: InsightsAlertsProps) => {
               <BarChart data={sniperData}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="time" />
-                <YAxis yAxisId="left" />
-                <YAxis yAxisId="right" orientation="right" />
+                <YAxis yAxisId={chartIds.leftAxis} />
+                <YAxis yAxisId={chartIds.rightAxis} orientation="right" />
                 <ChartTooltip content={<ChartTooltipContent />} />
-                <Bar yAxisId="left" dataKey="listings" fill="#10b981" />
-                <Bar yAxisId="right" dataKey="gains" fill="#f59e0b" />
+                <Bar yAxisId={chartIds.leftAxis} dataKey="listings" fill="#10b981" />
+                <Bar yAxisId={chartIds.rightAxis} dataKey="gains" fill="#f59e0b" />
               </BarChart>
             </ChartContainer>
           </div>
