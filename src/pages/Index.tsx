@@ -84,6 +84,19 @@ const Index = () => {
           <OptimizedTopGainersLosers />
         </section>
 
+        {/* Auto Ad Placement after Top Gainers */}
+        <AutoAdPlacement position="after-section" sectionName="top-gainers" className="container mx-auto px-4 py-4" />
+
+        {/* Arbitrage Section */}
+        <section className="container mx-auto px-4 py-8 border-t border-border/40">
+          <Suspense fallback={<div className="h-64 bg-muted animate-pulse rounded-lg" />}>
+            <LazyArbitrageSection />
+          </Suspense>
+        </section>
+
+        {/* Auto Ad Placement after Arbitrage */}
+        <AutoAdPlacement position="after-section" sectionName="arbitrage" className="container mx-auto px-4 py-4" />
+
         {/* Lazy loaded sections */}
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
           <Suspense fallback={<div className="h-64 bg-muted animate-pulse rounded-lg" />}>
