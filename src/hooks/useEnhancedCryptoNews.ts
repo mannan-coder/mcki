@@ -32,7 +32,28 @@ export const useEnhancedCryptoNews = () => {
       
       console.log('Fetching enhanced crypto news...');
       
-      // Add timestamp to prevent caching and force fresh data
+      // First try to get news directly from database
+      const { data: dbNews, error: dbError } = await supabase
+        .from('news_articles')
+        .select('*')
+        .order('time', { ascending: false })
+        .limit(50);
+      
+      if (dbNews && dbNews.length > 0 && !dbError) {
+        console.log(`Found ${dbNews.length} articles in database`);
+        // Transform database format to match expected format
+        const transformedNews = dbNews.map(article => ({
+          ...article,
+          image: article.image_url,
+          readTime: article.read_time
+        }));
+        setNews(transformedNews);
+        setError(null);
+        return;
+      }
+      
+      // Fallback to API function which will handle database storage
+      console.log('No recent news in database, fetching from API...');
       const timestamp = Date.now();
       const { data: result, error } = await supabase.functions.invoke('crypto-news', {
         body: { timestamp, forceRefresh: true }
@@ -47,7 +68,13 @@ export const useEnhancedCryptoNews = () => {
         console.log(`Enhanced news fetched successfully: ${result.length} articles`);
         // Sort by time to get most recent first
         const sortedNews = result.sort((a, b) => new Date(b.time).getTime() - new Date(a.time).getTime());
-        setNews(sortedNews);
+        // Transform to match expected format
+        const transformedNews = sortedNews.map(article => ({
+          ...article,
+          image: article.image_url,
+          readTime: article.read_time
+        }));
+        setNews(transformedNews);
         setError(null);
       } else {
         console.log('No news data received, using fallback');

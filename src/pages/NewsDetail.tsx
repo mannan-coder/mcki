@@ -32,19 +32,46 @@ const NewsDetail = () => {
       try {
         setLoading(true);
         
+        // First try to get the article directly from the database
+        const { data: dbArticle, error: dbError } = await supabase
+          .from('news_articles')
+          .select('*')
+          .eq('id', parseInt(id || '0'))
+          .single();
+        
+        if (dbArticle && !dbError) {
+          console.log('Article found in database');
+          setArticle({
+            ...dbArticle,
+            image: dbArticle.image_url || '',
+            content: dbArticle.content || dbArticle.summary || 'Article content not available.',
+            tags: dbArticle.tags || [],
+            readTime: dbArticle.read_time || '3 min read'
+          });
+          return;
+        }
+        
+        // Fallback to API if not found in database
+        console.log('Article not found in database, trying API...');
         const { data: result, error: fetchError } = await supabase.functions.invoke('crypto-news');
         
         if (fetchError) throw fetchError;
         
-        const newsData = result?.news || [];
-        const foundArticle = newsData.find((news: NewsArticle) => news.id.toString() === id);
+        const newsData = Array.isArray(result) ? result : (result?.news || []);
+        const foundArticle = newsData.find((news: any) => news.id.toString() === id);
         
         if (foundArticle) {
-          setArticle(foundArticle);
+          setArticle({
+            ...foundArticle,
+            image: foundArticle.image_url || foundArticle.image,
+            content: foundArticle.content || foundArticle.summary || 'Article content not available.',
+            tags: foundArticle.tags || []
+          });
         } else {
           setError('Article not found');
         }
       } catch (err) {
+        console.error('Error fetching article:', err);
         setError(err instanceof Error ? err.message : 'Failed to fetch article');
       } finally {
         setLoading(false);
