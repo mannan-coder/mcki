@@ -5,6 +5,9 @@ import TopMetricsBanner from '@/components/TopMetricsBanner';
 import { OptimizedMarketOverviewSection } from '@/components/sections/OptimizedMarketOverviewSection';
 import { OptimizedLiveMarketSignalsSection } from '@/components/sections/OptimizedLiveMarketSignalsSection';
 import { OptimizedTopGainersLosers } from '@/components/sections/OptimizedTopGainersLosers';
+import { MarketSentimentSection } from '@/components/sections/MarketSentimentSection';
+import { CalculatorsSuiteSection } from '@/components/sections/CalculatorsSuiteSection';
+import { InsightsEventsSection } from '@/components/sections/InsightsEventsSection';
 import { Toaster } from '@/components/ui/sonner';
 import AutoAdPlacement from '@/components/ads/AutoAdPlacement';
 
@@ -114,9 +117,21 @@ const Index = () => {
         </section>
 
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
+          <MarketSentimentSection />
+        </section>
+
+        <section className="container mx-auto px-4 py-8 border-t border-border/40">
+          <InsightsEventsSection />
+        </section>
+
+        <section className="container mx-auto px-4 py-8 border-t border-border/40">
           <Suspense fallback={<div className="h-64 bg-muted animate-pulse rounded-lg" />}>
             <LazyEventsSection />
           </Suspense>
+        </section>
+
+        <section className="container mx-auto px-4 py-8 border-t border-border/40">
+          <CalculatorsSuiteSection />
         </section>
 
         {/* Auto Ad Placement after Events */}
