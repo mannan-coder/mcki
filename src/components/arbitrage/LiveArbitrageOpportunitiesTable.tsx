@@ -138,13 +138,13 @@ const LiveArbitrageOpportunitiesTable = ({
           </div>
         </div>
         <div className="flex items-center space-x-3">
-          <button className="px-4 py-2 bg-warning/10 text-warning border border-warning/20 rounded-lg hover:bg-warning/20 transition-colors text-sm font-medium">
+          <button className="px-4 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-lg hover:from-orange-600 hover:to-yellow-600 transition-all duration-200 text-sm font-medium shadow-lg">
             View Full Analysis
           </button>
           <button
             onClick={handleRefresh}
             disabled={loading}
-            className="flex items-center space-x-2 px-4 py-2 bg-primary/10 text-primary border border-primary/20 rounded-lg hover:bg-primary/20 transition-colors disabled:opacity-50 text-sm font-medium"
+            className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-lg hover:from-orange-600 hover:to-yellow-600 transition-all duration-200 disabled:opacity-50 text-sm font-medium shadow-lg"
           >
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
             <span>Refresh</span>
@@ -258,7 +258,7 @@ const LiveArbitrageOpportunitiesTable = ({
                     </div>
                   </td>
                   <td className="px-4 py-4 text-center">
-                    <button className="px-3 py-1.5 bg-warning text-warning-foreground rounded-lg hover:bg-warning/90 transition-colors text-sm font-medium">
+                    <button className="px-3 py-1.5 bg-gradient-to-r from-orange-500 to-yellow-500 text-white rounded-lg hover:from-orange-600 hover:to-yellow-600 transition-all duration-200 text-sm font-medium shadow-md">
                       Trade
                     </button>
                   </td>

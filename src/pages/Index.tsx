@@ -60,6 +60,18 @@ const Index = () => {
   return (
     <Layout seoProps={seoProps}>
       <div className="min-h-screen">
+        {/* Hero Section */}
+        <section className="relative bg-gradient-to-br from-background via-background to-muted/20 border-b border-border/40">
+          <div className="container mx-auto px-4 py-16 text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
+              Professional Crypto Analytics
+            </h1>
+            <p className="text-lg md:text-xl text-muted-foreground max-w-4xl mx-auto mb-8">
+              Real-time market data, arbitrage opportunities, and comprehensive cryptocurrency analytics
+            </p>
+          </div>
+        </section>
+
         {/* Top Metrics Banner */}
         <section className="border-b border-border/40 bg-card/50 backdrop-blur-sm">
           <div className="container mx-auto px-4 py-2">
