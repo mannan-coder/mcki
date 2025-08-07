@@ -8,9 +8,12 @@ import { OptimizedTopGainersLosers } from '@/components/sections/OptimizedTopGai
 import { MarketSentimentSection } from '@/components/sections/MarketSentimentSection';
 import { CalculatorsSuiteSection } from '@/components/sections/CalculatorsSuiteSection';
 import { InsightsEventsSection } from '@/components/sections/InsightsEventsSection';
+import { TopVolumeSection } from '@/components/sections/TopVolumeSection';
 import OnChainAnalysis from '@/components/OnChainAnalysis';
+import LivePricesAcrossExchanges from '@/components/arbitrage/LivePricesAcrossExchanges';
 import { Toaster } from '@/components/ui/sonner';
 import AutoAdPlacement from '@/components/ads/AutoAdPlacement';
+import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 
 // Lazy load heavy components
 const LazyArbitrageSection = lazy(() => import('@/components/sections/LiveArbitrageSection'));
@@ -19,6 +22,7 @@ const LazyWhaleSection = lazy(() => import('@/components/sections/WhaleMovements
 const LazyEventsSection = lazy(() => import('@/components/sections/UpcomingEventsSection'));
 
 const Index = () => {
+  const { data: cryptoData, isLoading: cryptoLoading } = useOptimizedCryptoData();
   const seoProps = {
     title: "MCKI - Professional Crypto Intelligence Platform",
     description: "Real-time cryptocurrency market analysis, arbitrage opportunities, and trading intelligence. Get live crypto data, market insights, and professional trading tools.",
@@ -103,9 +107,14 @@ const Index = () => {
         {/* Auto Ad Placement after Top Gainers */}
         <AutoAdPlacement position="after-section" sectionName="top-gainers" className="container mx-auto px-4 py-4" />
 
-        {/* On-Chain Analysis Section */}
+        {/* Highest Volume Section */}
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
-          <OnChainAnalysis />
+          <TopVolumeSection coins={cryptoData?.coins || []} loading={cryptoLoading} />
+        </section>
+
+        {/* Live Exchange Data Section */}
+        <section className="container mx-auto px-4 py-8 border-t border-border/40">
+          <LivePricesAcrossExchanges />
         </section>
 
         {/* Arbitrage Section */}
@@ -113,6 +122,11 @@ const Index = () => {
           <Suspense fallback={<div className="h-64 bg-muted animate-pulse rounded-lg" />}>
             <LazyArbitrageSection />
           </Suspense>
+        </section>
+
+        {/* On-Chain Analysis Section - Moved after arbitrage */}
+        <section className="container mx-auto px-4 py-8 border-t border-border/40">
+          <OnChainAnalysis />
         </section>
 
         {/* Auto Ad Placement after Arbitrage */}
