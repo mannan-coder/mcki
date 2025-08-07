@@ -107,19 +107,19 @@ const LiveArbitrageOpportunitiesTable = ({
   };
 
   return (
-    <div className="w-full bg-gray-900 rounded-lg p-6">
+    <div className="w-full bg-background/95 backdrop-blur-sm rounded-xl border border-border/40 p-6 shadow-2xl">
       {/* Header Section */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between mb-6 space-y-4 lg:space-y-0">
         <div>
           <div className="flex items-center space-x-3 mb-2">
-            <div className="p-2 bg-orange-500/20 rounded-lg">
-              <TrendingUp className="h-6 w-6 text-orange-400" />
+            <div className="p-2 bg-primary/20 rounded-lg">
+              <TrendingUp className="h-6 w-6 text-primary" />
             </div>
-            <h2 className="text-2xl font-bold text-white">
+            <h2 className="text-2xl font-bold text-foreground">
               Live Arbitrage Opportunities
             </h2>
           </div>
-          <p className="text-gray-400 mb-3">
+          <p className="text-muted-foreground mb-3">
             Real-time profit opportunities across exchanges - Updated every 15 seconds
           </p>
           <div className="flex flex-wrap items-center gap-4 text-sm">
@@ -130,22 +130,22 @@ const LiveArbitrageOpportunitiesTable = ({
               </span>
             </div>
             <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-              <span className="text-orange-400 font-medium">
+              <div className="w-2 h-2 bg-primary rounded-full"></div>
+              <span className="text-primary font-medium">
                 Avg: {stats.avgSpread?.toFixed(2)}%
               </span>
             </div>
           </div>
         </div>
         <div className="flex items-center space-x-3">
-          <button className="px-4 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-black rounded-lg hover:from-orange-600 hover:to-yellow-600 transition-all duration-200 text-sm font-medium shadow-lg flex items-center space-x-2">
+          <button className="px-4 py-2 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-lg hover:from-primary/90 hover:to-primary/70 transition-all duration-200 text-sm font-medium shadow-lg flex items-center space-x-2">
             <BarChart3 size={16} />
             <span>Analysis</span>
           </button>
           <button
             onClick={handleRefresh}
             disabled={loading}
-            className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-black rounded-lg hover:from-orange-600 hover:to-yellow-600 transition-all duration-200 disabled:opacity-50 text-sm font-medium shadow-lg"
+            className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-lg hover:from-primary/90 hover:to-primary/70 transition-all duration-200 disabled:opacity-50 text-sm font-medium shadow-lg"
           >
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
             <span>Refresh</span>
@@ -154,45 +154,45 @@ const LiveArbitrageOpportunitiesTable = ({
       </div>
 
       {/* Table Section */}
-      <div className="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+      <div className="bg-card/50 backdrop-blur-sm rounded-lg border border-border/40 overflow-hidden shadow-lg">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-700/50">
-              <tr className="border-b border-gray-600">
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
+            <thead className="bg-muted/50">
+              <tr className="border-b border-border/40">
+                <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground uppercase tracking-wider">
                   #
                 </th>
-                <th className="px-4 py-3 text-left text-sm font-medium text-gray-300 uppercase tracking-wider">
+                <th className="px-4 py-3 text-left text-sm font-medium text-muted-foreground uppercase tracking-wider">
                   Asset
                 </th>
-                <th className="px-4 py-3 text-center text-sm font-medium text-gray-300 uppercase tracking-wider">
+                <th className="px-4 py-3 text-center text-sm font-medium text-muted-foreground uppercase tracking-wider">
                   Buy From
                 </th>
-                <th className="px-2 py-3 text-center text-sm font-medium text-gray-300">
+                <th className="px-2 py-3 text-center text-sm font-medium text-muted-foreground">
                   →
                 </th>
-                <th className="px-4 py-3 text-center text-sm font-medium text-gray-300 uppercase tracking-wider">
+                <th className="px-4 py-3 text-center text-sm font-medium text-muted-foreground uppercase tracking-wider">
                   Sell To
                 </th>
-                <th className="px-4 py-3 text-center text-sm font-medium text-gray-300 uppercase tracking-wider">
+                <th className="px-4 py-3 text-center text-sm font-medium text-muted-foreground uppercase tracking-wider">
                   Spread
                 </th>
-                <th className="px-4 py-3 text-center text-sm font-medium text-gray-300 uppercase tracking-wider">
+                <th className="px-4 py-3 text-center text-sm font-medium text-muted-foreground uppercase tracking-wider">
                   Profit
                 </th>
-                <th className="px-4 py-3 text-center text-sm font-medium text-gray-300 uppercase tracking-wider">
+                <th className="px-4 py-3 text-center text-sm font-medium text-muted-foreground uppercase tracking-wider">
                   Updated
                 </th>
-                <th className="px-4 py-3 text-center text-sm font-medium text-gray-300 uppercase tracking-wider">
+                <th className="px-4 py-3 text-center text-sm font-medium text-muted-foreground uppercase tracking-wider">
                   Action
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-gray-800 divide-y divide-gray-600">
+            <tbody className="bg-card/30 divide-y divide-border/30">
               {sortedOpportunities.map((opportunity, index) => (
-                <tr key={`${opportunity.pair}-${opportunity.buyExchange}-${opportunity.sellExchange}-${index}`} className="hover:bg-gray-700/50 transition-colors">
+                <tr key={`${opportunity.pair}-${opportunity.buyExchange}-${opportunity.sellExchange}-${index}`} className="hover:bg-muted/20 transition-colors">
                   <td className="px-4 py-4">
-                    <div className="text-sm font-medium text-yellow-400">
+                    <div className="text-sm font-medium text-primary">
                       {index + 1}
                     </div>
                   </td>
@@ -208,10 +208,10 @@ const LiveArbitrageOpportunitiesTable = ({
                         }}
                       />
                       <div>
-                        <div className="text-sm font-semibold text-white">
+                        <div className="text-sm font-semibold text-foreground">
                           {opportunity.pair?.split('/')[0] || 'Unknown'}
                         </div>
-                        <div className="text-xs text-gray-400">
+                        <div className="text-xs text-muted-foreground">
                           {opportunity.pair || 'N/A'}
                         </div>
                       </div>
@@ -222,44 +222,41 @@ const LiveArbitrageOpportunitiesTable = ({
                       <span className="text-sm text-green-400 font-medium">
                         {opportunity.buyExchange}
                       </span>
-                      <span className="text-xs text-gray-400">
+                      <span className="text-xs text-muted-foreground">
                         ${opportunity.buyPrice.toLocaleString()}
                       </span>
                     </div>
                   </td>
                   <td className="px-2 py-4 text-center">
-                    <div className="text-gray-400">→</div>
+                    <div className="text-muted-foreground">→</div>
                   </td>
                   <td className="px-4 py-4 text-center">
                     <div className="inline-flex flex-col">
                       <span className="text-sm text-red-400 font-medium">
                         {opportunity.sellExchange}
                       </span>
-                      <span className="text-xs text-gray-400">
+                      <span className="text-xs text-muted-foreground">
                         ${opportunity.sellPrice.toLocaleString()}
                       </span>
                     </div>
                   </td>
                   <td className="px-4 py-4 text-center">
-                    <div className="text-sm font-semibold text-yellow-400">
-                      {opportunity.spread}%
+                    <div className="text-sm font-semibold text-primary">
+                      {opportunity.spread.toFixed(2)}%
                     </div>
                   </td>
                   <td className="px-4 py-4 text-center">
                     <div className="text-sm font-semibold text-green-400">
                       ${opportunity.profitPotential.toFixed(2)}
                     </div>
-                    <div className="text-xs text-gray-400">
-                      ${(opportunity.volume24h / 1000000).toFixed(1)}M vol
-                    </div>
                   </td>
                   <td className="px-4 py-4 text-center">
-                    <div className="text-xs text-gray-400">
+                    <div className="text-xs text-muted-foreground">
                       {getTimeAgo(opportunity.lastUpdated)}
                     </div>
                   </td>
                   <td className="px-4 py-4 text-center">
-                    <button className="px-3 py-1.5 bg-gradient-to-r from-orange-500 to-yellow-500 text-black rounded-lg hover:from-orange-600 hover:to-yellow-600 transition-all duration-200 text-sm font-medium shadow-md">
+                    <button className="px-3 py-1.5 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground rounded-lg hover:from-primary/90 hover:to-primary/70 transition-all duration-200 text-sm font-medium shadow-md">
                       Trade
                     </button>
                   </td>
