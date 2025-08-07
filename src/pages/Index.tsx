@@ -8,6 +8,7 @@ import { OptimizedTopGainersLosers } from '@/components/sections/OptimizedTopGai
 import { MarketSentimentSection } from '@/components/sections/MarketSentimentSection';
 import { CalculatorsSuiteSection } from '@/components/sections/CalculatorsSuiteSection';
 import { InsightsEventsSection } from '@/components/sections/InsightsEventsSection';
+import OnChainAnalysis from '@/components/OnChainAnalysis';
 import { Toaster } from '@/components/ui/sonner';
 import AutoAdPlacement from '@/components/ads/AutoAdPlacement';
 
@@ -62,11 +63,11 @@ const Index = () => {
       <div className="min-h-screen">
         {/* Hero Section */}
         <section className="relative bg-gradient-to-br from-background via-background to-muted/20 border-b border-border/40">
-          <div className="container mx-auto px-4 py-16 text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-foreground mb-6">
+          <div className="container mx-auto px-4 py-12 sm:py-16 text-center">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-4 sm:mb-6 tracking-tight">
               Professional Crypto Analytics
             </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-4xl mx-auto mb-8">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4">
               Real-time market data, arbitrage opportunities, and comprehensive cryptocurrency analytics
             </p>
           </div>
@@ -101,6 +102,11 @@ const Index = () => {
 
         {/* Auto Ad Placement after Top Gainers */}
         <AutoAdPlacement position="after-section" sectionName="top-gainers" className="container mx-auto px-4 py-4" />
+
+        {/* On-Chain Analysis Section */}
+        <section className="container mx-auto px-4 py-8 border-t border-border/40">
+          <OnChainAnalysis />
+        </section>
 
         {/* Arbitrage Section */}
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
