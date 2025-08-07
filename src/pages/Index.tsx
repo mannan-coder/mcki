@@ -112,11 +112,6 @@ const Index = () => {
           <TopVolumeSection coins={cryptoData?.coins || []} loading={cryptoLoading} />
         </section>
 
-        {/* Live Exchange Data Section */}
-        <section className="container mx-auto px-4 py-8 border-t border-border/40">
-          <LivePricesAcrossExchanges />
-        </section>
-
         {/* Arbitrage Section */}
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
           <Suspense fallback={<div className="h-64 bg-muted animate-pulse rounded-lg" />}>
@@ -124,7 +119,12 @@ const Index = () => {
           </Suspense>
         </section>
 
-        {/* On-Chain Analysis Section - Moved after arbitrage */}
+        {/* Live Exchange Data Section - Moved after arbitrage */}
+        <section className="container mx-auto px-4 py-8 border-t border-border/40">
+          <LivePricesAcrossExchanges />
+        </section>
+
+        {/* On-Chain Analysis Section */}
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
           <OnChainAnalysis />
         </section>
