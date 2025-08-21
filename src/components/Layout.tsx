@@ -6,6 +6,7 @@ import AdSenseScript from '@/components/ads/AdSenseScript';
 import SEOOptimizer from '@/components/seo/SEOOptimizer';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { performanceMonitor, preloadCriticalResources } from '@/utils/performanceOptimization';
+import { StaticGenerator } from '@/components/seo/StaticGenerator';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -70,6 +71,7 @@ const Layout = ({ children, showFooter = true, seoProps = {} }: LayoutProps) => 
   return (
       <ErrorBoundary>
         <SEOOptimizer {...seoProps} />
+        <StaticGenerator />
         <AdSenseScript />
       
       <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
