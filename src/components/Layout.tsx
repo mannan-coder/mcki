@@ -3,7 +3,7 @@ import { useState, useEffect, Suspense } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import AdSenseScript from '@/components/ads/AdSenseScript';
-import EnhancedSEO from '@/components/seo/EnhancedSEO';
+import SEOOptimizer from '@/components/seo/SEOOptimizer';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { performanceMonitor, preloadCriticalResources } from '@/utils/performanceOptimization';
 
@@ -68,9 +68,9 @@ const Layout = ({ children, showFooter = true, seoProps = {} }: LayoutProps) => 
   };
 
   return (
-    <ErrorBoundary>
-      <EnhancedSEO {...seoProps} />
-      <AdSenseScript />
+      <ErrorBoundary>
+        <SEOOptimizer {...seoProps} />
+        <AdSenseScript />
       
       <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
         <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />
