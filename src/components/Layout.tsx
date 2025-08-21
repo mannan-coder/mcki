@@ -46,6 +46,15 @@ const Layout = ({ children, showFooter = true, seoProps = {} }: LayoutProps) => 
       setIsDarkMode(true);
     }
 
+    // Signal when page is ready for static generation
+    const timer = setTimeout(() => {
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('render-complete'));
+        // Also add a marker for SSG detection
+        document.body.setAttribute('data-ssg-ready', 'true');
+      }
+    }, 2000); // Wait 2s for content to load
+
     const handleThemeChange = () => {
       setIsDarkMode(document.documentElement.classList.contains('dark'));
     };
@@ -56,7 +65,10 @@ const Layout = ({ children, showFooter = true, seoProps = {} }: LayoutProps) => 
       attributeFilter: ['class']
     });
 
-    return () => observer.disconnect();
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    };
   }, []);
 
   const handleThemeToggle = (newMode: boolean) => {

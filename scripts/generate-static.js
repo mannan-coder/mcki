@@ -31,7 +31,12 @@ async function generateStaticPages() {
   
   const browser = await puppeteer.launch({
     headless: true,
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
+    args: [
+      '--no-sandbox', 
+      '--disable-setuid-sandbox',
+      '--disable-web-security',
+      '--disable-features=VizDisplayCompositor'
+    ]
   });
   
   const distDir = path.join(process.cwd(), 'dist');
@@ -42,6 +47,17 @@ async function generateStaticPages() {
     process.exit(1);
   }
 
+  console.log('📁 Starting local server...');
+  
+  // Start a simple local server to serve the built files
+  const { spawn } = require('child_process');
+  const server = spawn('npx', ['serve', '-s', 'dist', '-p', '3000'], {
+    stdio: 'pipe'
+  });
+  
+  // Wait for server to start
+  await new Promise(resolve => setTimeout(resolve, 3000));
+
   for (const route of routes) {
     try {
       console.log(`📄 Generating: ${route}`);
@@ -51,12 +67,31 @@ async function generateStaticPages() {
       // Set viewport for consistent rendering
       await page.setViewport({ width: 1200, height: 800 });
       
-      // Navigate to the route
-      const url = `file://${path.join(distDir, 'index.html')}`;
-      await page.goto(url, { waitUntil: 'networkidle0' });
+      // Navigate to the route on local server
+      const url = `http://localhost:3000${route}`;
+      await page.goto(url, { 
+        waitUntil: 'networkidle0',
+        timeout: 30000 
+      });
       
-      // Wait for React to hydrate and render
-      await page.waitForTimeout(2000);
+      // Wait for React to hydrate and render dynamic content
+      await page.waitForSelector('body', { timeout: 10000 });
+      await page.waitForTimeout(5000);
+      
+      // Wait for custom render event if it exists
+      try {
+        await page.evaluate(() => {
+          return new Promise((resolve) => {
+            if (document.readyState === 'complete') {
+              resolve();
+            } else {
+              window.addEventListener('load', resolve);
+            }
+          });
+        });
+      } catch (e) {
+        console.log('⚠️ Custom render event not found, continuing...');
+      }
       
       // Get the rendered HTML
       const html = await page.content();
@@ -88,7 +123,13 @@ async function generateStaticPages() {
   }
   
   await browser.close();
+  
+  // Kill the server
+  server.kill();
+  
   console.log('🎉 Static generation complete!');
+  console.log('📋 Generated static HTML files for all routes');
+  console.log('🔍 Check dist/ folder for prerendered content');
 }
 
 // Run if called directly
