@@ -8,28 +8,45 @@ interface AdPlacementProps {
 }
 
 const AdPlacement = memo(({ position, className = '' }: AdPlacementProps) => {
-  const [isVisible, setIsVisible] = useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [shouldHide, setShouldHide] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Check if ad loaded after a delay
-    const timer = setTimeout(() => {
+    // Check if ad loaded with multiple checks
+    const checkAdLoad = () => {
       if (containerRef.current) {
         const adElement = containerRef.current.querySelector('.adsbygoogle');
         if (adElement) {
           const hasContent = adElement.children.length > 0 || 
-                           adElement.innerHTML.trim().length > 0 ||
-                           (adElement as HTMLElement).offsetHeight > 50;
+                           (adElement as HTMLElement).getAttribute('data-ad-status') === 'filled' ||
+                           (adElement as HTMLElement).offsetHeight > 100;
           
-          if (!hasContent) {
-            setIsVisible(false);
+          if (hasContent) {
+            setIsLoaded(true);
           }
         }
       }
-    }, 2000);
+    };
 
-    return () => clearTimeout(timer);
-  }, []);
+    // Check immediately
+    checkAdLoad();
+    
+    // Check again after short delay
+    const timer1 = setTimeout(checkAdLoad, 500);
+    
+    // Final check - if still not loaded, hide it
+    const timer2 = setTimeout(() => {
+      if (!isLoaded) {
+        setShouldHide(true);
+      }
+    }, 3000);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, [isLoaded]);
   // Ad slot ID - Banner-ads-Horizontal
   const adSlots = {
     header: '8636350170',
@@ -64,19 +81,23 @@ const AdPlacement = memo(({ position, className = '' }: AdPlacementProps) => {
 
   const config = adConfigs[position];
 
-  // Don't render if not visible (ad didn't load)
-  if (!isVisible) {
+  // Don't render if should hide (ad didn't load)
+  if (shouldHide) {
     return null;
   }
 
   return (
     <div 
       ref={containerRef}
-      className={`ad-placement ad-placement-${position} transition-all duration-300 ${className}`}
+      className={`ad-placement ad-placement-${position} transition-opacity duration-300 ${
+        isLoaded ? 'opacity-100' : 'opacity-0 h-0 overflow-hidden'
+      } ${className}`}
     >
-      <div className="text-xs text-muted-foreground text-center mb-2">
-        Advertisement
-      </div>
+      {isLoaded && (
+        <div className="text-xs text-muted-foreground text-center mb-2">
+          Advertisement
+        </div>
+      )}
       <AdSenseAd
         adSlot={adSlots[position]}
         adFormat={config.adFormat}

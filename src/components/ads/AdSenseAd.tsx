@@ -43,16 +43,12 @@ const AdSenseAd = ({
 
   const adStyle = {
     display: 'block',
-    minHeight: '250px',
     width: '100%',
     ...style
   };
 
   return (
-    <div className={`adsense-container my-8 ${className}`} ref={adRef}>
-      <div className="text-xs text-muted-foreground text-center mb-2">
-        Advertisement
-      </div>
+    <div className={`adsense-container ${className}`} ref={adRef}>
       <ins
         className="adsbygoogle"
         style={adStyle}
