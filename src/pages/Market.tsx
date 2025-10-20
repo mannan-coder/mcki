@@ -12,6 +12,7 @@ import { MiniChart } from '@/components/market/MiniChart';
 import { MarketSignalCards } from '@/components/market/MarketSignalCards';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
+import AdPlacement from '@/components/ads/AdPlacement';
 
 const MarketPage = () => {
   const { data: cryptoData, isLoading, refetch, isRealTime, lastUpdateTime } = useOptimizedCryptoData(100, false); // Reduced limit and disabled notifications for performance
@@ -315,6 +316,9 @@ const MarketPage = () => {
 
             {/* Market Signal Cards */}
             <MarketSignalCards coins={categoryFilteredCoins} />
+
+            {/* Ad 1 - After Market Signals */}
+            <AdPlacement position="content" />
 
             {/* Filters */}
             <ResponsiveCard>

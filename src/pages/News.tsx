@@ -7,6 +7,7 @@ import { DataSection } from '@/components/common/DataSection';
 import { StatsGrid } from '@/components/common/StatsGrid';
 import { useEnhancedCryptoNews } from '@/hooks/useEnhancedCryptoNews';
 import { motion } from 'framer-motion';
+import AdPlacement from '@/components/ads/AdPlacement';
 
 interface NewsItem {
   id: number;
@@ -294,6 +295,9 @@ const News = () => {
                 </div>
               </div>
             </ResponsiveCard>
+
+            {/* Ad 1 - After Market Sentiment */}
+            <AdPlacement position="content" />
 
             {/* Featured News */}
             {featuredNews.length > 0 && (

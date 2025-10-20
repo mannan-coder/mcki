@@ -1,5 +1,5 @@
 
-import { memo } from 'react';
+import { memo, useState, useEffect, useRef } from 'react';
 import AdSenseAd from './AdSenseAd';
 
 interface AdPlacementProps {
@@ -8,6 +8,28 @@ interface AdPlacementProps {
 }
 
 const AdPlacement = memo(({ position, className = '' }: AdPlacementProps) => {
+  const [isVisible, setIsVisible] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    // Check if ad loaded after a delay
+    const timer = setTimeout(() => {
+      if (containerRef.current) {
+        const adElement = containerRef.current.querySelector('.adsbygoogle');
+        if (adElement) {
+          const hasContent = adElement.children.length > 0 || 
+                           adElement.innerHTML.trim().length > 0 ||
+                           (adElement as HTMLElement).offsetHeight > 50;
+          
+          if (!hasContent) {
+            setIsVisible(false);
+          }
+        }
+      }
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, []);
   // Ad slot ID - Banner-ads-Horizontal
   const adSlots = {
     header: '8636350170',
@@ -42,8 +64,16 @@ const AdPlacement = memo(({ position, className = '' }: AdPlacementProps) => {
 
   const config = adConfigs[position];
 
+  // Don't render if not visible (ad didn't load)
+  if (!isVisible) {
+    return null;
+  }
+
   return (
-    <div className={`ad-placement ad-placement-${position} ${className}`}>
+    <div 
+      ref={containerRef}
+      className={`ad-placement ad-placement-${position} transition-all duration-300 ${className}`}
+    >
       <div className="text-xs text-muted-foreground text-center mb-2">
         Advertisement
       </div>
