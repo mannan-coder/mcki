@@ -84,12 +84,12 @@ const Index = () => {
           </div>
         </section>
 
+        {/* Ad 1 - Above Market Overview (High Visibility) */}
+        <AdPlacement position="header" className="container mx-auto px-4 py-6" />
+
         <section className="container mx-auto px-4 py-8">
           <OptimizedMarketOverviewSection isDarkMode={true} />
         </section>
-
-        {/* Ad 1 - After Market Overview */}
-        <AdPlacement position="content" className="container mx-auto px-4" />
 
         {/* Live Market Signals Section */}
         <section className="container mx-auto px-4 py-8">
@@ -100,9 +100,6 @@ const Index = () => {
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
           <OptimizedTopGainersLosers />
         </section>
-
-        {/* Ad 2 - After Top Gainers/Losers */}
-        <AdPlacement position="content" className="container mx-auto px-4" />
 
         {/* Highest Volume Section */}
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
@@ -116,6 +113,9 @@ const Index = () => {
           </Suspense>
         </section>
 
+        {/* Ad 2 - Mid-page Strategic Placement */}
+        <AdPlacement position="content" className="container mx-auto px-4 py-6" />
+
         {/* Live Exchange Data Section - Moved after arbitrage */}
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
           <LivePricesAcrossExchanges />
@@ -125,9 +125,6 @@ const Index = () => {
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
           <OnChainAnalysis />
         </section>
-
-        {/* Ad 3 - After On-Chain Analysis */}
-        <AdPlacement position="content" className="container mx-auto px-4" />
 
         {/* Lazy loaded sections */}
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
@@ -141,6 +138,9 @@ const Index = () => {
             <LazyWhaleSection />
           </Suspense>
         </section>
+
+        {/* Ad 3 - After Whale Movements */}
+        <AdPlacement position="content" className="container mx-auto px-4 py-6" />
 
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
           <MarketSentimentSection />
