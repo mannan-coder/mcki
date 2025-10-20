@@ -8,13 +8,13 @@ interface AdPlacementProps {
 }
 
 const AdPlacement = memo(({ position, className = '' }: AdPlacementProps) => {
-  // Ad slot IDs - replace with your actual AdSense ad slot IDs
+  // Ad slot ID - Banner-ads-Horizontal
   const adSlots = {
-    header: '1234567890',
-    sidebar: '1234567891', 
-    content: '1234567892',
-    footer: '1234567893',
-    'mobile-banner': '1234567894'
+    header: '8636350170',
+    sidebar: '8636350170', 
+    content: '8636350170',
+    footer: '8636350170',
+    'mobile-banner': '8636350170'
   };
 
   const adConfigs = {

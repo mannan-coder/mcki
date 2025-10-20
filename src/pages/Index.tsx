@@ -12,7 +12,7 @@ import { TopVolumeSection } from '@/components/sections/TopVolumeSection';
 import OnChainAnalysis from '@/components/OnChainAnalysis';
 import LivePricesAcrossExchanges from '@/components/arbitrage/LivePricesAcrossExchanges';
 import { Toaster } from '@/components/ui/sonner';
-import AutoAdPlacement from '@/components/ads/AutoAdPlacement';
+import AdPlacement from '@/components/ads/AdPlacement';
 import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 
 // Lazy load heavy components
@@ -88,24 +88,21 @@ const Index = () => {
           <OptimizedMarketOverviewSection isDarkMode={true} />
         </section>
 
-        {/* Auto Ad Placement after Market Overview */}
-        <AutoAdPlacement position="after-section" sectionName="market-overview" className="container mx-auto px-4 py-4" />
+        {/* Ad 1 - After Market Overview */}
+        <AdPlacement position="content" className="container mx-auto px-4" />
 
         {/* Live Market Signals Section */}
         <section className="container mx-auto px-4 py-8">
           <OptimizedLiveMarketSignalsSection />
         </section>
 
-        {/* Auto Ad Placement after Market Signals */}
-        <AutoAdPlacement position="after-section" sectionName="market-signals" className="container mx-auto px-4 py-4" />
-
         {/* Top Gainers/Losers Section */}
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
           <OptimizedTopGainersLosers />
         </section>
 
-        {/* Auto Ad Placement after Top Gainers */}
-        <AutoAdPlacement position="after-section" sectionName="top-gainers" className="container mx-auto px-4 py-4" />
+        {/* Ad 2 - After Top Gainers/Losers */}
+        <AdPlacement position="content" className="container mx-auto px-4" />
 
         {/* Highest Volume Section */}
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
@@ -129,8 +126,8 @@ const Index = () => {
           <OnChainAnalysis />
         </section>
 
-        {/* Auto Ad Placement after Arbitrage */}
-        <AutoAdPlacement position="after-section" sectionName="arbitrage" className="container mx-auto px-4 py-4" />
+        {/* Ad 3 - After On-Chain Analysis */}
+        <AdPlacement position="content" className="container mx-auto px-4" />
 
         {/* Lazy loaded sections */}
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
@@ -138,9 +135,6 @@ const Index = () => {
             <LazyNewsSection />
           </Suspense>
         </section>
-
-        {/* Auto Ad Placement after News */}
-        <AutoAdPlacement position="after-section" sectionName="news-alerts" className="container mx-auto px-4 py-4" />
 
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
           <Suspense fallback={<div className="h-64 bg-muted animate-pulse rounded-lg" />}>
@@ -166,8 +160,8 @@ const Index = () => {
           <CalculatorsSuiteSection />
         </section>
 
-        {/* Auto Ad Placement after Events */}
-        <AutoAdPlacement position="after-section" sectionName="events" className="container mx-auto px-4 py-4" />
+        {/* Ad 4 - After Calculators */}
+        <AdPlacement position="content" className="container mx-auto px-4" />
       </div>
       
       <Toaster />

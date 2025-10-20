@@ -49,15 +49,16 @@ const AdSenseAd = ({
   };
 
   return (
-    <div className={`adsense-container ${className}`} ref={adRef}>
+    <div className={`adsense-container my-8 ${className}`} ref={adRef}>
+      <div className="text-xs text-muted-foreground text-center mb-2">
+        Advertisement
+      </div>
       <ins
         className="adsbygoogle"
         style={adStyle}
         data-ad-client="ca-pub-5532318785992990"
         data-ad-slot={adSlot}
-        data-ad-format={adFormat}
-        data-ad-layout={adLayout}
-        data-ad-layout-key={adLayoutKey}
+        data-ad-format="auto"
         data-full-width-responsive="true"
       />
     </div>
