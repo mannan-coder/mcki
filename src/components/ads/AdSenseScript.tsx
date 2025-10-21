@@ -9,7 +9,7 @@ declare global {
 
 const AdSenseScript = () => {
   useEffect(() => {
-    // Only load AdSense script once
+    // Only load AdSense script once globally
     if (document.querySelector('script[src*="adsbygoogle.js"]')) {
       return;
     }
@@ -25,19 +25,8 @@ const AdSenseScript = () => {
       // Initialize adsbygoogle array
       window.adsbygoogle = window.adsbygoogle || [];
 
-      // Initialize Auto Ads
       script.onload = () => {
-        try {
-          // Enable Auto Ads - this will automatically place ads throughout the site
-          window.adsbygoogle.push({
-            google_ad_client: "ca-pub-5532318785992990",
-            enable_page_level_ads: true,
-            overlays: {bottom: true}
-          });
-          console.log('Google Auto Ads initialized');
-        } catch (error) {
-          console.error('Auto Ads initialization error:', error);
-        }
+        console.log('Google AdSense script loaded successfully');
       };
 
       script.onerror = () => {

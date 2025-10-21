@@ -13,7 +13,7 @@ import { getExchangeColumns } from '@/utils/arbitrageColumns';
 import { getExchangeData } from '@/data/exchangeData';
 import { Building2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import AdPlacement from '@/components/ads/AdPlacement';
+import LazyAdBanner from '@/components/ads/LazyAdBanner';
 
 const ArbitragePage = () => {
   const { data: arbitrageData, loading, refetch } = useArbitrageData();
@@ -132,8 +132,8 @@ const ArbitragePage = () => {
           </div>
         </DataSection>
 
-        {/* Ad 1 - After Opportunities */}
-        <AdPlacement position="content" className="py-6" />
+        {/* Strategic Ad Placement 1 - After Opportunities Summary (High CTR) */}
+        <LazyAdBanner className="my-6" />
 
         {/* Live Prices Across Exchanges Section */}
         <DataSection
@@ -157,8 +157,8 @@ const ArbitragePage = () => {
           />
         </DataSection>
 
-        {/* Ad 2 - After Live Prices */}
-        <AdPlacement position="content" className="py-6" />
+        {/* Strategic Ad Placement 2 - After Live Prices (High visibility) */}
+        <LazyAdBanner className="my-6" />
 
         {/* Exchange Status & Performance Section */}
         <DataSection

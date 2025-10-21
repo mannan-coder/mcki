@@ -9,7 +9,7 @@ import { Clock, User, ArrowRight, RefreshCw, ExternalLink, AlertCircle } from 'l
 import { useBlogData, BlogPost } from '@/hooks/useBlogData';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { useState } from 'react';
-import AdPlacement from '@/components/ads/AdPlacement';
+import LazyAdBanner from '@/components/ads/LazyAdBanner';
 
 const Blog = () => {
   const {
@@ -312,8 +312,8 @@ const Blog = () => {
                   </Card>
                 ))}
 
-                {/* Ad 1 - After Featured Posts */}
-                <AdPlacement position="content" />
+                {/* Strategic Ad Placement - After Featured Posts (High CTR) */}
+                <LazyAdBanner className="my-6" />
 
                 {/* Blog Posts Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
