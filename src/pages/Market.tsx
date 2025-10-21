@@ -314,10 +314,13 @@ const MarketPage = () => {
             {/* Market Stats */}
             <StatsGrid stats={marketStats} />
 
+            {/* Strategic Ad Placement 1 - Above Live Market Signals */}
+            <LazyAdBanner className="my-6" />
+
             {/* Market Signal Cards */}
             <MarketSignalCards coins={categoryFilteredCoins} />
 
-            {/* Strategic Ad Placement - After Market Signals (High engagement) */}
+            {/* Strategic Ad Placement 2 - Above Filters & Search */}
             <LazyAdBanner className="my-6" />
 
             {/* Filters */}
@@ -368,6 +371,9 @@ const MarketPage = () => {
                 </div>
               </div>
             </ResponsiveCard>
+
+            {/* Strategic Ad Placement 3 - Above Market Data Section */}
+            <LazyAdBanner className="my-6" />
 
             {/* Crypto Table */}
             <ResponsiveCard>
