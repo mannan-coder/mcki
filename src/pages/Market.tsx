@@ -12,7 +12,6 @@ import { MiniChart } from '@/components/market/MiniChart';
 import { MarketSignalCards } from '@/components/market/MarketSignalCards';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import LazyAdBanner from '@/components/ads/LazyAdBanner';
 
 const MarketPage = () => {
   const { data: cryptoData, isLoading, refetch, isRealTime, lastUpdateTime } = useOptimizedCryptoData(100, false); // Reduced limit and disabled notifications for performance
@@ -314,14 +313,8 @@ const MarketPage = () => {
             {/* Market Stats */}
             <StatsGrid stats={marketStats} />
 
-            {/* Strategic Ad Placement 1 - Above Live Market Signals */}
-            <LazyAdBanner className="my-6" />
-
             {/* Market Signal Cards */}
             <MarketSignalCards coins={categoryFilteredCoins} />
-
-            {/* Strategic Ad Placement 2 - Above Filters & Search */}
-            <LazyAdBanner className="my-6" />
 
             {/* Filters */}
             <ResponsiveCard>
@@ -371,9 +364,6 @@ const MarketPage = () => {
                 </div>
               </div>
             </ResponsiveCard>
-
-            {/* Strategic Ad Placement 3 - Above Market Data Section */}
-            <LazyAdBanner className="my-6" />
 
             {/* Crypto Table */}
             <ResponsiveCard>

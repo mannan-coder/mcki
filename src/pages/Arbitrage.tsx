@@ -13,7 +13,6 @@ import { getExchangeColumns } from '@/utils/arbitrageColumns';
 import { getExchangeData } from '@/data/exchangeData';
 import { Building2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import LazyAdBanner from '@/components/ads/LazyAdBanner';
 
 const ArbitragePage = () => {
   const { data: arbitrageData, loading, refetch } = useArbitrageData();
@@ -113,9 +112,6 @@ const ArbitragePage = () => {
   return (
     <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 py-8">
-        {/* Strategic Ad Placement 1 - Above Opportunities Section */}
-        <LazyAdBanner className="my-6" />
-
         <DataSection
           title="Arbitrage Opportunities"
           subtitle="Real-time cryptocurrency arbitrage detection across major exchanges"
@@ -134,9 +130,6 @@ const ArbitragePage = () => {
             />
           </div>
         </DataSection>
-
-        {/* Strategic Ad Placement 2 - Above Live Prices Section */}
-        <LazyAdBanner className="my-6" />
 
         {/* Live Prices Across Exchanges Section */}
         <DataSection
@@ -159,9 +152,6 @@ const ArbitragePage = () => {
             loading={pricesLoading}
           />
         </DataSection>
-
-        {/* Strategic Ad Placement 3 - Above Exchange Status Section */}
-        <LazyAdBanner className="my-6" />
 
         {/* Exchange Status & Performance Section */}
         <DataSection

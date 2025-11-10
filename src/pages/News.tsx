@@ -7,7 +7,6 @@ import { DataSection } from '@/components/common/DataSection';
 import { StatsGrid } from '@/components/common/StatsGrid';
 import { useEnhancedCryptoNews } from '@/hooks/useEnhancedCryptoNews';
 import { motion } from 'framer-motion';
-import LazyAdBanner from '@/components/ads/LazyAdBanner';
 
 interface NewsItem {
   id: number;
@@ -295,9 +294,6 @@ const News = () => {
                 </div>
               </div>
             </ResponsiveCard>
-
-            {/* Strategic Ad Placement - After Market Sentiment (High engagement) */}
-            <LazyAdBanner className="my-6" />
 
             {/* Featured News */}
             {featuredNews.length > 0 && (

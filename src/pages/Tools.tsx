@@ -25,7 +25,6 @@ import {
   Eye,
   Database
 } from 'lucide-react';
-import LazyAdBanner from '@/components/ads/LazyAdBanner';
 
 const Tools = () => {
   const [activeTab, setActiveTab] = useState('roi');
@@ -411,9 +410,6 @@ const Tools = () => {
               </Card>
             </div>
           </div>
-
-          {/* Strategic Ad Placement - After Stats Grid (High visibility) */}
-          <LazyAdBanner className="my-8" />
 
           {/* Enhanced Main Tools Section */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 min-h-[600px]">

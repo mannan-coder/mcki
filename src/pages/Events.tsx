@@ -36,7 +36,6 @@ import { useEnhancedLiveEvents } from '@/hooks/useEnhancedLiveEvents';
 import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 import { getTimeAgo } from '@/utils/timeUtils';
 import { useToast } from '@/hooks/use-toast';
-import LazyAdBanner from '@/components/ads/LazyAdBanner';
 
 interface EventDetailModalProps {
   event: any;
@@ -569,9 +568,6 @@ const EventsPage = ({}: EventsPageProps) => {
           <div className="space-y-8">
             {/* Stats Overview */}
             <StatsGrid stats={eventStats} />
-
-            {/* Strategic Ad Placement - After Stats Grid (High visibility) */}
-            <LazyAdBanner className="my-6" />
 
             {/* Live Impact Analysis */}
             <ResponsiveCard>

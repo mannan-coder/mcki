@@ -12,7 +12,6 @@ import { TopVolumeSection } from '@/components/sections/TopVolumeSection';
 import OnChainAnalysis from '@/components/OnChainAnalysis';
 import LivePricesAcrossExchanges from '@/components/arbitrage/LivePricesAcrossExchanges';
 import { Toaster } from '@/components/ui/sonner';
-import LazyAdBanner from '@/components/ads/LazyAdBanner';
 import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 
 // Lazy load heavy components
@@ -84,9 +83,6 @@ const Index = () => {
           </div>
         </section>
 
-        {/* Strategic Ad Placement 1 - After Top Metrics (High CTR) */}
-        <LazyAdBanner className="my-6" />
-
         <section className="container mx-auto px-4 py-8">
           <OptimizedMarketOverviewSection isDarkMode={true} />
         </section>
@@ -113,9 +109,6 @@ const Index = () => {
           </Suspense>
         </section>
 
-        {/* Strategic Ad Placement 2 - After Arbitrage (Mid-page engagement) */}
-        <LazyAdBanner className="my-6" />
-
         {/* Live Exchange Data Section - Moved after arbitrage */}
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
           <LivePricesAcrossExchanges />
@@ -139,9 +132,6 @@ const Index = () => {
           </Suspense>
         </section>
 
-        {/* Strategic Ad Placement 3 - After Whale Section (High visibility) */}
-        <LazyAdBanner className="my-6" />
-
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
           <MarketSentimentSection />
         </section>
@@ -159,9 +149,6 @@ const Index = () => {
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
           <CalculatorsSuiteSection />
         </section>
-
-        {/* Strategic Ad Placement 4 - Bottom of page */}
-        <LazyAdBanner className="my-6" />
       </div>
       
       <Toaster />

@@ -16,7 +16,6 @@ import {
   ArrowUpIcon,
   ArrowDownIcon
 } from 'lucide-react';
-import LazyAdBanner from '@/components/ads/LazyAdBanner';
 
 
 const Analytics = () => {
@@ -250,9 +249,6 @@ const Analytics = () => {
             </CardContent>
           </Card>
         </div>
-
-        {/* Strategic Ad Placement - After Highlights (High CTR) */}
-        <LazyAdBanner className="my-8" />
 
         {/* Filters */}
         <div className="flex flex-col md:flex-row gap-4 mb-8">
