@@ -54,8 +54,8 @@ const Contact = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-muted-foreground">support@mcki.online</p>
-                <p className="text-muted-foreground">partnerships@mcki.online</p>
+                <p className="text-muted-foreground">support@mcki.site</p>
+                <p className="text-muted-foreground">partnerships@mcki.site</p>
               </CardContent>
             </Card>
 

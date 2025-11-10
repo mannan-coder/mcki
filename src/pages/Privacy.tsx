@@ -116,7 +116,7 @@ const Privacy = () => {
                 <li><strong>Opt-out:</strong> Unsubscribe from marketing communications</li>
               </ul>
               
-              <p>To exercise these rights, contact us at <a href="mailto:privacy@mcki.online">privacy@mcki.online</a></p>
+              <p>To exercise these rights, contact us at <a href="mailto:privacy@mcki.site">privacy@mcki.site</a></p>
             </CardContent>
           </Card>
 
@@ -162,7 +162,7 @@ const Privacy = () => {
             <CardContent className="prose prose-sm max-w-none dark:prose-invert">
               <p>If you have any questions about this Privacy Policy, please contact us:</p>
               <ul>
-                <li>Email: <a href="mailto:privacy@mcki.online">privacy@mcki.online</a></li>
+                <li>Email: <a href="mailto:privacy@mcki.site">privacy@mcki.site</a></li>
                 <li>Address: MCKI Platform, Privacy Office</li>
               </ul>
             </CardContent>

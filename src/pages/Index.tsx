@@ -38,13 +38,13 @@ const Index = () => {
       "market analysis tools",
       "cryptocurrency insights"
     ],
-    canonical: "https://mcki.online",
+    canonical: "https://mcki.site",
     structuredData: {
       "@context": "https://schema.org",
       "@type": "WebApplication",
       "name": "MCKI - Professional Crypto Intelligence",
       "description": "Real-time cryptocurrency market analysis, arbitrage opportunities, and trading intelligence platform",
-      "url": "https://mcki.online",
+      "url": "https://mcki.site",
       "applicationCategory": "FinanceApplication",
       "operatingSystem": "Web Browser",
       "offers": {

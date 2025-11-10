@@ -209,7 +209,7 @@ const Terms = () => {
             <CardContent className="prose prose-sm max-w-none dark:prose-invert">
               <p>If you have any questions about these Terms of Service, please contact us:</p>
               <ul>
-                <li>Email: <a href="mailto:legal@mcki.online">legal@mcki.online</a></li>
+                <li>Email: <a href="mailto:legal@mcki.site">legal@mcki.site</a></li>
                 <li>Address: MCKI Platform, Legal Department</li>
               </ul>
             </CardContent>

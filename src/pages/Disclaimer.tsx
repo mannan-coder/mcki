@@ -208,7 +208,7 @@ const Disclaimer = () => {
             <CardContent className="prose prose-sm max-w-none dark:prose-invert">
               <p>If you have questions about this disclaimer or our services, please contact us:</p>
               <ul>
-                <li>Email: <a href="mailto:legal@mcki.online">legal@mcki.online</a></li>
+                <li>Email: <a href="mailto:legal@mcki.site">legal@mcki.site</a></li>
                 <li>Subject: Disclaimer Inquiry</li>
               </ul>
             </CardContent>

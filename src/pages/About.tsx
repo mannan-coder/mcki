@@ -320,13 +320,13 @@ const About = () => {
                     <Card className="bg-muted/50 border-border/50">
                       <CardContent className="p-4 flex items-center gap-3">
                         <Globe className="h-5 w-5 text-primary" />
-                        <span className="font-semibold text-foreground">mcki.online</span>
+                        <span className="font-semibold text-foreground">mcki.site</span>
                       </CardContent>
                     </Card>
                     <Card className="bg-muted/50 border-border/50">
                       <CardContent className="p-4 flex items-center gap-3">
                         <Mail className="h-5 w-5 text-primary" />
-                        <span className="font-semibold text-foreground">contact@mcki.online</span>
+                        <span className="font-semibold text-foreground">contact@mcki.site</span>
                       </CardContent>
                     </Card>
                   </div>

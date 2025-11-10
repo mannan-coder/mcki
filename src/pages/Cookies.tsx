@@ -192,7 +192,7 @@ const Cookies = () => {
             <CardContent className="prose prose-sm max-w-none dark:prose-invert">
               <p>If you have any questions about our use of cookies or this Cookie Policy, please contact us:</p>
               <ul>
-                <li>Email: <a href="mailto:privacy@mcki.online">privacy@mcki.online</a></li>
+                <li>Email: <a href="mailto:privacy@mcki.site">privacy@mcki.site</a></li>
                 <li>Subject: Cookie Policy Inquiry</li>
               </ul>
             </CardContent>
