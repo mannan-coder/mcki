@@ -207,33 +207,20 @@ serve(async (req) => {
     // Fallback to static news if API fails or no recent news in DB
     if (news.length === 0) {
       console.log('=== USING FALLBACK DATA ===');
-      console.log('Using fallback news data');
+      console.log('Generating comprehensive fallback news data');
       
-      // Check if we have any news in database at all
-      const { data: existingNews } = await supabase
-        .from('news_articles')
-        .select('*')
-        .order('time', { ascending: false })
-        .limit(20);
-      
-      if (existingNews && existingNews.length > 0) {
-        console.log(`Returning ${existingNews.length} existing articles from database`);
-        return new Response(JSON.stringify(existingNews), {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        });
-      }
-      
-      // Generate fallback news and store in database
+      // Generate fallback news with unique IDs to avoid conflicts
+      const baseId = Date.now();
       news = [
         {
-          id: 1,
+          id: baseId + 1,
           title: "Bitcoin ETF Approval Drives Institutional Adoption to New Heights",
           summary: "Major financial institutions are rushing to offer Bitcoin ETF products following regulatory approvals, with over $2B in inflows recorded this week alone.",
           category: "Regulation",
           time: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
           impact: "bullish",
           source: "Financial Times",
-          url: "https://mcki.site/news/1",
+          url: "https://mcki.site/news/" + (baseId + 1),
           image_url: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=800&h=400&fit=crop",
           author: "Sarah Johnson",
           read_time: "5 min read",
@@ -244,14 +231,14 @@ serve(async (req) => {
           sentiment: 85
         },
         {
-          id: 2,
+          id: baseId + 2,
           title: "Ethereum 2.0 Staking Rewards Hit Record Highs Amid Network Growth",
           summary: "Ethereum validators are earning unprecedented yields as the network's staking participation reaches all-time high levels, signaling strong ecosystem confidence.",
           category: "Ethereum",
           time: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
           impact: "bullish",
           source: "CoinDesk",
-          url: "https://mcki.site/news/2",
+          url: "https://mcki.site/news/" + (baseId + 2),
           image_url: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=400&fit=crop",
           author: "Michael Chen",
           read_time: "4 min read",
@@ -262,14 +249,14 @@ serve(async (req) => {
           sentiment: 80
         },
         {
-          id: 3,
+          id: baseId + 3,
           title: "DeFi Protocol Launches Revolutionary Cross-Chain Bridge",
           summary: "A new decentralized finance protocol introduces seamless asset transfers between multiple blockchain networks, promising to revolutionize liquidity management.",
           category: "DeFi",
           time: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
           impact: "bullish",
           source: "The Block",
-          url: "https://mcki.site/news/3",
+          url: "https://mcki.site/news/" + (baseId + 3),
           image_url: "https://images.unsplash.com/photo-1642104704074-907c0698cbd9?w=800&h=400&fit=crop",
           author: "Emily Rodriguez",
           read_time: "6 min read",
@@ -280,14 +267,14 @@ serve(async (req) => {
           sentiment: 78
         },
         {
-          id: 4,
+          id: baseId + 4,
           title: "SEC Announces New Crypto Regulation Framework",
           summary: "The Securities and Exchange Commission reveals comprehensive regulatory guidelines for digital assets, bringing clarity to the industry.",
           category: "Regulation",
           time: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
           impact: "neutral",
           source: "Bloomberg",
-          url: "https://mcki.site/news/4",
+          url: "https://mcki.site/news/" + (baseId + 4),
           image_url: "https://images.unsplash.com/photo-1559526324-593bc54d86b4?w=800&h=400&fit=crop",
           author: "David Kim",
           read_time: "7 min read",
@@ -298,14 +285,14 @@ serve(async (req) => {
           sentiment: 55
         },
         {
-          id: 5,
+          id: baseId + 5,
           title: "NFT Marketplace Volume Surges 150% in Q4",
           summary: "Non-fungible token trading activity explodes with major brands and celebrities entering the digital collectibles space.",
           category: "NFT",
           time: new Date(Date.now() - 10 * 60 * 60 * 1000).toISOString(),
           impact: "bullish",
           source: "NFT News",
-          url: "https://mcki.site/news/5",
+          url: "https://mcki.site/news/" + (baseId + 5),
           image_url: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=800&h=400&fit=crop",
           author: "Lisa Zhang",
           read_time: "5 min read",
@@ -316,14 +303,14 @@ serve(async (req) => {
           sentiment: 82
         },
         {
-          id: 6,
+          id: baseId + 6,
           title: "Bitcoin Mining Becomes More Sustainable with Renewable Energy",
           summary: "Major mining operations shift to renewable energy sources, reducing Bitcoin's carbon footprint by 40% year-over-year.",
           category: "Bitcoin",
           time: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
           impact: "bullish",
           source: "Green Crypto",
-          url: "https://mcki.site/news/6",
+          url: "https://mcki.site/news/" + (baseId + 6),
           image_url: "https://images.unsplash.com/photo-1518544866330-4e4815fbbcc3?w=800&h=400&fit=crop",
           author: "Robert Taylor",
           read_time: "6 min read",
@@ -334,14 +321,14 @@ serve(async (req) => {
           sentiment: 75
         },
         {
-          id: 7,
+          id: baseId + 7,
           title: "Major Bank Announces Crypto Custody Services",
           summary: "Global banking giant launches institutional-grade cryptocurrency custody platform, signaling mainstream financial acceptance.",
           category: "Adoption",
           time: new Date(Date.now() - 14 * 60 * 60 * 1000).toISOString(),
           impact: "bullish",
           source: "Financial News",
-          url: "https://mcki.site/news/7",
+          url: "https://mcki.site/news/" + (baseId + 7),
           image_url: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=400&fit=crop",
           author: "Maria Santos",
           read_time: "4 min read",
@@ -352,14 +339,14 @@ serve(async (req) => {
           sentiment: 88
         },
         {
-          id: 8,
+          id: baseId + 8,
           title: "Layer 2 Scaling Solution Processes 1 Million Transactions",
           summary: "Ethereum Layer 2 network achieves milestone throughput, demonstrating the viability of scaling solutions for blockchain networks.",
           category: "Technology",
           time: new Date(Date.now() - 16 * 60 * 60 * 1000).toISOString(),
           impact: "bullish",
           source: "Tech Crypto",
-          url: "https://mcki.site/news/8",
+          url: "https://mcki.site/news/" + (baseId + 8),
           image_url: "https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=800&h=400&fit=crop",
           author: "Alex Thompson",
           read_time: "5 min read",
@@ -370,14 +357,14 @@ serve(async (req) => {
           sentiment: 80
         },
         {
-          id: 9,
+          id: baseId + 9,
           title: "Crypto Market Sees $50B Inflow from Institutional Investors",
           summary: "Hedge funds and pension funds pour unprecedented capital into digital assets, marking a turning point for institutional adoption.",
           category: "Market Analysis",
           time: new Date(Date.now() - 18 * 60 * 60 * 1000).toISOString(),
           impact: "bullish",
           source: "Market Watch",
-          url: "https://mcki.site/news/9",
+          url: "https://mcki.site/news/" + (baseId + 9),
           image_url: "https://images.unsplash.com/photo-1642104704074-907c0698cbd9?w=800&h=400&fit=crop",
           author: "Sarah Johnson",
           read_time: "6 min read",
@@ -388,14 +375,14 @@ serve(async (req) => {
           sentiment: 85
         },
         {
-          id: 10,
+          id: baseId + 10,
           title: "New Privacy Protocol Enhances Blockchain Anonymity",
           summary: "Cutting-edge zero-knowledge proof technology enables completely private transactions while maintaining blockchain transparency.",
           category: "Technology",
           time: new Date(Date.now() - 20 * 60 * 60 * 1000).toISOString(),
           impact: "neutral",
           source: "Privacy Tech",
-          url: "https://mcki.site/news/10",
+          url: "https://mcki.site/news/" + (baseId + 10),
           image_url: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=800&h=400&fit=crop",
           author: "Michael Chen",
           read_time: "7 min read",
@@ -406,14 +393,14 @@ serve(async (req) => {
           sentiment: 65
         },
         {
-          id: 11,
+          id: baseId + 11,
           title: "Stablecoin Market Cap Exceeds $150 Billion",
           summary: "Dollar-pegged cryptocurrencies reach new milestone as demand for stable digital assets continues to grow exponentially.",
           category: "DeFi",
           time: new Date(Date.now() - 22 * 60 * 60 * 1000).toISOString(),
           impact: "neutral",
           source: "Stablecoin News",
-          url: "https://mcki.site/news/11",
+          url: "https://mcki.site/news/" + (baseId + 11),
           image_url: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=400&fit=crop",
           author: "Emily Rodriguez",
           read_time: "4 min read",
@@ -424,14 +411,14 @@ serve(async (req) => {
           sentiment: 70
         },
         {
-          id: 12,
+          id: baseId + 12,
           title: "Blockchain Gaming Revenue Projected to Hit $10B",
           summary: "Play-to-earn gaming models drive explosive growth in blockchain gaming sector, attracting millions of players worldwide.",
           category: "NFT",
           time: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
           impact: "bullish",
           source: "Gaming Crypto",
-          url: "https://mcki.site/news/12",
+          url: "https://mcki.site/news/" + (baseId + 12),
           image_url: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=800&h=400&fit=crop",
           author: "David Kim",
           read_time: "5 min read",
@@ -442,14 +429,14 @@ serve(async (req) => {
           sentiment: 83
         },
         {
-          id: 13,
+          id: baseId + 13,
           title: "Central Bank Digital Currency Pilot Launches in Multiple Countries",
           summary: "Government-backed digital currencies enter testing phase as nations explore blockchain-based monetary systems.",
           category: "Regulation",
           time: new Date(Date.now() - 26 * 60 * 60 * 1000).toISOString(),
           impact: "neutral",
           source: "CBDC Today",
-          url: "https://mcki.site/news/13",
+          url: "https://mcki.site/news/" + (baseId + 13),
           image_url: "https://images.unsplash.com/photo-1559526324-593bc54d86b4?w=800&h=400&fit=crop",
           author: "Lisa Zhang",
           read_time: "6 min read",
@@ -460,14 +447,14 @@ serve(async (req) => {
           sentiment: 60
         },
         {
-          id: 14,
+          id: baseId + 14,
           title: "Smart Contract Audit Firm Uncovers Major Vulnerabilities",
           summary: "Security researchers discover critical flaws in popular DeFi protocols, prompting immediate patches and security upgrades.",
           category: "Technology",
           time: new Date(Date.now() - 28 * 60 * 60 * 1000).toISOString(),
           impact: "bearish",
           source: "Security News",
-          url: "https://mcki.site/news/14",
+          url: "https://mcki.site/news/" + (baseId + 14),
           image_url: "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=800&h=400&fit=crop",
           author: "Robert Taylor",
           read_time: "5 min read",
@@ -478,14 +465,14 @@ serve(async (req) => {
           sentiment: 35
         },
         {
-          id: 15,
+          id: baseId + 15,
           title: "Cryptocurrency Exchange Launches Zero-Fee Trading",
           summary: "Major trading platform eliminates transaction fees to compete for market share, sparking price war among exchanges.",
           category: "Market Analysis",
           time: new Date(Date.now() - 30 * 60 * 60 * 1000).toISOString(),
           impact: "bullish",
           source: "Exchange News",
-          url: "https://mcki.site/news/15",
+          url: "https://mcki.site/news/" + (baseId + 15),
           image_url: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&h=400&fit=crop",
           author: "Maria Santos",
           read_time: "4 min read",
