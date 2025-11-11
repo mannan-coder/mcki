@@ -32,15 +32,17 @@ export const useEnhancedCryptoNews = () => {
       
       console.log('Fetching enhanced crypto news...');
       
-      // First try to get news directly from database
+      // First try to get recent news directly from database (less than 1 hour old)
+      const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
       const { data: dbNews, error: dbError } = await supabase
         .from('news_articles')
         .select('*')
+        .gte('created_at', oneHourAgo)
         .order('time', { ascending: false })
         .limit(50);
       
       if (dbNews && dbNews.length > 0 && !dbError) {
-        console.log(`Found ${dbNews.length} articles in database`);
+        console.log(`Found ${dbNews.length} recent articles in database`);
         // Transform database format to match expected format
         const transformedNews = dbNews.map(article => ({
           ...article,
