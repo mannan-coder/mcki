@@ -7,6 +7,15 @@ import { DataSection } from '@/components/common/DataSection';
 import { StatsGrid } from '@/components/common/StatsGrid';
 import { useEnhancedCryptoNews } from '@/hooks/useEnhancedCryptoNews';
 import { motion } from 'framer-motion';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 interface NewsItem {
   id: number;
@@ -33,6 +42,9 @@ const News = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedImpact, setSelectedImpact] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  
+  const ITEMS_PER_PAGE = 12;
 
   const categories = ['All', 'Regulation', 'DeFi', 'Government', 'NFT', 'Technology', 'Adoption', 'Market Analysis'];
   const impactFilters = ['All', 'bullish', 'bearish', 'neutral'];
@@ -128,6 +140,18 @@ const News = () => {
 
   const featuredNews = filteredNews.filter(item => item.featured);
   const regularNews = filteredNews.filter(item => !item.featured);
+  
+  // Pagination calculations
+  const totalPages = Math.ceil(regularNews.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const paginatedNews = regularNews.slice(startIndex, endIndex);
+  
+  // Reset to page 1 when filters change
+  const handleFilterChange = (setter: (value: string) => void) => (value: string) => {
+    setter(value);
+    setCurrentPage(1);
+  };
 
   // Handle image error with fallback
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -223,10 +247,10 @@ const News = () => {
                   </div>
 
                   {/* Category Filter */}
-                  <div>
+                   <div>
                     <select
                       value={selectedCategory}
-                      onChange={(e) => setSelectedCategory(e.target.value)}
+                      onChange={(e) => handleFilterChange(setSelectedCategory)(e.target.value)}
                       className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                     >
                       {categories.map(category => (
@@ -239,7 +263,7 @@ const News = () => {
                   <div>
                     <select
                       value={selectedImpact}
-                      onChange={(e) => setSelectedImpact(e.target.value)}
+                      onChange={(e) => handleFilterChange(setSelectedImpact)(e.target.value)}
                       className="w-full px-4 py-2 rounded-lg border border-input bg-background text-foreground focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
                     >
                       {impactFilters.map(impact => (
@@ -369,7 +393,7 @@ const News = () => {
                 </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {regularNews.map((item, index) => (
+                {paginatedNews.map((item, index) => (
                   <motion.div
                     key={item.id}
                     initial={{ opacity: 0, y: 20 }}
@@ -426,6 +450,57 @@ const News = () => {
                   </motion.div>
                 ))}
               </div>
+              
+              {/* Pagination */}
+              {totalPages > 1 && (
+                <div className="flex justify-center mt-8">
+                  <Pagination>
+                    <PaginationContent>
+                      <PaginationItem>
+                        <PaginationPrevious 
+                          onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                          className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                        />
+                      </PaginationItem>
+                      
+                      {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => {
+                        // Show first page, last page, current page, and pages around current
+                        if (
+                          page === 1 ||
+                          page === totalPages ||
+                          (page >= currentPage - 1 && page <= currentPage + 1)
+                        ) {
+                          return (
+                            <PaginationItem key={page}>
+                              <PaginationLink
+                                onClick={() => setCurrentPage(page)}
+                                isActive={currentPage === page}
+                                className="cursor-pointer"
+                              >
+                                {page}
+                              </PaginationLink>
+                            </PaginationItem>
+                          );
+                        } else if (page === currentPage - 2 || page === currentPage + 2) {
+                          return (
+                            <PaginationItem key={page}>
+                              <PaginationEllipsis />
+                            </PaginationItem>
+                          );
+                        }
+                        return null;
+                      })}
+                      
+                      <PaginationItem>
+                        <PaginationNext 
+                          onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                          className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                        />
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>
+                </div>
+              )}
             </div>
           </div>
         </DataSection>
