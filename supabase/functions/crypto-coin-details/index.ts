@@ -5,6 +5,10 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+// In-memory cache for coin details
+const cache = new Map<string, { data: any; timestamp: number }>();
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
@@ -17,7 +21,20 @@ serve(async (req) => {
       throw new Error('Coin ID is required');
     }
 
+    console.log(`Fetching coin details for: ${coinId}`);
+
+    // Check cache first
+    const cached = cache.get(coinId);
+    if (cached && Date.now() - cached.timestamp < CACHE_TTL) {
+      console.log(`Returning cached data for: ${coinId}`);
+      return new Response(
+        JSON.stringify(cached.data),
+        { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'X-Cache': 'HIT' } }
+      );
+    }
+
     // Fetch detailed coin data
+    console.log(`Fetching fresh data from CoinGecko for: ${coinId}`);
     const response = await fetch(
       `https://api.coingecko.com/api/v3/coins/${coinId}?localization=false&tickers=false&market_data=true&community_data=false&developer_data=false&sparkline=true`
     );
@@ -55,9 +72,13 @@ serve(async (req) => {
       lastUpdated: coinData.last_updated
     };
 
+    // Cache the result
+    cache.set(coinId, { data: detailedCoin, timestamp: Date.now() });
+    console.log(`Cached data for: ${coinId}`);
+
     return new Response(
       JSON.stringify(detailedCoin),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json', 'X-Cache': 'MISS' } }
     );
 
   } catch (error) {
