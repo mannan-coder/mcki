@@ -86,6 +86,18 @@ export const StabilizedExchangePricesTable = ({
     );
   };
 
+  // Show empty state if no data
+  if (!loading && stabilizedData.length === 0) {
+    return (
+      <ResponsiveCard>
+        <div className="text-center py-8">
+          <Minus className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
+          <p className="text-muted-foreground">No price data available</p>
+        </div>
+      </ResponsiveCard>
+    );
+  }
+
   return (
     <ResponsiveCard>
       <div className="space-y-4">

@@ -29,14 +29,22 @@ export const useStabilizedPrices = (rawData: CoinPriceData[], updateInterval = 2
   const previousPrices = useRef<Record<string, Record<string, number>>>({});
 
   useEffect(() => {
+    // If we have no data yet, set empty array immediately
+    if (rawData.length === 0) {
+      setStabilizedData([]);
+      return;
+    }
+
     const now = Date.now();
     
     // Only update if enough time has passed since last update
     if (now - lastUpdateTime.current < updateInterval) {
+      // Still set the data on first load even if interval hasn't passed
+      if (stabilizedData.length === 0) {
+        setStabilizedData(rawData);
+      }
       return;
     }
-
-    if (rawData.length === 0) return;
 
     // Track price changes for visual indicators
     const newPriceChanges: Record<string, Record<string, 'up' | 'down' | 'neutral'>> = {};
@@ -71,7 +79,7 @@ export const useStabilizedPrices = (rawData: CoinPriceData[], updateInterval = 2
     setPriceChanges(newPriceChanges);
     setStabilizedData(rawData);
     lastUpdateTime.current = now;
-  }, [rawData, updateInterval]);
+  }, [rawData, updateInterval, stabilizedData.length]);
 
   // Clear price change indicators after a delay
   useEffect(() => {
