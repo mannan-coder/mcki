@@ -2,3 +2,6 @@ project_id = "tszsmthiqnzwkytrqbtd"
 
 [functions.crypto-news]
 verify_jwt = false
+
+[functions.crypto-coin-details]
+verify_jwt = false
