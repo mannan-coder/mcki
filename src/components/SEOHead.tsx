@@ -25,7 +25,7 @@ const SEOHead = ({
     "DeFi analysis"
   ],
   canonical,
-  ogImage = "https://mcki.online/og-image.png",
+  ogImage = "https://mcki.site/og-image.png",
   noIndex = false
 }: SEOHeadProps) => {
   const siteTitle = "MCKI - Crypto Intelligence Platform";
@@ -72,7 +72,7 @@ const SEOHead = ({
           "@type": "SoftwareApplication",
           "name": "MCKI",
           "description": description,
-          "url": "https://mcki.online",
+          "url": "https://mcki.site",
           "applicationCategory": "FinanceApplication",
           "operatingSystem": "Web Browser",
           "offers": {

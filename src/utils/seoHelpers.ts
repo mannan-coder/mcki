@@ -2,10 +2,10 @@
 
 export const SEO_CONFIG = {
   siteName: 'MCKI',
-  siteUrl: 'https://mcki.online',
+  siteUrl: 'https://mcki.site',
   defaultTitle: 'MCKI - Professional Crypto Intelligence Platform',
   defaultDescription: 'Advanced cryptocurrency arbitrage intelligence powered by AI. Real-time market analysis, profitable trading opportunities, and comprehensive tools for multi-chain operations.',
-  defaultImage: 'https://mcki.online/og-image.png',
+  defaultImage: 'https://mcki.site/og-image.png',
   twitterHandle: '@mcki_crypto',
   authorName: 'MCKI Platform',
   keywords: [

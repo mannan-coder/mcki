@@ -51,7 +51,7 @@ const StructuredData = ({ type, data }: StructuredDataProps) => {
       "name": "MCKI",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://mcki.online/logo.png"
+        "url": "https://mcki.site/logo.png"
       }
     },
     "datePublished": article.publishedDate,
@@ -105,8 +105,8 @@ const StructuredData = ({ type, data }: StructuredDataProps) => {
     "operatingSystem": "Web Browser",
     "applicationCategory": "FinanceApplication",
     "description": "Advanced cryptocurrency arbitrage intelligence platform powered by AI",
-    "url": "https://mcki.online",
-    "screenshot": "https://mcki.online/screenshot.png",
+    "url": "https://mcki.site",
+    "screenshot": "https://mcki.site/screenshot.png",
     "offers": {
       "@type": "Offer",
       "price": "0",
@@ -130,12 +130,12 @@ const StructuredData = ({ type, data }: StructuredDataProps) => {
     "@type": "FinancialService",
     "name": "MCKI Crypto Intelligence",
     "description": "Professional cryptocurrency arbitrage and market intelligence services",
-    "url": "https://mcki.online",
+    "url": "https://mcki.site",
     "serviceType": "Cryptocurrency Analysis",
     "provider": {
       "@type": "Organization",
       "name": "MCKI",
-      "url": "https://mcki.online"
+      "url": "https://mcki.site"
     },
     "areaServed": "Global",
     "availableLanguage": "English"

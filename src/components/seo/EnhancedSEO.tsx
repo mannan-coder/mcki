@@ -31,7 +31,7 @@ const EnhancedSEO = ({
     "cryptocurrency insights"
   ],
   canonical,
-  ogImage = "https://mcki.online/og-image.jpg",
+  ogImage = "https://mcki.site/og-image.jpg",
   noIndex = false,
   structuredData,
   breadcrumbs = []
@@ -44,7 +44,7 @@ const EnhancedSEO = ({
     "@type": "WebApplication",
     "name": "MCKI",
     "description": description,
-    "url": "https://mcki.online",
+    "url": "https://mcki.site",
     "applicationCategory": "FinanceApplication",
     "operatingSystem": "Web Browser",
     "offers": {
@@ -55,7 +55,7 @@ const EnhancedSEO = ({
     "creator": {
       "@type": "Organization",
       "name": "MCKI Platform",
-      "url": "https://mcki.online"
+      "url": "https://mcki.site"
     },
     "datePublished": "2024-01-01",
     "dateModified": new Date().toISOString(),

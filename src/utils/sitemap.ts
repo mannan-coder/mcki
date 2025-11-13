@@ -106,7 +106,7 @@ export const STATIC_ROUTES: SitemapUrl[] = [
   }
 ];
 
-export const generateSitemapXML = (urls: SitemapUrl[], baseUrl: string = 'https://mcki.online'): string => {
+export const generateSitemapXML = (urls: SitemapUrl[], baseUrl: string = 'https://mcki.site'): string => {
   const urlEntries = urls.map(url => {
     const fullUrl = url.loc.startsWith('http') ? url.loc : `${baseUrl}${url.loc}`;
     
@@ -124,7 +124,7 @@ ${urlEntries}
 </urlset>`;
 };
 
-export const generateRobotsTxt = (sitemapUrl: string = 'https://mcki.online/sitemap.xml'): string => {
+export const generateRobotsTxt = (sitemapUrl: string = 'https://mcki.site/sitemap.xml'): string => {
   return `User-agent: *
 Allow: /
 
@@ -199,7 +199,7 @@ export const generateDynamicUrls = async (): Promise<SitemapUrl[]> => {
 };
 
 // Generate complete sitemap
-export const generateCompleteSitemap = async (baseUrl: string = 'https://mcki.online'): Promise<string> => {
+export const generateCompleteSitemap = async (baseUrl: string = 'https://mcki.site'): Promise<string> => {
   const dynamicUrls = await generateDynamicUrls();
   const allUrls = [...STATIC_ROUTES, ...dynamicUrls];
   

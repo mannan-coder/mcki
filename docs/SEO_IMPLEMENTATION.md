@@ -76,8 +76,8 @@ const MyPage = () => {
     title: "Bitcoin Arbitrage Opportunities",
     description: "Discover profitable Bitcoin arbitrage opportunities across major exchanges. Real-time price differences and trading signals.",
     keywords: ["bitcoin arbitrage", "crypto trading", "price differences"],
-    canonical: "https://mcki.online/arbitrage/bitcoin",
-    ogImage: "https://mcki.online/images/bitcoin-arbitrage.png"
+    canonical: "https://mcki.site/arbitrage/bitcoin",
+    ogImage: "https://mcki.site/images/bitcoin-arbitrage.png"
   };
 
   return (
@@ -103,8 +103,8 @@ import StructuredData from '@/components/seo/StructuredData';
     author: "MCKI Team",
     publishedDate: "2024-12-21T10:00:00Z",
     modifiedDate: "2024-12-21T15:30:00Z",
-    image: "https://mcki.online/images/article.png",
-    url: "https://mcki.online/blog/crypto-arbitrage-strategies"
+    image: "https://mcki.site/images/article.png",
+    url: "https://mcki.site/blog/crypto-arbitrage-strategies"
   }}
 />
 
@@ -133,7 +133,7 @@ const DynamicPage = () => {
     updateSEO({
       title: `${coinData.name} Price Analysis`,
       description: `Real-time ${coinData.name} price analysis with trading opportunities`,
-      ogImage: `https://mcki.online/api/og?coin=${coinData.id}`
+      ogImage: `https://mcki.site/api/og?coin=${coinData.id}`
     });
   }, [coinData]);
   
@@ -184,8 +184,8 @@ const DynamicPage = () => {
 ## 📊 Monitoring & Analytics
 
 ### Google Search Console Setup
-1. Verify your domain: `https://mcki.online`
-2. Submit sitemap: `https://mcki.online/sitemap.xml`
+1. Verify your domain: `https://mcki.site`
+2. Submit sitemap: `https://mcki.site/sitemap.xml`
 3. Monitor crawl errors and index status
 4. Review search performance data
 

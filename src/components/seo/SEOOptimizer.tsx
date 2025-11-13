@@ -59,15 +59,15 @@ const SEOOptimizer = ({
   const siteTitle = title ? `${title} | MCKI` : defaultTitle;
   const siteDescription = description || defaultDescription;
   const siteKeywords = [...defaultKeywords, ...keywords];
-  const currentUrl = `https://mcki.online${location.pathname}`;
+  const currentUrl = `https://mcki.site${location.pathname}`;
   const canonicalUrl = canonical || currentUrl;
-  const imageUrl = ogImage || "https://mcki.online/og-image.png";
+  const imageUrl = ogImage || "https://mcki.site/og-image.png";
   
   // Generate breadcrumb structured data
   const generateBreadcrumbs = () => {
     const pathSegments = location.pathname.split('/').filter(Boolean);
     const breadcrumbs = [
-      { name: 'Home', url: 'https://mcki.online' }
+      { name: 'Home', url: 'https://mcki.site' }
     ];
     
     let currentPath = '';
@@ -76,7 +76,7 @@ const SEOOptimizer = ({
       const name = segment.charAt(0).toUpperCase() + segment.slice(1).replace(/-/g, ' ');
       breadcrumbs.push({
         name,
-        url: `https://mcki.online${currentPath}`
+        url: `https://mcki.site${currentPath}`
       });
     });
     
@@ -98,11 +98,11 @@ const SEOOptimizer = ({
     "@type": "WebSite",
     "name": "MCKI",
     "alternateName": "Multi-Chain Knowledge Intelligence",
-    "url": "https://mcki.online",
+    "url": "https://mcki.site",
     "description": defaultDescription,
     "potentialAction": {
       "@type": "SearchAction",
-      "target": "https://mcki.online/search?q={search_term_string}",
+      "target": "https://mcki.site/search?q={search_term_string}",
       "query-input": "required name=search_term_string"
     },
     "sameAs": [
@@ -118,8 +118,8 @@ const SEOOptimizer = ({
     "@type": "Organization",
     "name": "MCKI",
     "alternateName": "Multi-Chain Knowledge Intelligence",
-    "url": "https://mcki.online",
-    "logo": "https://mcki.online/logo.png",
+    "url": "https://mcki.site",
+    "logo": "https://mcki.site/logo.png",
     "description": defaultDescription,
     "contactPoint": {
       "@type": "ContactPoint",
