@@ -2,6 +2,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import AutoAdsLoader from '@/components/AutoAdsLoader';
 import SEOOptimizer from '@/components/seo/SEOOptimizer';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { performanceMonitor, preloadCriticalResources } from '@/utils/performanceOptimization';
@@ -83,6 +84,7 @@ const Layout = ({ children, showFooter = true, seoProps = {} }: LayoutProps) => 
       <ErrorBoundary>
         <SEOOptimizer {...seoProps} />
         <StaticGenerator />
+        <AutoAdsLoader />
       
       <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
         <div className="absolute inset-0 bg-grid-pattern opacity-[0.02]" />

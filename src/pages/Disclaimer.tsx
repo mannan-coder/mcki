@@ -17,9 +17,9 @@ const Disclaimer = () => {
         <div className="text-center mb-12">
           <AlertTriangle className="h-16 w-16 text-warning mx-auto mb-4" />
           <h1 className="text-4xl font-bold mb-4">Disclaimer</h1>
-          <p className="text-lg text-muted-foreground">
-            Important information about risks and limitations
-          </p>
+            <p className="text-muted-foreground">
+              Important information about risks and limitations | mcki.site
+            </p>
         </div>
 
         <div className="space-y-8">

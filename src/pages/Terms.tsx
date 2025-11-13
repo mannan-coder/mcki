@@ -17,9 +17,9 @@ const Terms = () => {
         <div className="text-center mb-12">
           <FileText className="h-16 w-16 text-primary mx-auto mb-4" />
           <h1 className="text-4xl font-bold mb-4">Terms of Service</h1>
-          <p className="text-lg text-muted-foreground">
-            Last updated: January 1, 2024
-          </p>
+              <p className="text-muted-foreground">
+                Last updated: January 1, 2024 | Website: mcki.site
+              </p>
         </div>
 
         <div className="space-y-8">

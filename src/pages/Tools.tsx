@@ -337,11 +337,22 @@ const Tools = () => {
   return (
     <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Tools Overview Description */}
+        <div className="mb-8 p-6 bg-card/50 border border-border rounded-lg">
+          <h1 className="text-3xl font-bold mb-3 text-foreground">Professional Cryptocurrency Trading Calculators & Analysis Tools</h1>
+          <p className="text-muted-foreground leading-relaxed mb-4">
+            MCKI offers a comprehensive suite of professional-grade cryptocurrency trading calculators designed to help traders and investors make informed financial decisions. Our tools cover everything from ROI projections and arbitrage profit analysis to risk assessment and compound interest calculations. Each calculator uses real-time market data and advanced algorithms to provide accurate results for various trading strategies, investment scenarios, and DeFi opportunities.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            Available tools include: ROI Calculator for investment return projections, Price Change Analyzer for percentage movement tracking, Arbitrage Opportunity Finder for cross-exchange profit detection, Portfolio Performance Tracker for holdings analysis, Risk Assessment Calculator for trade risk-to-reward ratios, Compound Interest Calculator for long-term growth projections, DCA (Dollar-Cost Averaging) Calculator for systematic investment strategies, Staking Calculator for proof-of-stake reward estimation, and Trading Fees Calculator for cost comparison across multiple exchanges. Whether you're analyzing arbitrage spreads, planning your investment strategy, or calculating staking rewards, MCKI's calculator suite provides the professional tools you need for successful cryptocurrency trading and investing.
+          </p>
+        </div>
+        
           {/* Enhanced Header */}
           <div className="mb-12 text-center animate-fade-in">
             <div className="inline-flex items-center space-x-2 bg-gradient-premium text-transparent bg-clip-text mb-4">
               <Calculator className="h-8 w-8 text-primary animate-float" />
-              <h1 className="text-5xl font-bold font-sans tracking-tight">Tools & Calculators</h1>
+              <h2 className="text-5xl font-bold font-sans tracking-tight">Tools & Calculators</h2>
             </div>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
               Professional-grade financial calculators and analysis tools. 

@@ -219,6 +219,17 @@ const News = () => {
   return (
     <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 py-8">
+        {/* News Overview Description */}
+        <div className="mb-8 p-6 bg-card/50 border border-border rounded-lg">
+          <h1 className="text-3xl font-bold mb-3 text-foreground">Cryptocurrency News & Market Sentiment Analysis</h1>
+          <p className="text-muted-foreground leading-relaxed mb-4">
+            MCKI's Crypto News Hub aggregates breaking cryptocurrency news, blockchain updates, and market analysis from hundreds of trusted sources worldwide. Stay informed with real-time news articles covering regulation changes, DeFi innovations, NFT trends, government policies, technology breakthroughs, and institutional adoption. Our platform categorizes news by topic and analyzes sentiment to help you understand market psychology and anticipate price movements based on news events.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            Every news article includes AI-powered sentiment scoring (bullish, bearish, or neutral), market impact assessment, source credibility ratings, and estimated reading time. Filter news by category (Regulation, DeFi, Government, NFT, Technology, Adoption, Market Analysis) or sentiment impact to focus on the stories that matter most to your investment strategy. Track featured breaking news, analyze average market sentiment scores, and monitor how news flow correlates with price action. From SEC regulatory announcements to major exchange listings and blockchain protocol upgrades, MCKI delivers the cryptocurrency news intelligence you need to stay ahead in the fast-moving digital asset markets.
+          </p>
+        </div>
+        
         <DataSection
           title="Crypto News Hub"
           subtitle="Stay updated with the latest cryptocurrency news, market analysis, and sentiment insights"

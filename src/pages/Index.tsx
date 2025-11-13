@@ -68,11 +68,14 @@ const Index = () => {
         <section className="relative bg-gradient-to-br from-background via-background to-muted/20 border-b border-border/40">
           <div className="container mx-auto px-4 py-12 sm:py-16 text-center">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-4 sm:mb-6 tracking-tight">
-              Professional Crypto Analytics
+              Professional Crypto Analytics & Arbitrage Intelligence
             </h1>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4">
-              Real-time market data, arbitrage opportunities, and comprehensive cryptocurrency analytics
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto px-4 mb-6">
+              MCKI provides real-time cryptocurrency market data, arbitrage opportunities, and comprehensive blockchain analytics for professional traders and investors. Our platform monitors 150+ exchanges 24/7, delivering actionable insights, profitable trading opportunities, and advanced market intelligence tools to help you make informed decisions in the fast-paced crypto market.
             </p>
+            <div className="max-w-4xl mx-auto px-4 text-sm sm:text-base text-muted-foreground">
+              <p>Track live price movements across multiple exchanges, identify arbitrage spreads, analyze on-chain metrics, monitor whale movements, and stay ahead with real-time alerts. Whether you're looking for arbitrage opportunities, market sentiment analysis, or comprehensive trading calculators, MCKI delivers the data and tools you need to succeed in cryptocurrency trading.</p>
+            </div>
           </div>
         </section>
 

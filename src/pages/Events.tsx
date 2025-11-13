@@ -528,6 +528,17 @@ const EventsPage = ({}: EventsPageProps) => {
   return (
     <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 py-8">
+        {/* Events Overview Description */}
+        <div className="mb-8 p-6 bg-card/50 border border-border rounded-lg">
+          <h1 className="text-3xl font-bold mb-3 text-foreground">Live Cryptocurrency Events & Market Impact Analysis</h1>
+          <p className="text-muted-foreground leading-relaxed mb-4">
+            Stay ahead of the market with MCKI's comprehensive crypto events calendar and real-time impact analysis. Track upcoming blockchain upgrades, network launches, economic events, regulatory announcements, and major industry conferences that move cryptocurrency markets. Our platform monitors hundreds of events daily, providing detailed information about event types, expected market impact levels (high, medium, low), and live price correlation metrics to help you anticipate market movements before they happen.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            Each event includes comprehensive details such as event date and time, blockchain or project involved, event type classification (network upgrade, token unlock, partnership announcement, regulatory decision), and AI-powered market impact predictions. Filter events by type, impact level, or specific cryptocurrencies to focus on what matters most to your trading strategy. Access live alerts for breaking crypto news, monitor social sentiment trends, and analyze potential market scenarios with our bullish, neutral, and bearish forecasting models. Whether you're tracking Ethereum network upgrades, Bitcoin halving events, or emerging DeFi protocol launches, MCKI's Events page gives you the intelligence needed to position yourself ahead of significant market movements.
+          </p>
+        </div>
+
         {/* Header with Navigation */}
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">

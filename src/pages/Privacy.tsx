@@ -17,9 +17,9 @@ const Privacy = () => {
         <div className="text-center mb-12">
           <Shield className="h-16 w-16 text-primary mx-auto mb-4" />
           <h1 className="text-4xl font-bold mb-4">Privacy Policy</h1>
-          <p className="text-lg text-muted-foreground">
-            Last updated: January 1, 2024
-          </p>
+              <p className="text-muted-foreground">
+                Last updated: January 1, 2024 | Website: mcki.site
+              </p>
         </div>
 
         <div className="space-y-8">
@@ -84,6 +84,41 @@ const Privacy = () => {
                 <li><strong>Regular Audits:</strong> We conduct regular security audits and assessments</li>
                 <li><strong>Secure Infrastructure:</strong> Our platform is hosted on secure, enterprise-grade infrastructure</li>
               </ul>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Advertising and Cookies</CardTitle>
+            </CardHeader>
+            <CardContent className="prose prose-sm max-w-none dark:prose-invert">
+              <p>MCKI uses Google AdSense to display advertisements on our platform. This service uses cookies and similar technologies to provide personalized advertising based on your browsing activity.</p>
+              
+              <h4>How AdSense Works:</h4>
+              <ul>
+                <li><strong>Personalized Ads:</strong> Google uses cookies to show ads based on your interests and previous visits to mcki.site and other websites</li>
+                <li><strong>Cookie Usage:</strong> AdSense uses cookies to serve relevant advertisements and measure ad performance</li>
+                <li><strong>Third-Party Vendors:</strong> Google and other advertising partners may use cookies to display ads across the internet</li>
+                <li><strong>Data Collection:</strong> Information collected includes device type, browser, IP address, and browsing behavior</li>
+              </ul>
+
+              <h4>Your Advertising Choices:</h4>
+              <ul>
+                <li>Visit <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google Ad Settings</a> to manage your personalized advertising preferences</li>
+                <li>Opt out of personalized advertising by visiting <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">aboutads.info</a></li>
+                <li>Use browser settings to block or delete cookies (this may affect site functionality)</li>
+                <li>Visit <a href="https://policies.google.com/technologies/ads" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google's Advertising Policies</a> for more information</li>
+              </ul>
+
+              <h4>Cookie Types We Use:</h4>
+              <ul>
+                <li><strong>Essential Cookies:</strong> Required for basic site functionality</li>
+                <li><strong>Analytics Cookies:</strong> Help us understand how visitors use our site</li>
+                <li><strong>Advertising Cookies:</strong> Used by Google AdSense to deliver personalized ads</li>
+                <li><strong>Third-Party Cookies:</strong> Set by our advertising and analytics partners</li>
+              </ul>
+
+              <p className="font-medium">By using mcki.site, you consent to the use of cookies for advertising purposes as described in this policy.</p>
             </CardContent>
           </Card>
 

@@ -277,6 +277,17 @@ const MarketPage = () => {
   return (
     <Layout>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8 py-8">
+        {/* Market Overview Description */}
+        <div className="mb-8 p-6 bg-card/50 border border-border rounded-lg">
+          <h1 className="text-3xl font-bold mb-3 text-foreground">Comprehensive Cryptocurrency Market Analysis</h1>
+          <p className="text-muted-foreground leading-relaxed mb-4">
+            MCKI's Market Intelligence page provides real-time cryptocurrency market data across 150+ exchanges, tracking billions in daily trading volume. Our platform delivers live price feeds, market capitalization data, 24-hour trading volumes, and percentage changes for thousands of digital assets. Monitor market dominance metrics, track active cryptocurrencies, and analyze price movements with professional-grade tools designed for serious traders and investors.
+          </p>
+          <p className="text-muted-foreground leading-relaxed">
+            Access detailed market signals including top gainers and losers, trending cryptocurrencies, and newly listed tokens. Our advanced filtering system allows you to search by coin name, filter by category (DeFi, Layer 1, Layer 2, Gaming, NFT, Meme, AI, RWA, Privacy), and track your favorite assets. Each cryptocurrency entry includes live price charts, 24-hour change indicators, market cap rankings, and trading volume metrics. Stay informed with real-time market updates that help you identify profitable trading opportunities and make data-driven investment decisions in the volatile cryptocurrency market.
+          </p>
+        </div>
+
         <DataSection
           title="Cryptocurrency Market"
           subtitle={
