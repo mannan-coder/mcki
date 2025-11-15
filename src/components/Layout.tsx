@@ -5,7 +5,7 @@ import Footer from '@/components/Footer';
 import AutoAdsLoader from '@/components/AutoAdsLoader';
 import SEOOptimizer from '@/components/seo/SEOOptimizer';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
-import { performanceMonitor, preloadCriticalResources } from '@/utils/performanceOptimization';
+import { initializePerformanceOptimizations } from '@/utils/performanceOptimizer';
 import { StaticGenerator } from '@/components/seo/StaticGenerator';
 
 interface LayoutProps {
@@ -33,12 +33,8 @@ const Layout = ({ children, showFooter = true, seoProps = {} }: LayoutProps) => 
   });
 
   useEffect(() => {
-    // Performance monitoring
-    performanceMonitor.measurePageLoad();
-    performanceMonitor.measureLCP();
-    
-    // Preload critical resources
-    preloadCriticalResources();
+    // Initialize all performance optimizations
+    initializePerformanceOptimizations();
     
     // Set dark mode as default on first load
     if (!document.documentElement.classList.contains('dark') && !document.documentElement.classList.contains('light')) {
