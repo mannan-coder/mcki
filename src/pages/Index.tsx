@@ -11,6 +11,7 @@ import { InsightsEventsSection } from '@/components/sections/InsightsEventsSecti
 import { TopVolumeSection } from '@/components/sections/TopVolumeSection';
 import OnChainAnalysis from '@/components/OnChainAnalysis';
 import LivePricesAcrossExchanges from '@/components/arbitrage/LivePricesAcrossExchanges';
+import { ContentEnhancer } from '@/components/seo/ContentEnhancer';
 import { Toaster } from '@/components/ui/sonner';
 import { useOptimizedCryptoData } from '@/hooks/useOptimizedCryptoData';
 
@@ -152,6 +153,9 @@ const Index = () => {
         <section className="container mx-auto px-4 py-8 border-t border-border/40">
           <CalculatorsSuiteSection />
         </section>
+
+        {/* Rich Content Section for SEO and AdSense */}
+        <ContentEnhancer />
       </div>
       
       <Toaster />

@@ -12,97 +12,97 @@ export const STATIC_ROUTES: SitemapUrl[] = [
     loc: '/',
     changefreq: 'daily',
     priority: 1.0,
-    lastmod: new Date().toISOString().split('T')[0]
+    lastmod: '2025-01-15'
   },
   {
     loc: '/about',
     changefreq: 'monthly',
     priority: 0.8,
-    lastmod: new Date().toISOString().split('T')[0]
+    lastmod: '2025-01-15'
   },
   {
     loc: '/arbitrage',
     changefreq: 'hourly',
     priority: 0.9,
-    lastmod: new Date().toISOString().split('T')[0]
+    lastmod: '2025-01-15'
   },
   {
     loc: '/market',
     changefreq: 'hourly',
     priority: 0.9,
-    lastmod: new Date().toISOString().split('T')[0]
+    lastmod: '2025-01-15'
   },
   {
     loc: '/analytics',
     changefreq: 'daily',
     priority: 0.8,
-    lastmod: new Date().toISOString().split('T')[0]
+    lastmod: '2025-01-15'
   },
   {
     loc: '/chain-analytics',
     changefreq: 'daily',
     priority: 0.8,
-    lastmod: new Date().toISOString().split('T')[0]
+    lastmod: '2025-01-15'
   },
   {
     loc: '/news',
     changefreq: 'hourly',
     priority: 0.8,
-    lastmod: new Date().toISOString().split('T')[0]
+    lastmod: '2025-01-15'
   },
   {
     loc: '/events',
     changefreq: 'daily',
     priority: 0.7,
-    lastmod: new Date().toISOString().split('T')[0]
+    lastmod: '2025-01-15'
   },
   {
     loc: '/tools',
     changefreq: 'weekly',
     priority: 0.7,
-    lastmod: new Date().toISOString().split('T')[0]
+    lastmod: '2025-01-15'
   },
   {
     loc: '/alerts',
     changefreq: 'daily',
     priority: 0.7,
-    lastmod: new Date().toISOString().split('T')[0]
+    lastmod: '2025-01-15'
   },
   {
     loc: '/blog',
     changefreq: 'daily',
     priority: 0.8,
-    lastmod: new Date().toISOString().split('T')[0]
+    lastmod: '2025-01-15'
   },
   {
     loc: '/contact',
     changefreq: 'monthly',
     priority: 0.6,
-    lastmod: new Date().toISOString().split('T')[0]
+    lastmod: '2025-01-15'
   },
   {
     loc: '/careers',
     changefreq: 'weekly',
     priority: 0.6,
-    lastmod: new Date().toISOString().split('T')[0]
+    lastmod: '2025-01-15'
   },
   {
     loc: '/privacy',
     changefreq: 'yearly',
     priority: 0.3,
-    lastmod: new Date().toISOString().split('T')[0]
+    lastmod: '2025-01-15'
   },
   {
     loc: '/terms',
     changefreq: 'yearly',
     priority: 0.3,
-    lastmod: new Date().toISOString().split('T')[0]
+    lastmod: '2025-01-15'
   },
   {
     loc: '/disclaimer',
     changefreq: 'yearly',
     priority: 0.3,
-    lastmod: new Date().toISOString().split('T')[0]
+    lastmod: '2025-01-15'
   }
 ];
 
@@ -171,7 +171,7 @@ export const generateDynamicUrls = async (): Promise<SitemapUrl[]> => {
         loc: `/coin/${coinId}`,
         changefreq: 'daily',
         priority: 0.7,
-        lastmod: new Date().toISOString().split('T')[0]
+        lastmod: '2025-01-15'
       });
     });
     
@@ -181,13 +181,13 @@ export const generateDynamicUrls = async (): Promise<SitemapUrl[]> => {
         loc: '/market-cap-details',
         changefreq: 'daily',
         priority: 0.6,
-        lastmod: new Date().toISOString().split('T')[0]
+        lastmod: '2025-01-15'
       },
       {
         loc: '/volume-details',
         changefreq: 'daily',
         priority: 0.6,
-        lastmod: new Date().toISOString().split('T')[0]
+        lastmod: '2025-01-15'
       }
     );
     
