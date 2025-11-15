@@ -30,6 +30,10 @@ const SEOHead = ({
 }: SEOHeadProps) => {
   const siteTitle = "MCKI - Crypto Intelligence Platform";
   const fullTitle = title === siteTitle ? title : `${title} | ${siteTitle}`;
+  
+  // Ensure canonical URL is always set and properly formatted
+  const canonicalUrl = canonical || `https://mcki.site${window.location.pathname}`;
+  const cleanCanonicalUrl = canonicalUrl.replace(/\/$/, ''); // Remove trailing slash
 
   return (
     <Helmet>
@@ -39,10 +43,10 @@ const SEOHead = ({
       <meta name="keywords" content={keywords.join(', ')} />
       
       {/* Robots */}
-      <meta name="robots" content={noIndex ? "noindex, nofollow" : "index, follow"} />
+      <meta name="robots" content={noIndex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"} />
       
-      {/* Canonical URL */}
-      {canonical && <link rel="canonical" href={canonical} />}
+      {/* Canonical URL - Always present and indexable */}
+      <link rel="canonical" href={cleanCanonicalUrl} />
       
       {/* Open Graph */}
       <meta property="og:title" content={fullTitle} />
