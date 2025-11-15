@@ -63,8 +63,8 @@ export const useCryptoData = () => {
   useEffect(() => {
     fetchCryptoData();
     
-    // Refresh data every 45 seconds to avoid rate limits
-    const interval = setInterval(() => fetchCryptoData(), 45000);
+    // Refresh data every 60 seconds to match cache TTL and reduce rate limits
+    const interval = setInterval(() => fetchCryptoData(), 60000);
     
     return () => clearInterval(interval);
   }, []);

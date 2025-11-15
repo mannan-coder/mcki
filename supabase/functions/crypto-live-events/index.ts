@@ -5,6 +5,38 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+// In-memory cache with TTL
+const cache = new Map();
+const CACHE_TTL = 60000; // 60 seconds
+
+// Retry logic with timeout
+async function fetchWithRetry(url: string, retries = 2, baseDelay = 2000): Promise<Response> {
+  for (let i = 0; i < retries; i++) {
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
+      
+      const response = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+      
+      if (response.ok) return response;
+      
+      if (response.status === 429 || response.status >= 500) {
+        const waitTime = baseDelay * Math.pow(2, i);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+        continue;
+      }
+      
+      throw new Error(`HTTP ${response.status}`);
+    } catch (error) {
+      if (i === retries - 1) throw error;
+      const waitTime = baseDelay * Math.pow(2, i);
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+    }
+  }
+  throw new Error('Max retries exceeded');
+}
+
 interface CoinGeckoEvent {
   id: string;
   title: string;
@@ -38,6 +70,18 @@ serve(async (req) => {
 
   try {
     console.log('Fetching comprehensive live events data...');
+    
+    // Check cache first
+    const cacheKey = 'live-events-data';
+    const cached = cache.get(cacheKey);
+    const now = Date.now();
+    
+    if (cached && (now - cached.timestamp) < CACHE_TTL) {
+      console.log('Returning cached live events data');
+      return new Response(JSON.stringify(cached.data), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
 
     // Fetch multiple data sources in parallel for better performance
     const [eventsData, marketData, globalData] = await Promise.all([
@@ -70,6 +114,12 @@ serve(async (req) => {
       lastUpdated: new Date().toISOString(),
       success: true
     };
+    
+    // Cache the result
+    cache.set(cacheKey, {
+      data: responseData,
+      timestamp: now
+    });
 
     console.log('Live events data processed successfully:', processedEvents.length, 'events');
 
@@ -107,20 +157,18 @@ serve(async (req) => {
 
 async function fetchCoinGeckoEvents() {
   try {
-    const response = await fetch('https://api.coingecko.com/api/v3/events?upcoming_events_only=true&with_description=true&page=1');
-    if (!response.ok) throw new Error(`Events API error: ${response.status}`);
+    const response = await fetchWithRetry('https://api.coingecko.com/api/v3/events?upcoming_events_only=true&with_description=true&page=1');
     const data = await response.json();
     return data.data || [];
   } catch (error) {
-    console.error('Error fetching CoinGecko events:', error);
-    return [];
+    console.error('Error fetching CoinGecko events (using fallback):', error);
+    return []; // Fallback will be used
   }
 }
 
 async function fetchMarketData() {
   try {
-    const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=24h,7d');
-    if (!response.ok) throw new Error(`Market data API error: ${response.status}`);
+    const response = await fetchWithRetry('https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=20&page=1&sparkline=false&price_change_percentage=24h,7d');
     return await response.json();
   } catch (error) {
     console.error('Error fetching market data:', error);
@@ -130,8 +178,7 @@ async function fetchMarketData() {
 
 async function fetchGlobalData() {
   try {
-    const response = await fetch('https://api.coingecko.com/api/v3/global');
-    if (!response.ok) throw new Error(`Global data API error: ${response.status}`);
+    const response = await fetchWithRetry('https://api.coingecko.com/api/v3/global');
     const data = await response.json();
     return data.data || {};
   } catch (error) {
