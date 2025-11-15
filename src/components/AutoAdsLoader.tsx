@@ -20,25 +20,50 @@ const AutoAdsLoader = () => {
       return;
     }
 
-    // Wait for meaningful content to load before initializing ads
+    let timeoutId: NodeJS.Timeout;
+
+    // Wait for meaningful content and DOM ready before initializing ads
     const initializeAds = () => {
       try {
-        // Check if adsbygoogle script is loaded
-        if (typeof window !== 'undefined' && (window as any).adsbygoogle) {
+        // Check if adsbygoogle script is loaded and DOM has content
+        const hasContent = document.body.children.length > 2; // More than just script tags
+        
+        if (typeof window !== 'undefined' && (window as any).adsbygoogle && hasContent) {
           // Auto Ads are already initialized via the script tag in index.html
-          // No need to push anything - Auto Ads handles placement automatically
+          // Mark as initialized to prevent duplicates
           adsInitialized.current = true;
-          console.log('Google Auto Ads ready');
+          
+          // Signal that ads are ready (only in development)
+          if (process.env.NODE_ENV === 'development') {
+            console.log('Google Auto Ads ready');
+          }
         }
       } catch (error) {
-        console.error('Error initializing Auto Ads:', error);
+        // Silently fail in production
+        if (process.env.NODE_ENV === 'development') {
+          console.error('Error initializing Auto Ads:', error);
+        }
       }
     };
 
-    // Wait for page content to be meaningful before initializing
-    const timer = setTimeout(initializeAds, 1000);
+    // Wait for DOM content and meaningful content to load
+    if (document.readyState === 'complete') {
+      timeoutId = setTimeout(initializeAds, 1500);
+    } else {
+      const handleLoad = () => {
+        timeoutId = setTimeout(initializeAds, 1500);
+      };
+      window.addEventListener('load', handleLoad);
+      
+      return () => {
+        window.removeEventListener('load', handleLoad);
+        if (timeoutId) clearTimeout(timeoutId);
+      };
+    }
 
-    return () => clearTimeout(timer);
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
   }, []);
 
   // This component doesn't render anything - it just manages Auto Ads initialization

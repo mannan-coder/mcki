@@ -60,8 +60,8 @@ export const useSEO = (seoData: SEOData = {}) => {
     }
     ogImageMeta.setAttribute('content', ogImage);
     
-    // Track page view for analytics
-    if (typeof window !== 'undefined' && window.gtag) {
+    // Track page view for analytics (only in production)
+    if (typeof window !== 'undefined' && window.gtag && process.env.NODE_ENV === 'production') {
       window.gtag('config', 'GA_MEASUREMENT_ID', {
         page_title: title,
         page_location: window.location.href,
