@@ -40,7 +40,8 @@ const ExchangePriceMobile = ({ coinData, isDarkMode }: ExchangePriceMobileProps)
                 className="w-16 h-16 rounded-full"
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
-                  target.src = `https://via.placeholder.com/64x64/666666/ffffff?text=${coin.symbol.charAt(0)}`;
+                  const { getCoinFallbackAvatar } = require('@/utils/avatarGenerator');
+                  target.src = getCoinFallbackAvatar(coin.symbol, 64);
                 }}
               />
               <div className="flex-1">

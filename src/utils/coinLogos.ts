@@ -19,7 +19,14 @@ export const getExchangeLogo = (exchange: string): string => {
   };
   
   const exchangeName = exchange.toLowerCase();
-  return exchangeLogos[exchangeName] || `https://via.placeholder.com/24x24/666666/ffffff?text=${exchange.charAt(0).toUpperCase()}`;
+  
+  // Use local fallback instead of via.placeholder.com
+  if (!exchangeLogos[exchangeName]) {
+    const { getExchangeFallbackAvatar } = require('./avatarGenerator');
+    return getExchangeFallbackAvatar(exchange, 24);
+  }
+  
+  return exchangeLogos[exchangeName];
 };
 
 export const getCoinLogoById = (coinId: string): string => {

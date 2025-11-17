@@ -204,7 +204,8 @@ const LiveArbitrageOpportunitiesTable = ({
                         className="w-8 h-8 rounded-full"
                         onError={(e) => {
                           const target = e.target as HTMLImageElement;
-                          target.src = `https://via.placeholder.com/32x32/666666/ffffff?text=${(opportunity.pair?.split('/')[0] || 'C').charAt(0)}`;
+                          const { getCoinFallbackAvatar } = require('@/utils/avatarGenerator');
+                          target.src = getCoinFallbackAvatar(opportunity.pair?.split('/')[0] || 'C', 32);
                         }}
                       />
                       <div>
