@@ -8,7 +8,7 @@ interface OptimizedLiveMarketSignalsSectionProps {
 }
 
 export const OptimizedLiveMarketSignalsSection = ({ loading }: OptimizedLiveMarketSignalsSectionProps) => {
-  const { data: marketData, isLoading } = useOptimizedMarketOverview();
+  const { data: marketData, isLoading, isError } = useOptimizedMarketOverview();
 
   if (isLoading || loading) {
     return (
@@ -34,8 +34,21 @@ export const OptimizedLiveMarketSignalsSection = ({ loading }: OptimizedLiveMark
     );
   }
 
-  if (!marketData) {
-    return null;
+  if (isError || !marketData) {
+    return (
+      <section className="space-y-6">
+        <div className="text-center py-12">
+          <div className="max-w-md mx-auto">
+            <h3 className="text-xl font-semibold text-foreground mb-2">
+              Market Data Temporarily Unavailable
+            </h3>
+            <p className="text-muted-foreground">
+              We're experiencing temporary connectivity issues. Please check back in a few minutes.
+            </p>
+          </div>
+        </div>
+      </section>
+    );
   }
 
   return (

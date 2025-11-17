@@ -61,23 +61,25 @@ export const useOptimizedMarketOverview = () => {
   const query = useQuery({
     queryKey: ['optimized-market-overview'],
     queryFn: async (): Promise<OptimizedMarketData> => {
-      console.log('Fetching optimized market overview data...');
-      
-      const { data, error } = await supabase.functions.invoke('crypto-market-overview');
-      
-      if (error) {
-        console.error('Error fetching market overview:', error);
-        throw new Error(error.message || 'Failed to fetch market overview');
+      try {
+        const { data, error } = await supabase.functions.invoke('crypto-market-overview');
+        
+        if (error) {
+          console.warn('⚠️ Market overview API temporarily unavailable:', error.message);
+          throw new Error('Market data unavailable');
+        }
+        
+        return data;
+      } catch (error) {
+        console.warn('⚠️ Unable to load live market data. Please try again later.');
+        throw error;
       }
-      
-      console.log('Market overview data fetched successfully');
-      return data;
     },
     staleTime: 2 * 60 * 1000, // 2 minutes
-    refetchInterval: 3 * 60 * 1000, // 3 minutes
+    refetchInterval: false, // Disable auto-refetch to prevent error spam
     refetchOnWindowFocus: false,
-    retry: 2,
-    retryDelay: 1000,
+    retry: 1, // Only retry once
+    retryDelay: 3000,
   });
 
   const refetch = async () => {

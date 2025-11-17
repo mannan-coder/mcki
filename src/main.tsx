@@ -53,7 +53,8 @@ const initPerformanceMonitoring = () => {
 preloadCriticalResources();
 injectCriticalCSS();
 initPerformanceMonitoring();
-registerServiceWorker();
+// Service Worker disabled to prevent cache errors
+// registerServiceWorker();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

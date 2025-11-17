@@ -33,7 +33,8 @@ const CoinPriceRow = ({ coin, isDarkMode }: CoinPriceRowProps) => {
             className="w-8 h-8 rounded-full"
             onError={(e) => {
               const target = e.target as HTMLImageElement;
-              target.src = `https://via.placeholder.com/32x32/666666/ffffff?text=${coin.symbol.charAt(0)}`;
+              const { getCoinFallbackAvatar } = require('@/utils/avatarGenerator');
+              target.src = getCoinFallbackAvatar(coin.symbol, 32);
             }}
           />
           <div>
