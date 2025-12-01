@@ -89,22 +89,6 @@ const Footer = ({ isDarkMode }: FooterProps) => {
               Advanced cryptocurrency arbitrage intelligence powered by AI. Real-time market analysis, 
               profitable trading opportunities, and comprehensive tools for multi-chain operations.
             </p>
-            
-            {/* Social Links */}
-            <div className="flex space-x-4">
-              {socialLinks.map((social) => (
-                <a
-                  key={social.name}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="p-2 rounded-lg bg-muted/50 hover:bg-primary/10 transition-colors group"
-                  aria-label={social.name}
-                >
-                  <social.icon className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
-                </a>
-              ))}
-            </div>
           </div>
 
           {/* Footer Links */}
