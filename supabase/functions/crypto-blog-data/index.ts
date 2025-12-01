@@ -624,7 +624,7 @@ Flash loans revolutionized arbitrage by allowing traders to borrow massive amoun
 
 **Basic Flash Loan Arbitrage Flow:**
 
-```
+\`\`\`
 Transaction Block:
 1. Borrow 1,000 ETH from Aave
 2. Swap 1,000 ETH → USDC on Uniswap ($3,000 per ETH = $3,000,000)
@@ -632,7 +632,7 @@ Transaction Block:
 4. Repay 1,000 ETH + 0.9 ETH fee to Aave
 5. Profit: 4.1 ETH (~$12,300)
 6. Gas cost: ~$50-200 (depending on network congestion)
-```
+\`\`\`
 
 **Transaction completes in ~12 seconds on Ethereum**
 
@@ -1040,9 +1040,9 @@ Professional traders exploit these inefficiencies while managing complex risk ex
 ### Understanding Put-Call Parity
 
 **Theoretical Relationship:**
-```
+\`\`\`
 Call Price - Put Price = Spot Price - Present Value (Strike Price)
-```
+\`\`\`
 
 When this equality doesn't hold, arbitrage opportunities exist.
 
