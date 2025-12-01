@@ -1724,9 +1724,10 @@ The crypto market offers unprecedented opportunities, but survival comes first:
 
 Want to see real-time risk metrics and manage your portfolio professionally? Visit [MCKI Platform](https://mcki.site/tools) for comprehensive risk management tools.
 
+
 ---
 
-**This article is for educational purposes only and does not constitute financial advice.**\`
+**This article is for educational purposes only and does not constitute financial advice.**`
   },
   {
     id: 'understanding-order-books',
@@ -2187,7 +2188,7 @@ Want to analyze order books across multiple exchanges simultaneously? Visit [MCK
 
 ---
 
-**This article is for educational purposes only and does not constitute financial advice.**\`
+**This article is for educational purposes only and does not constitute financial advice.**`
   },
   {
     id: 'cross-chain-arbitrage',
@@ -2777,7 +2778,7 @@ Want to explore cross-chain opportunities without building infrastructure? Visit
 
 ---
 
-**This article is for educational purposes only and does not constitute financial advice.**\`
+**This article is for educational purposes only and does not constitute financial advice.**`
   },
   {
     id: 'candlestick-patterns-guide',
@@ -3376,7 +3377,7 @@ Ready to apply these patterns? Visit [MCKI Platform](https://mcki.site/market) f
 
 ---
 
-**This article is for educational purposes only and does not constitute financial advice.**\`
+**This article is for educational purposes only and does not constitute financial advice.**`
   },
   {
     id: 'building-trading-bot',
@@ -4049,7 +4050,7 @@ Ready to start building? Visit [MCKI Platform](https://mcki.site/) for real-time
 
 ---
 
-**This article is for educational purposes only and does not constitute financial advice.**\`
+**This article is for educational purposes only and does not constitute financial advice.**`
   }
 ];
 
