@@ -59,7 +59,7 @@ export const useBlogData = () => {
         body: {
           page,
           category: category === 'All' ? '' : category,
-          limit: 12
+          limit: 25
         }
       });
 
