@@ -1315,62 +1315,11 @@ serve(async (req) => {
     // Get unique categories
     const categories = ['All', ...new Set(seoArticles.map(article => article.category))]
 
-    const blogPosts: BlogPost[] = paginatedArticles.map(article => ({
-      ...article,
-      featured: article.featured || false,
-      tags: article.tags || []
-    }));
-      // Calculate estimated read time based on content length
-      const fullContent = article.content || article.description || ''
-      const wordCount = fullContent.split(' ').length
-      const readTime = Math.max(2, Math.ceil(wordCount / 200)) // Average reading speed: 200 words/minute
-      
-      // Determine category based on keywords
-      let category = 'General'
-      const title = (article.title || '').toLowerCase()
-      const description = (article.description || '').toLowerCase()
-      const content = title + ' ' + description
-      
-      if (content.includes('bitcoin') || content.includes('btc')) category = 'Bitcoin'
-      else if (content.includes('ethereum') || content.includes('eth') || content.includes('erc')) category = 'Ethereum'
-      else if (content.includes('trading') || content.includes('arbitrage') || content.includes('exchange')) category = 'Trading'
-      else if (content.includes('defi') || content.includes('decentralized') || content.includes('dex')) category = 'DeFi'
-      else if (content.includes('blockchain') || content.includes('technology') || content.includes('smart contract')) category = 'Technology'
-      else if (content.includes('market') || content.includes('analysis') || content.includes('price')) category = 'Analysis'
-      else if (content.includes('regulation') || content.includes('legal') || content.includes('sec')) category = 'Regulation'
-      else if (content.includes('nft') || content.includes('token') || content.includes('web3')) category = 'Web3'
-
-      // Enhanced content formatting
-      let enhancedContent = fullContent
-      
-      // Add structured content if available
-      if (article.content && article.content.length > 200) {
-        // Break long content into paragraphs
-        enhancedContent = article.content
-          .split('. ')
-          .map((sentence: string) => sentence.trim())
-          .filter((sentence: string) => sentence.length > 20)
-          .join('. ')
-          .replace(/([.!?])\s+/g, '$1\n\n') // Add paragraph breaks
-      }
-
-      // Add market context for crypto articles
-      if (['Bitcoin', 'Ethereum', 'Trading', 'DeFi', 'Analysis'].includes(category)) {
-        enhancedContent += `\n\n**Market Context:** This ${category.toLowerCase()} news could impact trading opportunities and arbitrage potential across major cryptocurrency exchanges.`
-      }
-
+    const blogPosts: BlogPost[] = paginatedArticles.map(article => {
       return {
-        id: article.article_id || `${Date.now()}-${index}`,
-        title: article.title || 'Crypto Market Update',
-        description: article.description || 'Latest developments in the cryptocurrency and blockchain space.',
-        content: enhancedContent || 'Content not available. Please visit the source for full details.',
-        author: article.source_name || 'Crypto News Network',
-        published_at: article.pubDate || new Date().toISOString(),
-        category,
-        image_url: article.image_url || `https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=800&h=400&fit=crop&crop=center`, // Crypto fallback image
-        source_name: article.source_name || 'Crypto News',
-        source_url: article.link || '#',
-        read_time: `${readTime} min read`
+        ...article,
+        featured: article.featured || false,
+        tags: article.tags || []
       }
     }) || []
 
