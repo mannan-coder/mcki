@@ -88,19 +88,22 @@ const Blog = () => {
   return (
     <Layout>
       <SEOHead 
-        title="Blog - Live Crypto Trading Insights & News"
-        description="Latest real-time insights, analysis, and educational content about cryptocurrency arbitrage trading, market trends, and blockchain technology."
-        keywords={["crypto news", "live crypto blog", "arbitrage insights", "trading analysis", "blockchain education", "cryptocurrency market"]}
+        title="Crypto Trading Blog - Expert Arbitrage & Market Analysis | MCKI"
+        description="Expert cryptocurrency trading blog with 20+ in-depth articles on arbitrage strategies, risk management, on-chain analysis, and market psychology. Learn from professional traders."
+        keywords={["crypto trading blog", "cryptocurrency arbitrage guide", "crypto trading strategies", "blockchain analysis", "market psychology", "DeFi trading", "whale tracking", "trading bots"]}
       />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Header */}
-        <div className="text-center mb-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* SEO-optimized Header */}
+        <header className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            MCKI Live Blog
+            Cryptocurrency Trading Blog
           </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Real-time insights, analysis, and educational content about cryptocurrency arbitrage trading and market intelligence.
+          <h2 className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto mb-4">
+            Expert Guides on Arbitrage, Market Analysis & Trading Strategies
+          </h2>
+          <p className="text-base text-muted-foreground max-w-2xl mx-auto">
+            Explore {blogData?.total || 20}+ comprehensive articles covering cryptocurrency arbitrage, risk management, on-chain analysis, and advanced trading techniques.
           </p>
           
           {/* Refresh button */}
@@ -112,10 +115,10 @@ const Blog = () => {
               className="gap-2"
             >
               <RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-              Refresh
+              Refresh Articles
             </Button>
           </div>
-        </div>
+        </header>
 
         {/* Error Alert */}
         {error && (
@@ -129,7 +132,7 @@ const Blog = () => {
 
         {/* Categories Filter */}
         {blogData?.categories && (
-          <div className="flex flex-wrap gap-2 mb-8 justify-center">
+          <nav aria-label="Article categories" className="flex flex-wrap gap-2 mb-8 justify-center">
             {blogData.categories.map((category) => (
               <Badge 
                 key={category} 
@@ -140,7 +143,7 @@ const Blog = () => {
                 {category}
               </Badge>
             ))}
-          </div>
+          </nav>
         )}
 
         {/* Loading State */}
@@ -414,7 +417,7 @@ const Blog = () => {
             </Button>
           </div>
         )}
-      </div>
+      </main>
     </Layout>
   );
 };
