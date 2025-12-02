@@ -9,6 +9,7 @@ import { Clock, User, ArrowRight, RefreshCw, ExternalLink, AlertCircle } from 'l
 import { useBlogData, BlogPost } from '@/hooks/useBlogData';
 import { formatDistanceToNow, parseISO } from 'date-fns';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const Blog = () => {
   const {
@@ -206,19 +207,69 @@ const Blog = () => {
                   {/* Article Content */}
                   <div className="prose-content text-base leading-relaxed">
                     {selectedArticle.content.split('\n\n').map((paragraph, index) => {
-                      if (paragraph.trim().startsWith('**') && paragraph.trim().endsWith('**')) {
-                        // Handle bold headers
+                      const cleanParagraph = paragraph
+                        .replace(/^#{1,6}\s*/gm, '') // Remove # headers
+                        .replace(/\*\*/g, '') // Remove **bold**
+                        .replace(/\*/g, '') // Remove *italic*
+                        .replace(/---/g, '') // Remove horizontal rules
+                        .trim();
+                      
+                      if (!cleanParagraph) return null;
+                      
+                      // Check if it's a heading-like line (short, no punctuation at end)
+                      const isHeading = cleanParagraph.length < 80 && 
+                        !cleanParagraph.endsWith('.') && 
+                        !cleanParagraph.endsWith(':') &&
+                        !cleanParagraph.startsWith('•') &&
+                        !cleanParagraph.match(/^\d+\./);
+                      
+                      // Check if it's a list item
+                      const isList = cleanParagraph.startsWith('•') || cleanParagraph.match(/^\d+\./);
+                      
+                      // Check if it contains a URL for linking
+                      const urlMatch = cleanParagraph.match(/(https?:\/\/[^\s]+)/g);
+                      
+                      if (isHeading && index > 0) {
                         return (
-                          <div key={index} className="my-6 p-4 bg-primary/10 rounded-lg border-l-4 border-primary">
-                            <h3 className="font-bold text-lg text-primary m-0">
-                              {paragraph.replace(/\*\*/g, '')}
-                            </h3>
-                          </div>
+                          <h3 key={index} className="text-xl font-semibold mt-8 mb-4 text-foreground">
+                            {cleanParagraph}
+                          </h3>
                         );
                       }
+                      
+                      if (isList) {
+                        return (
+                          <p key={index} className="mb-2 text-foreground pl-4">
+                            {cleanParagraph}
+                          </p>
+                        );
+                      }
+                      
+                      // Render paragraph with clickable links
+                      if (urlMatch) {
+                        const parts = cleanParagraph.split(/(https?:\/\/[^\s]+)/g);
+                        return (
+                          <p key={index} className="mb-4 text-foreground leading-relaxed">
+                            {parts.map((part, i) => 
+                              part.match(/^https?:\/\//) ? (
+                                <a 
+                                  key={i} 
+                                  href={part} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="text-primary hover:underline"
+                                >
+                                  {part.replace(/https?:\/\/(www\.)?/, '').split('/')[0]}
+                                </a>
+                              ) : part
+                            )}
+                          </p>
+                        );
+                      }
+                      
                       return (
-                        <p key={index} className="mb-4 text-foreground">
-                          {paragraph}
+                        <p key={index} className="mb-4 text-foreground leading-relaxed">
+                          {cleanParagraph}
                         </p>
                       );
                     })}
@@ -257,13 +308,49 @@ const Blog = () => {
                       Discover profitable arbitrage opportunities with MCKI's real-time market analysis.
                     </p>
                     <div className="flex flex-wrap justify-center gap-3">
-                      <Button className="gap-2">
-                        Explore Arbitrage Tools
-                        <ArrowRight className="h-4 w-4" />
+                      <Button asChild className="gap-2">
+                        <Link to="/arbitrage">
+                          Explore Arbitrage Tools
+                          <ArrowRight className="h-4 w-4" />
+                        </Link>
                       </Button>
-                      <Button variant="outline">
-                        View Market Data
+                      <Button asChild variant="outline">
+                        <Link to="/market">View Market Data</Link>
                       </Button>
+                    </div>
+                  </div>
+                  
+                  {/* Internal Navigation Links */}
+                  <div className="mt-6 p-4 border border-border rounded-lg not-prose">
+                    <h4 className="text-sm font-semibold mb-3 text-muted-foreground">Explore MCKI Platform:</h4>
+                    <div className="flex flex-wrap gap-2">
+                      <Link to="/" className="text-sm text-primary hover:underline">Dashboard</Link>
+                      <span className="text-muted-foreground">•</span>
+                      <Link to="/arbitrage" className="text-sm text-primary hover:underline">Arbitrage Scanner</Link>
+                      <span className="text-muted-foreground">•</span>
+                      <Link to="/market" className="text-sm text-primary hover:underline">Market Overview</Link>
+                      <span className="text-muted-foreground">•</span>
+                      <Link to="/analytics" className="text-sm text-primary hover:underline">On-Chain Analytics</Link>
+                      <span className="text-muted-foreground">•</span>
+                      <Link to="/news" className="text-sm text-primary hover:underline">Crypto News</Link>
+                      <span className="text-muted-foreground">•</span>
+                      <Link to="/tools" className="text-sm text-primary hover:underline">Trading Tools</Link>
+                    </div>
+                    <div className="mt-3 pt-3 border-t border-border">
+                      <h4 className="text-sm font-semibold mb-2 text-muted-foreground">External Resources:</h4>
+                      <div className="flex flex-wrap gap-2">
+                        <a href="https://www.coingecko.com" target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1">
+                          CoinGecko <ExternalLink className="h-3 w-3" />
+                        </a>
+                        <span className="text-muted-foreground">•</span>
+                        <a href="https://www.tradingview.com" target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1">
+                          TradingView <ExternalLink className="h-3 w-3" />
+                        </a>
+                        <span className="text-muted-foreground">•</span>
+                        <a href="https://www.investopedia.com/cryptocurrency-4427699" target="_blank" rel="noopener noreferrer" className="text-sm text-primary hover:underline flex items-center gap-1">
+                          Investopedia <ExternalLink className="h-3 w-3" />
+                        </a>
+                      </div>
                     </div>
                   </div>
                 </article>
