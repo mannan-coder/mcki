@@ -4093,10 +4093,10 @@ serve(async (req) => {
     return new Response(
       JSON.stringify({
         posts: processedPosts,
-        total: data.totalResults || 0,
+        total: filteredArticles.length,
         page: parseInt(page),
-        hasMore: data.nextPage !== null,
-        categories: ['All', 'Bitcoin', 'Ethereum', 'Trading', 'DeFi', 'Technology', 'Analysis', 'Regulation', 'Web3']
+        hasMore: endIndex < filteredArticles.length,
+        categories: categories
       }),
       {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
